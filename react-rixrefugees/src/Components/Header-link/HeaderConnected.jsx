@@ -1,12 +1,12 @@
 import React from "react"
 import {Link} from "react-router-dom"
 
-function Header_connected() {
+function HeaderConnected() {
     return (
         <div>
-
+            
         </div>
     )
 }
 
-export default Header_connected
+export default HeaderConnected

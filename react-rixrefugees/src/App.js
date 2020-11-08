@@ -1,8 +1,8 @@
 import React from "react";
 import './App.css';
+import 'fontsource-roboto';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Accueil from "./Components/Accueil"
-import Header from "./Components/Header"
+import  {Accueil, Header, About} from "./Components"
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Header/>
         <Switch>
           <Route path="/" exact component={() => <Accueil />} />
-          
+          <Route path="/about" exact component={() => <About />} />
         </Switch>
       </Router>
     </div>
