@@ -1,22 +1,28 @@
-/*import React from "react"
-import {connect} from "react-redux"
-import {mapStateToProps} from "./redux-import"
-import {mapDispatchToProps} from './redux-import'
-
-function Header(props) {
-    return <div>Hello user with id {props.user}
-    <button onClick={() => props.switchUser({user : props.user+1})}>Modifier</button></div>
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Header)
-*/
 import React from "react"
-import {useSelector,useDispatch} from "react-redux"
-import {switchUser} from "../redux/Actions/index"
+import {Link} from "react-router-dom"
+import "../Style/Header.css"
 
-function Header(props) {
-    const userId = useSelector(state => state.user);
-    const dispatch = useDispatch();
-    return <div>Hello user with id {userId}
-    <button onClick={() => dispatch(switchUser(userId+1))}>Modifier</button></div>
+function Header() {
+
+    return (
+        <div>
+            <div className="links">
+                <Link to={"/"}>
+                    Accueil
+                </Link>
+            </div>
+            <div className="links">
+                <Link to={"/about"}>
+                    En savoir plus
+                </Link>
+            </div>
+            <div className="links">
+                <Link to={"/join"}>
+                    Comment rejoindre ?
+                </Link>
+            </div>
+            <hr/>
+        </div>
+    )
 }
 export default Header
