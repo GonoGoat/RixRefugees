@@ -17,7 +17,7 @@ function Header() {
     }
 
     function isConnected() {
-        if (userId === 1) {
+        if ((userId === 1) || (userId === 2)) {
             return (
                 <HeaderConnected/>
             )

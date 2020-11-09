@@ -6,3 +6,7 @@
 #connection {
     float : right;
 }
+
+#admin {
+    float : left;
+}
