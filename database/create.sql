@@ -1,138 +1,180 @@
-create table Places (
-    id  SERIAL PRIMARY KEY,
-    nom varchar(20),
-    nombre_lit int,
-    adresse varchar(60),
-    description text
+/******************RANGEE N°0************/
+
+create table Web (
+	slug varchar(60) PRIMARY KEY, /*OK*/
+	title varchar(60) NOT NULL, /*OK*/
+	content text /*OK*/
 );
 
-create table Equipment (
-    id  SERIAL PRIMARY KEY,
-    nom varchar(20)
+create table Accounting (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	date date NOT NULL default current_date, /*OK*/
+	amount decimal not null /*OK*/
+);
+
+create table Donations (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	fname varchar(20), /*OK*/
+	lname varchar(20), /*OK*/
+	description text, /*OK*/
+	contact text, /*OK*/
+	isResolved boolean NOT NULL default false /*OK*/
+);
+
+create table Relations (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	contact_fname varchar(20), /*OK*/
+	contact_lname varchar(20), /*OK*/
+	contact_label varchar(40), /*OK*/
+	mail varchar(40), /*OK*/
+	phone char(12), /*OK*/
+	address varchar(60) /*OK*/
+);
+
+/******************RANGEE N°1************/
+
+create table Places (
+    id  SERIAL PRIMARY KEY,  /*OK*/
+    name varchar(20) NOT NULL, /*OK*/
+    address varchar(60) NOT NULL, /*OK*/
+    description text, /*OK*/
+	unique (address,description) /*OK*/
+);
+
+create table Equipments (
+    id  SERIAL PRIMARY KEY, /*OK*/
+    name varchar(20) NOT NULL unique /*OK*/
 );
 
 create table Users (
-	id  SERIAL PRIMARY KEY,
-	nom varchar(20),
-	prenom varchar(20),
-	mail varchar(40),
-	isAdmin boolean,
-	isActive boolean,
-	lastActivity date
+	id  SERIAL PRIMARY KEY, /*OK*/
+	password varchar(30) NOT NULL, /*OK*/
+	fname varchar(20) NOT NULL, /*OK*/
+	lname varchar(20) NOT NULL, /*OK*/
+	mail varchar(40) NOT NULL unique, /*OK*/
+	isAdmin boolean NOT NULL default false, /*OK*/
+	isActive boolean NOT NULL default false,  /*OK*/
+	lastActivity date NOT NULL default current_date, /*OK*/
+	address varchar(60) /*OK*/
 );
 
 create table Tasks (
-	id  SERIAL PRIMARY KEY,
-	nom varchar(40),
-	description text,
-	isFromAdmin boolean,
-	numberOfPeople int
+	id  SERIAL PRIMARY KEY, /*OK*/
+	name varchar(40) NOT NULL /*OK*/
 );
 
+create table Status (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	name varchar(20) NOT NULL unique /*OK*/
+);
+
+/******************RANGEE N°2************/
 create table Accomodations (
-	id  SERIAL PRIMARY KEY,
-	constraint fk__accomodations_places
+	id  SERIAL PRIMARY KEY, /*OK*/
+	bed_quantity int default 0 NOT NULL, /*OK*/
+	constraint fk__places__id /*OK*/
 		foreign key (id)
 			references Places(id),
-	constraint fk__accomodations_equipments
+	constraint fk__equipments__id /*OK*/
 		foreign key (id)
 			references Equipments(id)
 );
 
 create table Registrations (
-	id  SERIAL PRIMARY KEY,
-	motivation text,
-	constraint fk__registrations_users
+	id  SERIAL PRIMARY KEY, /*OK*/
+	motivation text, /*OK*/
+	constraint fk__users__id /*OK*/
 		foreign key (id)
 			references Users(id)
 );
 
-create table Availabilities (
-	id  SERIAL PRIMARY KEY,
-	commentaire text,
-	isAssigned boolean,
-	isComingFromAdmin boolean,
-	constraint fk__availabilities_users
+create table Friends (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	fname varchar(20), /*OK*/
+	lname varchar(20), /*OK*/
+	nationality varchar(3), /*OK*/
+	notes text, /*OK*/
+	birth_date date, /*OK*/
+	in_date date NOT NULL default current_date, /*OK*/
+	out_date date, /*OK*/
+	phone char(12), /*OK*/
+	constraint fk__status__id /*OK*/
 		foreign key (id)
-			references Users(id),
-	constraint fk__availabilities_tasks
-		foreign key (id)
-			references Tasks(id)
+			references Status(id)
 );
 
-create table Accomodations_availabilities (
-	id  SERIAL PRIMARY KEY,
-	dispo_debut timestamp(0),
-	dispo_fin timestamp(0),
-	constraint fk__accomodations_avail_acc
+/******************RANGEE N°3************/
+
+create table Appointments (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	appointment date NOT NULL, /*OK*/
+	constraint fk__status__id /*OK*/
+		foreign key (id)
+			references Status(id),
+	constraint fk__friends__id /*OK*/
+		foreign key (id)
+			references Friends(id)
+);
+
+create table Accomodations_period (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	start_avail timestamp(0) NOT NULL, /*OK*/
+	end_avail timestamp(0) NOT NULL, /*OK*/
+	constraint fk__accomodations__id /*OK*/
 		foreign key (id)
 			references Accomodations(id)
 );
 
-create table Friends (
-	id  SERIAL PRIMARY KEY,
-	nom varchar(20),
-	prenom varchar(20),
-	nationalite varchar(3),
-	status int
-);
+/******************RANGEE N°4************/
 
 create table Sessions (
-	id  SERIAL PRIMARY KEY,
-	date_debut date,
-	date_fin date,
-	constraint fk__sessions_users
+	id  SERIAL PRIMARY KEY, /*OK*/
+	start_date date NOT NULL, /*OK*/
+	end_date date NOT NULL, /*OK*/
+	constraint fk__users__id /*OK*/
 		foreign key (id)
 			references Users(id),
-	constraint fk__sessions_accomodations_avail
+	constraint fk__accomodations_period__id /*OK*/
 		foreign key (id)
-			references Accomodations_availabilities(id)
+			references Accomodations_period(id)
 );
 
-create table Sessions (
-	id  SERIAL PRIMARY KEY,
-	date_debut date,
-	date_fin date,
-	constraint fk__sessions_users
-		foreign key (id)
-			references Users(id),
-	constraint fk__sessions_accomodations_avail
-		foreign key (id)
-			references Accomodations_availabilities(id)
-);
+/******************RANGEE N°5************/
 
 create table Sessions_tasks (
-	id  SERIAL PRIMARY KEY,
-	date timestamp(0),
-	constraint fk__sessions_tasks_assignments
+	id  SERIAL PRIMARY KEY, /*OK*/
+	isFromAdmin boolean NOt NULL default true, /*OK*/
+	description text, /*OK*/
+	amountOfPeople int NOT NULL default 0, /*OK*/
+	constraint fk__tasks__id /*OK*/
 		foreign key (id)
-			references Assignments(id),
-	constraint fk__sessions_tasks_sessions
+			references Tasks(id),
+	constraint fk__sessions__id /*OK*/
 		foreign key (id)
 			references Sessions(id)
 );
 
-create table Relations (
-	id  SERIAL PRIMARY KEY,
-	nom_contact varchar(20),
-	prenom_contact varchar(20),
-	intitule_contact varchar(40),
-	telephone char(12),
-	adresse varchar(60)
+/******************RANGEE N°6************/
+
+create table Availabilities (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	description text, /*OK*/
+	constraint fk__users__id /*OK*/
+		foreign key (id)
+			references Users(id),
+	constraint fk__session_tasks__id /*OK*/
+		foreign key (id)
+			references Sessions_tasks(id)
 );
 
-create table Web (
-	id  SERIAL PRIMARY KEY,
-	slug varchar(60),
-	title varchar(60),
-	content text
-);
+/******************RANGEE N°7************/
 
-create table Donations (
-	id  SERIAL PRIMARY KEY,
-	nom varchar(20),
-	prenom varchar(20),
-	description text,
-	contact text,
-	isResolved boolean
+create table Assignments (
+	id  SERIAL PRIMARY KEY, /*OK*/
+	constraint fk__friends__id /*OK*/
+		foreign key (id)
+			references Friends(id),
+	constraint fk__availabilities__id /*OK*/
+		foreign key (id)
+			references Availabilities(id)
 );
