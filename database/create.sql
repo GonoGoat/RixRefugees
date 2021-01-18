@@ -38,7 +38,7 @@ create table Places (
     name varchar(20) NOT NULL, /*OK*/
     address varchar(60) NOT NULL, /*OK*/
     description text, /*OK*/
-	unique (address,description) /*OK*/
+	unique (address,name) /*OK*/
 );
 
 create table Equipments (
@@ -71,7 +71,6 @@ create table Status (
 /******************RANGEE N°2************/
 create table Accomodations (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	bed_quantity int default 0 NOT NULL, /*OK*/
 	constraint fk__places__id /*OK*/
 		foreign key (id)
 			references Places(id),
@@ -120,6 +119,7 @@ create table Accomodations_period (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	start_avail timestamp(0) NOT NULL, /*OK*/
 	end_avail timestamp(0) NOT NULL, /*OK*/
+	bed_quantity int default 0 NOT NULL, /*OK*/
 	constraint fk__accomodations__id /*OK*/
 		foreign key (id)
 			references Accomodations(id)
@@ -143,7 +143,7 @@ create table Sessions (
 
 create table Sessions_tasks (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	isFromAdmin boolean NOt NULL default true, /*OK*/
+	isFromAdmin boolean NOT NULL default true, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
 	constraint fk__tasks__id /*OK*/
