@@ -1,0 +1,12 @@
+.links {
+    display : inline-block;
+    padding: 5px;
+}
+
+#connection {
+    float : right;
+}
+
+#admin {
+    float : left;
+}
