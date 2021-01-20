@@ -1,15 +1,10 @@
 /******************RANGEE N°0************/
 
-create table Web (
-	slug varchar(60) PRIMARY KEY, /*OK*/
-	title varchar(60) NOT NULL, /*OK*/
-	content text /*OK*/
-);
-
 create table Accounting (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	date date NOT NULL default current_date, /*OK*/
-	amount decimal not null /*OK*/
+	amount decimal not null, /*OK*/
+	description text
 );
 
 create table Donations (
@@ -55,7 +50,7 @@ create table Users (
 	isAdmin boolean NOT NULL default false, /*OK*/
 	isActive boolean NOT NULL default false,  /*OK*/
 	lastActivity date NOT NULL default current_date, /*OK*/
-	address varchar(60) /*OK*/
+	contact text /*OK*/
 );
 
 create table Tasks (
@@ -65,10 +60,20 @@ create table Tasks (
 
 create table Status (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	name varchar(20) NOT NULL unique /*OK*/
+	name varchar(40) NOT NULL unique /*OK*/
 );
 
 /******************RANGEE N°2************/
+create table Web (
+	slug varchar(60) PRIMARY KEY, /*OK*/
+	title varchar(60) NOT NULL, /*OK*/
+	content text, /*OK*/
+	last_change timestamp(0) NOT NULL default current_date,
+	constraint fk__users__id /*OK*/
+		foreign key (id)
+			references Users(id)
+);
+
 create table Accomodations (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	constraint fk__places__id /*OK*/
@@ -107,6 +112,8 @@ create table Friends (
 create table Appointments (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	appointment date NOT NULL, /*OK*/
+	description text,
+	isCanceled boolean NOT NULL default false,
 	constraint fk__status__id /*OK*/
 		foreign key (id)
 			references Status(id),
@@ -146,6 +153,8 @@ create table Sessions_tasks (
 	isFromAdmin boolean NOT NULL default true, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
+	start_date timestamp(0) default current_date,
+	end_date timestamp(0),
 	constraint fk__tasks__id /*OK*/
 		foreign key (id)
 			references Tasks(id),
@@ -159,6 +168,7 @@ create table Sessions_tasks (
 create table Availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	description text, /*OK*/
+	isCanceled boolean NOT NULL default false,
 	constraint fk__users__id /*OK*/
 		foreign key (id)
 			references Users(id),
@@ -171,6 +181,7 @@ create table Availabilities (
 
 create table Assignments (
 	id  SERIAL PRIMARY KEY, /*OK*/
+	feedback text,
 	constraint fk__friends__id /*OK*/
 		foreign key (id)
 			references Friends(id),
