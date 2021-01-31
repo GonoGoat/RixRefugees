@@ -69,26 +69,33 @@ create table Web (
 	title varchar(60) NOT NULL, /*OK*/
 	content text, /*OK*/
 	last_change timestamp(0) NOT NULL default current_date,
+
+	users_id int,
 	constraint fk__users__id /*OK*/
-		foreign key (id)
+		foreign key (users_id)
 			references Users(id)
 );
 
 create table Accomodations (
 	id  SERIAL PRIMARY KEY, /*OK*/
+
+	places_id int,
 	constraint fk__places__id /*OK*/
-		foreign key (id)
+		foreign key (places_id)
 			references Places(id),
+	equipments_id int,
 	constraint fk__equipments__id /*OK*/
-		foreign key (id)
+		foreign key (equipments_id)
 			references Equipments(id)
 );
 
 create table Registrations (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	motivation text, /*OK*/
+
+	users_id int,
 	constraint fk__users__id /*OK*/
-		foreign key (id)
+		foreign key (users_id)
 			references Users(id)
 );
 
@@ -102,8 +109,10 @@ create table Friends (
 	in_date date NOT NULL default current_date, /*OK*/
 	out_date date, /*OK*/
 	phone char(12), /*OK*/
+
+	status_id int,
 	constraint fk__status__id /*OK*/
-		foreign key (id)
+		foreign key (status_id)
 			references Status(id)
 );
 
@@ -114,11 +123,14 @@ create table Appointments (
 	appointment date NOT NULL, /*OK*/
 	description text,
 	isCanceled boolean NOT NULL default false,
+
+	status_id int,
 	constraint fk__status__id /*OK*/
-		foreign key (id)
+		foreign key (status_id)
 			references Status(id),
+	friends_id int,
 	constraint fk__friends__id /*OK*/
-		foreign key (id)
+		foreign key (friends_id)
 			references Friends(id)
 );
 
@@ -127,8 +139,10 @@ create table Accomodations_period (
 	start_avail timestamp(0) NOT NULL, /*OK*/
 	end_avail timestamp(0) NOT NULL, /*OK*/
 	bed_quantity int default 0 NOT NULL, /*OK*/
+
+	accomodations_id int,
 	constraint fk__accomodations__id /*OK*/
-		foreign key (id)
+		foreign key (accomodations_id)
 			references Accomodations(id)
 );
 
@@ -138,11 +152,14 @@ create table Sessions (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	start_date date NOT NULL, /*OK*/
 	end_date date NOT NULL, /*OK*/
+
+	users_id int,
 	constraint fk__users__id /*OK*/
-		foreign key (id)
+		foreign key (users_id)
 			references Users(id),
+	accomodations_period_id int,
 	constraint fk__accomodations_period__id /*OK*/
-		foreign key (id)
+		foreign key (accomodations_period_id)
 			references Accomodations_period(id)
 );
 
@@ -155,9 +172,12 @@ create table Sessions_tasks (
 	amountOfPeople int NOT NULL default 0, /*OK*/
 	start_date timestamp(0) default current_date,
 	end_date timestamp(0),
+
+	tasks_id int,
 	constraint fk__tasks__id /*OK*/
-		foreign key (id)
+		foreign key (tasks_id)
 			references Tasks(id),
+	sessions_id int,
 	constraint fk__sessions__id /*OK*/
 		foreign key (id)
 			references Sessions(id)
@@ -169,9 +189,12 @@ create table Availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	description text, /*OK*/
 	isCanceled boolean NOT NULL default false,
+
+	users_id int,
 	constraint fk__users__id /*OK*/
 		foreign key (id)
 			references Users(id),
+	sessions_tasks_id int,
 	constraint fk__session_tasks__id /*OK*/
 		foreign key (id)
 			references Sessions_tasks(id)
@@ -182,10 +205,13 @@ create table Availabilities (
 create table Assignments (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	feedback text,
+
+	friends_id int,
 	constraint fk__friends__id /*OK*/
 		foreign key (id)
 			references Friends(id),
+	availabilities_id int,
 	constraint fk__availabilities__id /*OK*/
-		foreign key (id)
+		foreign key (availabilities_id)
 			references Availabilities(id)
 );
