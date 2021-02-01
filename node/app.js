@@ -1,22 +1,30 @@
-// Utilisation dotenv (fichier .env)
 require('dotenv').config()
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-// Définition express (serveur http)
-const express = require('express');
-const app = express();
+var reactRouter = require('./routes/react');
+var placesRouter = require('./routes/init');
 
-// Servir les fichiers statiques
+var app = express();
+
+// view engine setup
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('../react-rixrefugees/build'));
 
-// API 
+app.use('/api/places',placesRouter);
+app.use('*', reactRouter);
 
-
-// Accès à React
-const path = require('path');
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve('..', 'react-rixrefugees', 'build', 'index.html'));
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
-// Déploiement
-const PORT = process.env.PORT;
-app.listen(PORT);
+module.exports = app;

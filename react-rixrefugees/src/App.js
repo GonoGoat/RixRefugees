@@ -1,8 +1,8 @@
 import React from "react";
 import './App.css';
 import 'fontsource-roboto';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import  {Accueil, Header, About} from "./Components"
+import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {Accueil, Header, About} from "./Components"
 
 function App() {
   return (

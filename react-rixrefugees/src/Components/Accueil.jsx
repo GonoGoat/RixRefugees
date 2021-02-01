@@ -1,7 +1,6 @@
-import React from "react"
-import {useSelector} from "react-redux"
-import {useDispatch} from "react-redux"
-import {switchUser} from "../redux/Actions/index"
+import React from "react";
+import {useSelector,useDispatch} from "react-redux";
+import {switchUser} from "../redux/Actions/index";
 
 function Accueil() {
     const userId = useSelector(state => state.user);
@@ -10,11 +9,11 @@ function Accueil() {
     function getRole() {
         switch(userId) {
             case 1 :
-                return "Bénévole"
+                return "Bénévole";
             case 2 :
-                return "Coordinateur"
+                return "Coordinateur";
             default : 
-                return "Visiteur"
+                return "Visiteur";
         }
     }
 

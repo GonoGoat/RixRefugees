@@ -203,7 +203,7 @@ create table Availabilities (
 /******************RANGEE N°7************/
 
 create table Assignments (
-	id  SERIAL PRIMARY KEY, /*OK*/
+	id SERIAL PRIMARY KEY, /*OK*/
 	feedback text,
 
 	friends_id int,

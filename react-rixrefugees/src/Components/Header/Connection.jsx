@@ -1,5 +1,5 @@
-import React from "react"
-import {useHistory} from "react-router-dom"
+import React from "react";
+import {useHistory} from "react-router-dom";
 
 function Connection() {
     const history = useHistory();
@@ -12,4 +12,4 @@ function Connection() {
     )
 }
 
-export default Connection
+export default Connection;

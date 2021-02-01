@@ -1,37 +1,17 @@
-import React from "react"
-import {Link} from "react-router-dom"
-import "../Style/Header.css"
-import {Connection, HeaderConnected, HeaderAdmin} from "./Header-link"
-import {useSelector} from "react-redux"
+import React from "react";
+import {Link} from "react-router-dom";
+import "../Style/Header.css";
+import {useSelector} from "react-redux";
+import Pannel from './Header/Pannel'
+import Connection from './Header/Connection'
 
 function Header() {
 
     const userId = useSelector(state => state.user)
 
-    function isAdmin() {
-        if (userId === 2) {
-            return (
-                <HeaderAdmin/>
-            )
-        }
-    }
-
-    function isConnected() {
-        if ((userId === 1) || (userId === 2)) {
-            return (
-                <HeaderConnected/>
-            )
-        }
-        else {
-            return (
-                <Connection/>
-            )
-        }
-    }
-
     return (
-        <div>
-            {isAdmin()}
+        <div id="header">
+            {userId === 0 ? <React.Fragment/> : <Pannel/>}
             <div className="links">
                 <Link to={"/"}>
                     Accueil
@@ -47,9 +27,9 @@ function Header() {
                     Comment rejoindre ?
                 </Link>
             </div>
-            {isConnected()}
+            {userId === 0 ? <Connection/> : <React.Fragment/>}
             <hr/>
         </div>
     )
 }
-export default Header
+export default Header;
