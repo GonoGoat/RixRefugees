@@ -134,16 +134,16 @@ create table Appointments (
 			references Friends(id)
 );
 
-create table Accomodations_period (
+create table Places_availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	start_avail timestamp(0) NOT NULL, /*OK*/
 	end_avail timestamp(0) NOT NULL, /*OK*/
 	bed_quantity int default 0 NOT NULL, /*OK*/
 
-	accomodations_id int,
-	constraint fk__accomodations__id /*OK*/
-		foreign key (accomodations_id)
-			references Accomodations(id)
+	places_id int,
+	constraint fk__Places__id /*OK*/
+		foreign key (places_id)
+			references Places(id)
 );
 
 /******************RANGEE N°4************/
@@ -157,10 +157,10 @@ create table Sessions (
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id),
-	accomodations_period_id int,
-	constraint fk__accomodations_period__id /*OK*/
-		foreign key (accomodations_period_id)
-			references Accomodations_period(id)
+	places_availabilities_id int,
+	constraint fk__places_availabilities__id /*OK*/
+		foreign key (places_availabilities_id)
+			references Places_availabilities(id)
 );
 
 /******************RANGEE N°5************/
