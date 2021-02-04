@@ -15,9 +15,8 @@ function getAllPlaces(req, res, next) {
       .then(function (data) {
         res.status(200)
           .json({
-            status: 'success',
+            status: true,
             data: data,
-            message: 'Retrieved ALL puppies'
           });
       })
       .catch(function (err) {

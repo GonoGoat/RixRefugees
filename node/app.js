@@ -6,7 +6,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var reactRouter = require('./routes/react');
-var placesRouter = require('./routes/init');
+var placesRouter = require('./routes/places');
+var equipmentsRouter = require('./routes/equipments')
 
 var app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('../react-rixrefugees/build'));
 
+app.use('/api/equipments',equipmentsRouter)
 app.use('/api/places',placesRouter);
 app.use('*', reactRouter);
 
