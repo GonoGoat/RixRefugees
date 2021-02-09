@@ -20,6 +20,11 @@ const places_availabilitiesList =
         headerName : 'Fin de disponibilité',
         flex : 1
     },
+    {
+        field : 'bed_quantity',
+        headerName : 'Nombre de lit disponible',
+        flex : 1
+    }
 ]
 ;
 

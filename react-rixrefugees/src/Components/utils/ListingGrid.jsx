@@ -13,8 +13,20 @@ function ListingGrid (props) {
             checkboxSelection
             autoHeight
             hideFooter
-            disableColumnMenu />
+            disableColumnMenu
+            onRowClick={(row) => {
+                if (props.columns[(props.columns.length)-1].headerName.includes("lieu")) {
+                    props.setId(row.row.id);
+                }
+            }}
+            onSelectionChange={(select) => props.setSelected(select)}/>
         </div>
     );
 }
 export default ListingGrid;
+
+/*onsole.log(row);
+console.log(props.columns[props.columns.length()-1]);
+if (props.columns[props.columns.length()-1].headerName.contains("Lieu")) {
+    props.setId(row.data.id);
+}*/

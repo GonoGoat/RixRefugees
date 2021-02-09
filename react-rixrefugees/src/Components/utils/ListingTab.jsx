@@ -12,7 +12,7 @@ function ListingTab(props) {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            {props.header.map((obj) => <TableCell id={obj.id}align="right">{obj.name}</TableCell>)}
+                            {props.header.map((obj) => <TableCell id={obj.id} align="left"><strong>{obj.name}</strong></TableCell>)}
                         </TableRow>
                     </TableHead>
                     <TableBody>

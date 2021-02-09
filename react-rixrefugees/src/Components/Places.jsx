@@ -3,9 +3,10 @@ import React from "react";
 import ListingGrid from './utils/ListingGrid';
 import LoadingIndicator from "./utils/LoadingIndicator";
 import ListingTab from "./utils/ListingTab";
+import DataList from "./utils/DataList";
 
 import {Button} from '@material-ui/core';
-//ListingGrid iùmports
+//ListingGrid imports
 import {placesList} from "../utils/DataGridColumns/places"
 import {equipList} from "../utils/DataGridColumns/equipments";
 import {pavailList} from "../utils/DataGridColumns/places_avail";
@@ -15,6 +16,9 @@ function Places () {
     const [loading,setLoading] = React.useState(false);
     const [columns,setColumns] = React.useState([]);
     const [isTab,setTab] = React.useState(false);
+    const [selected, setSelected] = React.useState([]);
+    const [id,setId] = React.useState(0);
+
     const axios = require('axios');
 
     // Display ListingGrid
@@ -70,19 +74,20 @@ function Places () {
         let compare,k,tab;
         for (let j = 0;j<rows.length;j++) { // Check equipments for each place
             compare = acc.filter((obj) => obj.places_id === rows[j].id); // Get all accomodations values for a certain places_id
-            if (compare.length === 0) {continue;}
+            if (compare.length === 0) {continue;} // Cancel if no equipments
             compare.map((obj) => {
-                k = header.findIndex((elem) => elem.id === obj.equipments_id);
+                // Write that the place contain equipments
+                k = header.findIndex((elem) => elem.id === obj.equipments_id); 
                 if (k != -1) {
                     tab = rows.find((elem) => elem.id === obj.places_id);
                     tab.check[k-1] = true;
                 }
             })
         }
-        setTab(true);
-        setColumns(header);
-        setData(rows);
-        setLoading(false);
+        setTab(true); // Display the tab
+        setColumns(header); // Give the Header 
+        setData(rows); // Give the rows
+        setLoading(false); // Stop loading
     }
 
     return (
@@ -95,9 +100,13 @@ function Places () {
             </div>
             {data.length === 0 ? '' : 
                 (loading === true ? <LoadingIndicator/> : 
-                    (isTab === true ? <ListingTab rows={data} header={columns}/> : <ListingGrid rows={data} columns={columns}/>)
+                    (isTab === true ? <ListingTab rows={data} header={columns}/> : 
+                        <ListingGrid rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
                 )
             }
+            <div>
+                <DataList id={id}/>
+            </div>
         </div>
     )
 }
