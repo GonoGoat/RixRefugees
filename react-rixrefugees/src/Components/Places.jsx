@@ -24,7 +24,7 @@ function Places () {
     // Display ListingGrid
     async function displayGrid(api,options) {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_API}${api}`)
+        await axios.get(`${process.env.REACT_APP_API}${api}`)
         .then(res => {
             setData(res.data);
             setColumns(options);
@@ -105,7 +105,7 @@ function Places () {
                 )
             }
             <div>
-                <DataList id={id}/>
+                {id === 0 ? '' :<DataList setLoading={(load) => setLoading(load)} id={id}/>}
             </div>
         </div>
     )

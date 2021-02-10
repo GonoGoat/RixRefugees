@@ -1,5 +1,4 @@
 var pool = require('../db.js');
-var moment = require("moment");
 
 // add query functions
 function getAllPlacesAvail(req, res, next) {
