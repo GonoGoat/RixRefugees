@@ -24,9 +24,3 @@ function ListingGrid (props) {
     );
 }
 export default ListingGrid;
-
-/*onsole.log(row);
-console.log(props.columns[props.columns.length()-1]);
-if (props.columns[props.columns.length()-1].headerName.contains("Lieu")) {
-    props.setId(row.data.id);
-}*/
