@@ -1,18 +1,19 @@
 import React from "react";
-import LoadingIndicator from "./LoadingIndicator";
+import LoadingIndicator from "../utils/LoadingIndicator";
 
 function DataList(props) {
 
     const [details,setDetails] = React.useState();
+    const [loading,setLoading] = React.useState(false);
 
     const axios = require('axios');
 
     async function fetchPlaces() {
-        props.setLoading(true);
+        setLoading(true);
         await axios.get(`${process.env.REACT_APP_API}/places/${props.id}`)
         .then(res => {
             setDetails(res.data);
-            props.setLoading(false);
+            setLoading(false);
         })
         .catch(err => {
             console.log(err);
@@ -23,7 +24,7 @@ function DataList(props) {
         fetchPlaces();
     }, [props.id])
 
-    if (!details) {
+    if (loading || !details) {
         return (
             <div>
                 <LoadingIndicator/>

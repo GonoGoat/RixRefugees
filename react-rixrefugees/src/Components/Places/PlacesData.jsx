@@ -3,7 +3,7 @@ import React from "react";
 import ListingGrid from "../utils/ListingGrid";
 import ListingTab from "../utils/ListingTab";
 import LoadingIndicator from "../utils/LoadingIndicator";
-import DataList from "../utils/DataList";
+import DataList from "./PlacesDataList";
 import AddButton from "../utils/AddButton";
 import PlacesForm from '../Forms/PlacesForm';
 
@@ -107,7 +107,7 @@ function PlacesData(props) {
             {data.length === 0 ? '' : 
                 (loading === true ? <LoadingIndicator/> : 
                     (isTab === true ? <ListingTab rows={data} header={columns}/> : 
-                        <ListingGrid rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
+                        <ListingGrid setForm={() => setForm(false)} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
                 )
             }
             <div>

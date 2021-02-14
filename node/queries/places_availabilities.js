@@ -8,6 +8,15 @@ function getAllPlacesAvail(req, res, next) {
   })
 }
 
+function addPlacesAvail(req, res, next) {
+  pool.query('insert into places_availabilities (start_avail,end_avail,bed_quantity,places_id) values ($1,$2,$3,$4)',
+  [req.body.start_avail,req.body.end_avail,req.body.bed_quantity,req.body.places_id],(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
+}
+
 module.exports = {
     getAllPlacesAvail: getAllPlacesAvail,
+    addPlacesAvail : addPlacesAvail
 };

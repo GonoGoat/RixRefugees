@@ -8,6 +8,17 @@ function getAllAccomodations(req, res, next) {
   })
 }
 
+function addAccomodations(req, res, next) {
+  req.body.accomodations.forEach(element => {
+    pool.query('insert into accomodations (places_id,equipments_id) values ($1,$2)',[req.body.places_id,element],(err,rows) =>  {
+      console.log(element);
+      if (err) throw err;
+    }) 
+  });
+  return res.send({data : true});
+}
+
 module.exports = {
     getAllAccomodations: getAllAccomodations,
+    addAccomodations : addAccomodations
 };

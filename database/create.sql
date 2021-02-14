@@ -68,7 +68,7 @@ create table Web (
 	slug varchar(60) PRIMARY KEY, /*OK*/
 	title varchar(60) NOT NULL, /*OK*/
 	content text, /*OK*/
-	last_change timestamp(0) NOT NULL default current_date,
+	last_change timestamp(0) without time zone NOT NULL default current_date,
 
 	users_id int,
 	constraint fk__users__id /*OK*/
@@ -143,8 +143,8 @@ create table Appointments (
 
 create table Places_availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	start_avail timestamp(0) NOT NULL, /*OK*/
-	end_avail timestamp(0) NOT NULL, /*OK*/
+	start_avail timestamp(0) without time zone NOT NULL, /*OK*/
+	end_avail timestamp(0) without time zone NOT NULL, /*OK*/
 	bed_quantity int default 0 NOT NULL, /*OK*/
 
 	places_id int,
@@ -180,8 +180,8 @@ create table Sessions_tasks (
 	isFromAdmin boolean NOT NULL default true, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
-	start_date timestamp(0) default current_date,
-	end_date timestamp(0),
+	start_date timestamp(0) without time zone default current_date,
+	end_date timestamp(0) without time zone,
 
 	tasks_id int,
 	constraint fk__tasks__id /*OK*/

@@ -17,6 +17,7 @@ function ListingGrid (props) {
             onRowClick={(row) => {
                 if (props.columns[(props.columns.length)-1].headerName.includes("lieu")) {
                     props.setId(row.row.id);
+                    props.setForm();
                 }
             }}
             onSelectionChange={(select) => props.setSelected(select)}/>
