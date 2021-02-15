@@ -111,7 +111,7 @@ function PlacesData(props) {
                 )
             }
             <div>
-                <AddButton add={()=>setForm(true)}/>
+                <AddButton disabled={props.api === "/accomodations"} add={()=>setForm(true)}/>
             </div>
             {(isForm || id) ? (isForm ? <PlacesForm form={props.api}/> : <DataList setLoading={(load) => setLoading(load)} id={id}/>) : ''}
         </div>

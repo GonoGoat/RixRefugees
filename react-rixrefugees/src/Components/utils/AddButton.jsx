@@ -10,6 +10,7 @@ function AddButton (props) {
                 color="green"
                 startIcon={<AddIcon/>}
                 onClick={() => props.add()}
+                disabled={props.disabled}
             >
                 Ajouter
             </Button>

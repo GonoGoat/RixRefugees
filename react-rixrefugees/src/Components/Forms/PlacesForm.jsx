@@ -2,6 +2,9 @@ import React from "react";
 import {Grid,TextField,FormControlLabel,FormControl,FormLabel,Button} from "@material-ui/core"
 
 import LoadingIndicator from "../utils/LoadingIndicator";
+import Equipments from "./Places/Equipments";
+import Places from "./Places/Places";
+import PlacesAvail from "./Places/PlacesAvail";
 
 function PlacesForm(props) {
 
@@ -46,7 +49,6 @@ function PlacesForm(props) {
         let key = props.form.substr(1);
         let next = formValues[key];
         next[name] = value;
-        console.log(formValues[key]);
         setFormValues({
           ...formValues,
           [key]: next
@@ -57,61 +59,21 @@ function PlacesForm(props) {
         switch (props.form) {
             case '/equipments':
                 return (
-                   <Grid item>
-                       <TextField
-                            id="equipments-form"
-                            name="name"
-                            label="Nom de l'équipement"
-                            type="text"
-                            value={formValues.equipments.name}
-                            onChange={handleInputChange}
-                            required
-                        />
-                   </Grid> 
-                )
+                    <Equipments value={formValues.equipments} handleInputChange={handleInputChange}/>
+                );
             case '/places' : 
-                    return (
-                        <React.Fragment>
-                            <Grid item>
-                                <TextField
-                                    id="places-name"
-                                    name="name"
-                                    label="Nom de l'endroit"
-                                    type="text"
-                                    value={formValues.places.name}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TextField
-                                    id="places-address"
-                                    name="address"
-                                    label="Adresse de l'endroit"
-                                    type="text"
-                                    value={formValues.places.address}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TextField
-                                    id="places-desc"
-                                    name="description"
-                                    label="Description de l'endroit"
-                                    type="text"
-                                    value={formValues.places.description}
-                                    onChange={handleInputChange}
-                                    multiline
-                                    rowsMax = {10}
-                                />
-                            </Grid>
-                        </React.Fragment>
-                    )
+                return (
+                    <Places value={formValues.places} handleInputChange={handleInputChange}/>
+                );
+            case '/places_avail' :
+                return (
+                    <PlacesAvail  values={formValues.places_avail} handleInputChange={handleInputChange}/>
+                );
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
         }
-    }
+    };
+
     if (loading) {
         return (
             <div>
