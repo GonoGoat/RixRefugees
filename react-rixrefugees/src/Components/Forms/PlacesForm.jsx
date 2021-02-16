@@ -28,7 +28,7 @@ function PlacesForm(props) {
             start_avail : '',
             end_avail : '',
             bed_quantity : '',
-            places_id : 0
+            places_id : 0,
         }
     });
 
@@ -67,7 +67,7 @@ function PlacesForm(props) {
                 );
             case '/places_avail' :
                 return (
-                    <PlacesAvail  values={formValues.places_avail} handleInputChange={handleInputChange}/>
+                    <PlacesAvail value={formValues.places_avail} handleInputChange={handleInputChange}/>
                 );
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
