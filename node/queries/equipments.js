@@ -9,14 +9,24 @@ function getAllEquipments(req, res, next) {
 }
 
 function addEquipments(req, res, next) {
-  console.log(req.body);
   pool.query('insert into equipments (name) values ($1)',[req.body.name],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })
 }
 
+function deleteEquipments(req, res, next) {
+  let e = req.body;
+  e.map((obj) => {
+    pool.query('delete from equipments where id = ($1)',[obj],(err,rows) =>  {
+      if (err) throw err;
+      return res.send({data : true});
+    })
+  });
+}
+
 module.exports = {
   getAllEquipments: getAllEquipments,
-  addEquipments : addEquipments
+  addEquipments : addEquipments,
+  deleteEquipments : deleteEquipments
 };

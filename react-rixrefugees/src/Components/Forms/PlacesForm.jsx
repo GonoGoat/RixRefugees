@@ -1,15 +1,18 @@
 import React from "react";
-import {Grid,TextField,FormControlLabel,FormControl,FormLabel,Button} from "@material-ui/core"
+import {Grid,Button} from "@material-ui/core"
 
 import LoadingIndicator from "../utils/LoadingIndicator";
 import Equipments from "./Places/Equipments";
 import Places from "./Places/Places";
 import PlacesAvail from "./Places/PlacesAvail";
+import "date-fns";
 
 function PlacesForm(props) {
 
     const axios = require('axios');
+    const moment = require('moment');
 
+    const date = moment().format("YYYY-MM-DDThh:mm");
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
         equipments : {
@@ -20,13 +23,9 @@ function PlacesForm(props) {
             address : '',
             description : ''
         },
-        accomodations : {
-            places_id : 0,
-            accomodations : []
-        },
         places_avail : {
-            start_avail : '',
-            end_avail : '',
+            start_avail : date,
+            end_avail : date,
             bed_quantity : '',
             places_id : 0,
         }

@@ -5,6 +5,7 @@ import ListingTab from "../utils/ListingTab";
 import LoadingIndicator from "../utils/LoadingIndicator";
 import DataList from "./PlacesDataList";
 import AddButton from "../utils/AddButton";
+import DeleteButton from "../utils/DeleteButton";
 import PlacesForm from '../Forms/PlacesForm';
 
 function PlacesData(props) {
@@ -101,6 +102,19 @@ function PlacesData(props) {
         setData(rows); // Give the rows
         setLoading(false); // Stop loading
     }
+  
+    async function deleteRows() {
+        setLoading(true);
+        let key = props.api.substr(1);
+        console.log(selected);
+        await axios.delete(`${process.env.REACT_APP_API}${props.api}/delete`, {data : selected})
+        .then(res => {
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
 
     return (
         <div>
@@ -112,6 +126,7 @@ function PlacesData(props) {
             }
             <div>
                 <AddButton disabled={props.api === "/accomodations"} add={()=>setForm(true)}/>
+                <DeleteButton disabled={props.api === "/accomodations" || selected.length <= 0} delete={()=>deleteRows()}/>
             </div>
             {(isForm || id) ? (isForm ? <PlacesForm form={props.api}/> : <DataList setLoading={(load) => setLoading(load)} id={id}/>) : ''}
         </div>
