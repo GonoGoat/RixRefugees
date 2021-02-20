@@ -16,7 +16,18 @@ function addPlacesAvail(req, res, next) {
   })
 }
 
+function deletePlacesAvail(req, res, next) {
+  let e = req.body;
+  e.map((obj) => {
+    pool.query('delete from places_availabilities where id = ($1)',[obj],(err,rows) =>  {
+      if (err) throw err;
+      return res.send({data : true});
+    })
+  });
+}
+
 module.exports = {
     getAllPlacesAvail: getAllPlacesAvail,
-    addPlacesAvail : addPlacesAvail
+    addPlacesAvail : addPlacesAvail,
+    deletePlacesAvail : deletePlacesAvail
 };

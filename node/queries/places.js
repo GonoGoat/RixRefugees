@@ -23,8 +23,19 @@ function addPlaces(req, res, next) {
   })
 }
 
+function deletePlaces(req, res, next) {
+  let e = req.body;
+  e.map((obj) => {
+    pool.query('delete from places where id = ($1)',[obj],(err,rows) =>  {
+      if (err) throw err;
+      return res.send({data : true});
+    })
+  });
+}
+
 module.exports = {
   getAllPlaces: getAllPlaces,
   getPlacesInfo : getPlacesInfo,
-  addPlaces : addPlaces
+  addPlaces : addPlaces,
+  deletePlaces : deletePlaces
 };

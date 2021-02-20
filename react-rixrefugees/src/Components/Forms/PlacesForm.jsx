@@ -1,11 +1,12 @@
 import React from "react";
 import {Grid,Button} from "@material-ui/core"
+import "date-fns";
 
 import LoadingIndicator from "../utils/LoadingIndicator";
 import Equipments from "./Places/Equipments";
 import Places from "./Places/Places";
 import PlacesAvail from "./Places/PlacesAvail";
-import "date-fns";
+import Accomodations from "./Places/Accomodations"
 
 function PlacesForm(props) {
 
@@ -23,6 +24,10 @@ function PlacesForm(props) {
             address : '',
             description : ''
         },
+        accomodations : {
+            places : 0,
+            equipments : []
+        },
         places_avail : {
             start_avail : date,
             end_avail : date,
@@ -30,6 +35,16 @@ function PlacesForm(props) {
             places_id : 0,
         }
     });
+
+    React.useEffect(() => {
+        if (props.form != '/accomodations') {
+            let key = props.form.substr(1);
+            setFormValues({
+              ...formValues,
+              [key]: props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]
+            });
+        }
+    }, [props.selected,props.data])
 
     async function handleSubmit() {
         setLoading(true);
@@ -58,11 +73,15 @@ function PlacesForm(props) {
         switch (props.form) {
             case '/equipments':
                 return (
-                    <Equipments value={formValues.equipments} handleInputChange={handleInputChange}/>
+                    <Equipments init={props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]} value={formValues.equipments} handleInputChange={handleInputChange}/>
                 );
             case '/places' : 
                 return (
                     <Places value={formValues.places} handleInputChange={handleInputChange}/>
+                );
+            case '/accomodations' : 
+                return (
+                    <Accomodations value={formValues.accomodations} handleInputChange={handleInputChange}/>
                 );
             case '/places_avail' :
                 return (

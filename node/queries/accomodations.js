@@ -8,6 +8,25 @@ function getAllAccomodations(req, res, next) {
   })
 }
 
+function addAllAccomodations(req, res, next) {
+  let e = req.body.equipments;
+  e.map((obj) => {
+    pool.query('insert into accomodations (equipments_id,places_id) values ($1,$2)',[obj,req.body.places],(err,rows) =>  {
+      if (err) throw err;
+    })
+  })
+  return res.send({data : true});
+}
+
+function deleteAllAccomodations(req, res, next) {
+  pool.query('delete from accomodations where places_id = ($1)',[req.body.places],(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
+}
+
 module.exports = {
     getAllAccomodations: getAllAccomodations,
+    addAllAccomodations : addAllAccomodations,
+    deleteAllAccomodations : deleteAllAccomodations
 };

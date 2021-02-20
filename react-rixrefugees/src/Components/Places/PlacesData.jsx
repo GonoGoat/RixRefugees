@@ -4,9 +4,10 @@ import ListingGrid from "../utils/ListingGrid";
 import ListingTab from "../utils/ListingTab";
 import LoadingIndicator from "../utils/LoadingIndicator";
 import DataList from "./PlacesDataList";
-import AddButton from "../utils/AddButton";
-import DeleteButton from "../utils/DeleteButton";
+import AddButton from "../utils/Buttons/AddButton";
+import DeleteButton from "../utils/Buttons/DeleteButton";
 import PlacesForm from '../Forms/PlacesForm';
+import EditButton from "../utils/Buttons/EditButton";
 
 function PlacesData(props) {
     const [data,setData] = React.useState([]);
@@ -15,7 +16,10 @@ function PlacesData(props) {
     const [isTab,setTab] = React.useState(false);
     const [selected, setSelected] = React.useState([]);
     const [id,setId] = React.useState(0);
-    const [isForm, setForm] = React.useState();
+    const [isForm, setForm] = React.useState({
+        form : '',
+        edit : false
+    });
 
     const axios = require('axios');
 
@@ -23,7 +27,10 @@ function PlacesData(props) {
         setTab(false);
         setSelected([]);
         setId(0);
-        setForm(0);
+        setForm({
+            form : '',
+            edit : false
+        })
         if (props.options === 0) {
             displayAccomodations();
         }
@@ -105,8 +112,6 @@ function PlacesData(props) {
   
     async function deleteRows() {
         setLoading(true);
-        let key = props.api.substr(1);
-        console.log(selected);
         await axios.delete(`${process.env.REACT_APP_API}${props.api}/delete`, {data : selected})
         .then(res => {
             setLoading(false);
@@ -121,14 +126,15 @@ function PlacesData(props) {
             {data.length === 0 ? '' : 
                 (loading === true ? <LoadingIndicator/> : 
                     (isTab === true ? <ListingTab rows={data} header={columns}/> : 
-                        <ListingGrid setForm={() => setForm(false)} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
+                        <ListingGrid setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
                 )
             }
             <div>
-                <AddButton disabled={props.api === "/accomodations"} add={()=>setForm(true)}/>
+                <AddButton disabled={props.api === "/accomodations"} add={()=>setForm({form : true,edit : false})}/>
                 <DeleteButton disabled={props.api === "/accomodations" || selected.length <= 0} delete={()=>deleteRows()}/>
+                <EditButton disabled={selected.length != 1 && props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
-            {(isForm || id) ? (isForm ? <PlacesForm form={props.api}/> : <DataList setLoading={(load) => setLoading(load)} id={id}/>) : ''}
+            {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} data={data} selected={selected} form={props.api}/> : <DataList setLoading={(load) => setLoading(load)} id={id}/>) : ''}
         </div>
         
 
