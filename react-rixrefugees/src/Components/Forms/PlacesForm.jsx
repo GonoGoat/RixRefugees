@@ -37,30 +37,14 @@ function PlacesForm(props) {
     });
 
     React.useEffect(() => {
-        if (props.edit) {
-            switch (props.form) {
-                case '/places_avail' :
-                    console.log(props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))].end_avail);
-                    setFormValues({
-                        ...formValues,
-                        places_avail: {
-                            id : props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))].id,
-                            start_avail : moment(props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))].start_avail.replace(/ /, 'T'), 'DD-MM-YYYYThh:mm'),
-                            end_avail : moment(props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))].end_avail.replace(/ /, 'T'), 'DD-MM-YYYYThh:mm'),
-                            places_id : props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))].places_id,
-                            bed_quantity : props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))].bed_quantity
-                        }
-                    });
-                    break;
-                case '/accomodation' :
-                    break;
-                default :
-                    console.log(1);
-                    let key = props.form.substr(1);
-                    setFormValues({
-                        ...formValues,
-                        [key]: props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]
-                    });
+        console.log(formValues);
+        if (props.edit) {    
+            if (props.form != '/accomodations') {
+                let key = props.form.substr(1);
+                setFormValues({
+                    ...formValues,
+                    [key]: props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]
+                });
             }
         }
     }, [props.selected,props.data])

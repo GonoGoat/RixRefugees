@@ -32,7 +32,7 @@ function PlacesAvail (props) {
                     <FormControl>
                         <InputLabel>Lieux d'hébergement</InputLabel>
                         <Select
-                            value={places[places.findIndex((obj) => obj.id === props.value.places_id)]}
+                            value={props.value.places_id}
                             onChange={props.handleInputChange}
                             name="places_id"
                         >

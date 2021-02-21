@@ -2,7 +2,7 @@ var pool = require('../db.js');
 
 // add query functions
 function getAllPlacesAvail(req, res, next) {
-  pool.query('select places_availabilities.id as id,name,bed_quantity,to_char(start_avail,\'DD/MM/YYYY HH24:MI\') as start_avail,to_char(end_avail,\'DD/MM/YYYY HH24:MI\') as end_avail from places_availabilities join places on places_availabilities.places_id = places.id',(err,rows) =>  {
+  pool.query('select places_availabilities.id as id,places_id,name,bed_quantity,concat(to_char(start_avail,\'YYYY-MM-DD\'),\'T\',to_char(start_avail, \'HH24:MI\')) as start_avail,concat(to_char(end_avail,\'YYYY-MM-DD\'),\'T\',to_char(end_avail, \'HH24:MI\')) as end_avail from places_availabilities join places on places_availabilities.places_id = places.id',(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
   })
