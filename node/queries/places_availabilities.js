@@ -2,7 +2,7 @@ var pool = require('../db.js');
 
 // add query functions
 function getAllPlacesAvail(req, res, next) {
-  pool.query('select places_availabilities.id,name,bed_quantity,to_char(start_avail,\'DD/MM/YYYY HH24:MI\') as start_avail,to_char(end_avail,\'DD/MM/YYYY HH24:MI\') as end_avail from places_availabilities join places on places_availabilities.places_id = places.id',(err,rows) =>  {
+  pool.query('select places_availabilities.id as id,name,bed_quantity,to_char(start_avail,\'DD/MM/YYYY HH24:MI\') as start_avail,to_char(end_avail,\'DD/MM/YYYY HH24:MI\') as end_avail from places_availabilities join places on places_availabilities.places_id = places.id',(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
   })
@@ -26,8 +26,18 @@ function deletePlacesAvail(req, res, next) {
   });
 }
 
+function updatePlacesAvail(req, res, next) {
+  console.log(req.body);
+  pool.query('update places_availabilities set start_avail = $1,end_avail = $2,bed_quantity = $3,places_id = $4 where id = $5',
+  [req.body.start_avail,req.body.end_avail,req.body.bed_quantity,req.body.places_id,req.body.id],(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
+}
+
 module.exports = {
     getAllPlacesAvail: getAllPlacesAvail,
     addPlacesAvail : addPlacesAvail,
-    deletePlacesAvail : deletePlacesAvail
+    deletePlacesAvail : deletePlacesAvail,
+    updatePlacesAvail : updatePlacesAvail
 };

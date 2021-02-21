@@ -25,8 +25,16 @@ function deleteEquipments(req, res, next) {
   });
 }
 
+function updateEquipments(req, res, next) {
+  pool.query('update equipments set name = $1 where id = $2',[req.body.name,req.body.id],(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
+}
+
 module.exports = {
   getAllEquipments: getAllEquipments,
   addEquipments : addEquipments,
-  deleteEquipments : deleteEquipments
+  deleteEquipments : deleteEquipments,
+  updateEquipments : updateEquipments
 };
