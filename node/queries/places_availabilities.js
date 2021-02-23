@@ -27,7 +27,6 @@ function deletePlacesAvail(req, res, next) {
 }
 
 function updatePlacesAvail(req, res, next) {
-  console.log(req.body);
   pool.query('update places_availabilities set start_avail = $1,end_avail = $2,bed_quantity = $3,places_id = $4 where id = $5',
   [req.body.start_avail,req.body.end_avail,req.body.bed_quantity,req.body.places_id,req.body.id],(err,rows) =>  {
     if (err) throw err;

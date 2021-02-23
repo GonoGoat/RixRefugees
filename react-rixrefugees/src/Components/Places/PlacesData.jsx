@@ -3,7 +3,7 @@ import React from "react";
 import ListingGrid from "../utils/ListingGrid";
 import ListingTab from "../utils/ListingTab";
 import LoadingIndicator from "../utils/LoadingIndicator";
-import DataList from "./PlacesDataList";
+import DataList from "../utils/DataList";
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
 import PlacesForm from '../Forms/PlacesForm';
@@ -135,7 +135,7 @@ function PlacesData(props) {
                 <EditButton disabled={selected.length != 1 && props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
             {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} form={props.api}/> :
-             <DataList setLoading={(load) => setLoading(load)} id={id}/>) : ''
+             <DataList data={data[data.findIndex(obj => obj.id === id)]}/>) : ''
             }
         </div>
         

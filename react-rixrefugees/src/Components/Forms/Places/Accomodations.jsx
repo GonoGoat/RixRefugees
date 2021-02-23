@@ -17,7 +17,7 @@ function Accomodations(props) {
                 <FormControl>
                     <InputLabel>Lieu d'hébergement</InputLabel>
                     <Select
-                        value={props.data[props.data.findIndex((obj) => obj.id === props.value.places)]}
+                        value={props.data[props.data.findIndex((obj) => obj.id === props.value.places_id)]}
                         onChange={props.handleInputChange}
                         name="places_id"
                     >
@@ -33,8 +33,9 @@ function Accomodations(props) {
                     <FormGroup>
                         {props.header.map((obj,index) => 
                             <FormControlLabel
-                                control={<Checkbox checked={props.value.equipments[index]} name={index.toString()} onChange={props.toggleAccomodations}/>}
+                                control={<Checkbox checked={props.value.equipments[index]} name={index.toString()} onChange={props.toggleAccomodation}/>}
                                 label = {obj.name}
+                                disabled={props.value.places_id === 0}
                             />
                         )}
                     </FormGroup>

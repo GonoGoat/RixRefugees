@@ -25,7 +25,7 @@ function PlacesForm(props) {
             description : ''
         },
         accomodations : {
-            places : 0,
+            places_id : 0,
             equipments : []
         },
         places_avail : {
@@ -37,9 +37,21 @@ function PlacesForm(props) {
     });
 
     React.useEffect(() => {
-        console.log(formValues);
-        if (props.edit) {    
-            if (props.form != '/accomodations') {
+        if (props.edit) {
+            if (props.form === '/accomodations') {
+                let x = []
+                for (let i =0;i<props.data[0].check.length;i++) {
+                    x.push(false)
+                }
+                setFormValues({
+                    ...formValues,
+                    accomodations : {
+                        places_id : 0,
+                        equipments : x
+                    }
+                });
+            }
+            else {
                 let key = props.form.substr(1);
                 setFormValues({
                     ...formValues,
@@ -49,11 +61,25 @@ function PlacesForm(props) {
         }
     }, [props.selected,props.data])
 
+    //Submit button for Accomodations and the others
     async function handleSubmit() {
         setLoading(true);
-        let key = props.form.substr(1);
-        if (props.edit) {
-            await axios.put(`${process.env.REACT_APP_API}${props.form}/update`, formValues[key])
+        if (props.form === '/accomodations') {
+            await axios.delete(`${process.env.REACT_APP_API}/accomodations/delete`, {places : formValues.accomodations.places_id})
+            .then(res => {
+                setLoading(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+            let acc = [];
+            let head = props.header.slice(1);
+            for (let i = 0;i<head;i++) {
+                if (formValues.equipments[i] === true) {
+                    acc.push(head.id);
+                }
+            }
+            await axios.post(`${process.env.REACT_APP_API}/accomodations/add`, {places : formValues.accomodations.places_id,equipments : acc})
             .then(res => {
                 setLoading(false);
             })
@@ -62,31 +88,47 @@ function PlacesForm(props) {
             });
         }
         else {
-            await axios.post(`${process.env.REACT_APP_API}${props.form}/add`, formValues[key])
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            let key = props.form.substr(1);
+            if (props.edit) {
+                await axios.put(`${process.env.REACT_APP_API}${props.form}/update`, formValues[key])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                await axios.post(`${process.env.REACT_APP_API}${props.form}/add`, formValues[key])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
         }
     }
 
+    // Select of Accomodations
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         let key = props.form.substr(1);
         let next = formValues[key];
         next[name] = value;
+        next.equipments = props.data[props.data.findIndex(obj => obj.id === value)].check;
         setFormValues({
           ...formValues,
           [key]: next
         });
     };
 
+    // CheckBox of Accomodations
     const toggleAccomodation = (e) => {
         let index = e.target.name;
         let next = formValues.accomodations;
         next.equipments[index] = !next.equipments[index];
+        console.log(next);
         setFormValues({
           ...formValues,
           accomodations: next
@@ -97,7 +139,7 @@ function PlacesForm(props) {
         switch (props.form) {
             case '/equipments':
                 return (
-                    <Equipments init={props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]} value={formValues.equipments} handleInputChange={handleInputChange}/>
+                    <Equipments value={formValues.equipments} handleInputChange={handleInputChange}/>
                 );
             case '/places' : 
                 return (
@@ -105,7 +147,7 @@ function PlacesForm(props) {
                 );
             case '/accomodations' : 
                 return (
-                    <Accomodations header = {props.header.slice(1)} data={props.data} value={formValues.accomodations} handleInputChange={handleInputChange} toggleAccomodation={(e) => toggleAccomodation(e)}/>
+                    <Accomodations header = {props.header.slice(1)} data={props.data} value={formValues.accomodations} handleInputChange={handleInputChange} toggleAccomodation={toggleAccomodation}/>
                 );
             case '/places_avail' :
                 return (
