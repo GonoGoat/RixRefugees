@@ -9,6 +9,7 @@ function getAllAccomodations(req, res, next) {
 }
 
 function addAllAccomodations(req, res, next) {
+  console.log(req.body);
   let e = req.body.equipments;
   e.map((obj) => {
     pool.query('insert into accomodations (equipments_id,places_id) values ($1,$2)',[obj,req.body.places],(err,rows) =>  {

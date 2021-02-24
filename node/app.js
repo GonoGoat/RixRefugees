@@ -13,6 +13,7 @@ var placesRouter = require('./routes/places');
 var equipmentsRouter = require('./routes/equipments')
 var accomodationsRouter = require('./routes/accomodations')
 var placesAvailRouter = require('./routes/places_availabilities')
+var sessionsRouter = require('./routes/sessions');
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use('/api/places_avail', placesAvailRouter)
 app.use('/api/accomodations',accomodationsRouter)
 app.use('/api/equipments',equipmentsRouter)
 app.use('/api/places',placesRouter);
+app.use('/api/sessions',sessionsRouter);
 app.use('*', reactRouter);
 
 app.all("/*", function(req, res, next){

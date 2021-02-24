@@ -74,9 +74,9 @@ function PlacesForm(props) {
             });
             let acc = [];
             let head = props.header.slice(1);
-            for (let i = 0;i<head;i++) {
-                if (formValues.equipments[i] === true) {
-                    acc.push(head.id);
+            for (let i = 0;i<head.length;i++) {
+                if (props.data[props.data.findIndex(obj => obj.id === formValues.accomodations.places_id)].check[i] === true) {
+                    acc.push(head[i].id);
                 }
             }
             await axios.post(`${process.env.REACT_APP_API}/accomodations/add`, {places : formValues.accomodations.places_id,equipments : acc})
@@ -128,7 +128,6 @@ function PlacesForm(props) {
         let index = e.target.name;
         let next = formValues.accomodations;
         next.equipments[index] = !next.equipments[index];
-        console.log(next);
         setFormValues({
           ...formValues,
           accomodations: next
