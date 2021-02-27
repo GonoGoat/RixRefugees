@@ -19,7 +19,7 @@ function Pannel_admin() {
                 <ListItemText><Link to="/manage/friends">Amis</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/sessions">Sessions</Link></ListItemText>
+                <ListItemText><Link to="/manage/places">Sessions et lieux d'hébergement</Link></ListItemText>
             </ListItem>
             <ListItem>
                 <ListItemText><Link to="/manage/assignments">Assignations</Link></ListItemText>

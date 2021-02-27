@@ -7,13 +7,16 @@ import Equipments from "./Places/Equipments";
 import Places from "./Places/Places";
 import PlacesAvail from "./Places/PlacesAvail";
 import Accomodations from "./Places/Accomodations"
+import Sessions from './Places/Sessions';
 
 function PlacesForm(props) {
 
     const axios = require('axios');
     const moment = require('moment');
 
-    const date = moment().format("YYYY-MM-DDThh:mm");
+    const dateTime = moment().format("YYYY-MM-DDThh:mm");
+    const date = moment().format("YYYY-MM-DD");
+
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
         equipments : {
@@ -29,10 +32,16 @@ function PlacesForm(props) {
             equipments : []
         },
         places_avail : {
-            start_avail : date,
-            end_avail : date,
+            start_avail : dateTime,
+            end_avail : dateTime,
             bed_quantity : 0,
             places_id : 0,
+        },
+        sessions : {
+            users_id : 0,
+            start_date : date,
+            end_date : date,
+            places_availabilities_id : 0
         }
     });
 
@@ -65,7 +74,7 @@ function PlacesForm(props) {
     async function handleSubmit() {
         setLoading(true);
         if (props.form === '/accomodations') {
-            await axios.delete(`${process.env.REACT_APP_API}/accomodations/delete`, {places : formValues.accomodations.places_id})
+            await axios.delete(`${process.env.REACT_APP_API}/accomodations/delete`, {data : {places_id : formValues.accomodations.places_id}})
             .then(res => {
                 setLoading(false);
             })
@@ -116,7 +125,9 @@ function PlacesForm(props) {
         let key = props.form.substr(1);
         let next = formValues[key];
         next[name] = value;
-        next.equipments = props.data[props.data.findIndex(obj => obj.id === value)].check;
+        if (props.form === '/accomodations') {
+            next.equipments = props.data[props.data.findIndex(obj => obj.id === value)].check;
+        }
         setFormValues({
           ...formValues,
           [key]: next
@@ -152,6 +163,10 @@ function PlacesForm(props) {
                 return (
                     <PlacesAvail value={formValues.places_avail} handleInputChange={handleInputChange}/>
                 );
+            case '/sessions' :
+                return (
+                    <Sessions value={formValues.sessions} handleInputChange={handleInputChange}/>
+                )
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
         }

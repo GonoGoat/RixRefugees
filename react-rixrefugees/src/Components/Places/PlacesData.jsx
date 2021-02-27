@@ -9,6 +9,9 @@ import DeleteButton from "../utils/Buttons/DeleteButton";
 import PlacesForm from '../Forms/PlacesForm';
 import EditButton from "../utils/Buttons/EditButton";
 
+import {placesDataListKeys} from "../../utils/DataListKeys/places";
+import {sessionsDataListKeys} from '../../utils/DataListKeys/sessions';
+
 function PlacesData(props) {
     const [data,setData] = React.useState([]);
     const [loading,setLoading] = React.useState(false);
@@ -121,12 +124,28 @@ function PlacesData(props) {
         });
     }
 
+    function getDataList() {
+        let keys;
+        switch (props.api) {
+            case '/places' :
+                keys = placesDataListKeys;
+                break;
+            case '/sessions' :
+                keys = sessionsDataListKeys;
+                break;
+            default :
+                break;
+        }
+        let api = `${props.api}/${id}`
+        return <DataList keys={keys} api={api} />
+    }
+
     return (
         <div>
             {data.length === 0 ? '' : 
                 (loading === true ? <LoadingIndicator/> : 
                     (isTab === true ? <ListingTab rows={data} header={columns}/> : 
-                        <ListingGrid setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
+                        <ListingGrid filter={props.api === '/sessions'} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
                 )
             }
             <div>
@@ -135,7 +154,7 @@ function PlacesData(props) {
                 <EditButton disabled={selected.length != 1 && props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
             {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} form={props.api}/> :
-             <DataList data={data[data.findIndex(obj => obj.id === id)]}/>) : ''
+             getDataList()) : ''
             }
         </div>
         

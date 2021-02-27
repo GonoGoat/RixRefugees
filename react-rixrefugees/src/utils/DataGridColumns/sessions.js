@@ -9,14 +9,14 @@ const sessionList = [
     },
     {
         field : 'start_date',
-        headerName : 'Date de début',
+        headerName : 'Date de début de la session',
         flex : 1,
         type : 'date',
         valueFormatter : (params) => moment(params.value).format('DD/MM/YYYY')
     },
     {
         field : 'end_date',
-        headerName : 'Date de fin',
+        headerName : 'Date de fin de la session',
         flex : 1,
         type : 'date',
         valueFormatter : (params) => moment(params.value).format('DD/MM/YYYY')

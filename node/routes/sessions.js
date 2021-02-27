@@ -5,8 +5,8 @@ var db = require('../queries/sessions');
 
 
 router.get('/', db.getAllSessions);
-/*router.get('/:id',db.getPlacesInfo);
-router.post('/add',db.addPlaces);
+router.get('/:id',db.getSessionsInfo);
+/*router.post('/add',db.addPlaces);
 router.delete('/delete',db.deletePlaces);
 router.put('/update',db.updatePlaces);*/
 

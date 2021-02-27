@@ -20,7 +20,7 @@ function addAllAccomodations(req, res, next) {
 }
 
 function deleteAllAccomodations(req, res, next) {
-  pool.query('delete from accomodations where places_id = ($1)',[req.body.places],(err,rows) =>  {
+  pool.query('delete from accomodations where places_id = ($1)',[req.body.places_id],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })
