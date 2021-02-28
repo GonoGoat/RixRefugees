@@ -68,12 +68,13 @@ create table Web (
 	slug varchar(60) PRIMARY KEY, /*OK*/
 	title varchar(60) NOT NULL, /*OK*/
 	content text, /*OK*/
-	last_change timestamp(0) NOT NULL default current_date,
+	last_change timestamp(0) without time zone NOT NULL default current_date,
 
 	users_id int,
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id)
+			on Delete set null
 );
 
 create table Accomodations (
@@ -82,11 +83,13 @@ create table Accomodations (
 	places_id int,
 	constraint fk__places__id /*OK*/
 		foreign key (places_id)
-			references Places(id),
+			references Places(id)
+			on Delete Cascade,
 	equipments_id int,
 	constraint fk__equipments__id /*OK*/
 		foreign key (equipments_id)
 			references Equipments(id)
+			on Delete Cascade
 );
 
 create table Registrations (
@@ -97,6 +100,7 @@ create table Registrations (
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id)
+			on Delete Cascade
 );
 
 create table Friends (
@@ -114,6 +118,7 @@ create table Friends (
 	constraint fk__status__id /*OK*/
 		foreign key (status_id)
 			references Status(id)
+			on Delete set null
 );
 
 /******************RANGEE N°3************/
@@ -127,23 +132,26 @@ create table Appointments (
 	status_id int,
 	constraint fk__status__id /*OK*/
 		foreign key (status_id)
-			references Status(id),
+			references Status(id)
+			on Delete set null,
 	friends_id int,
 	constraint fk__friends__id /*OK*/
 		foreign key (friends_id)
 			references Friends(id)
+			on Delete cascade
 );
 
-create table Accomodations_period (
+create table Places_availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	start_avail timestamp(0) NOT NULL, /*OK*/
-	end_avail timestamp(0) NOT NULL, /*OK*/
+	start_avail timestamp(0) without time zone NOT NULL, /*OK*/
+	end_avail timestamp(0) without time zone NOT NULL, /*OK*/
 	bed_quantity int default 0 NOT NULL, /*OK*/
 
-	accomodations_id int,
-	constraint fk__accomodations__id /*OK*/
-		foreign key (accomodations_id)
-			references Accomodations(id)
+	places_id int,
+	constraint fk__Places__id /*OK*/
+		foreign key (places_id)
+			references Places(id)
+			on delete set null
 );
 
 /******************RANGEE N°4************/
@@ -156,11 +164,13 @@ create table Sessions (
 	users_id int,
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
-			references Users(id),
-	accomodations_period_id int,
-	constraint fk__accomodations_period__id /*OK*/
-		foreign key (accomodations_period_id)
-			references Accomodations_period(id)
+			references Users(id)
+			on Delete set null,
+	places_availabilities_id int,
+	constraint fk__places_availabilities__id /*OK*/
+		foreign key (places_availabilities_id)
+			references Places_availabilities(id)
+			on Delete set null
 );
 
 /******************RANGEE N°5************/
@@ -170,17 +180,19 @@ create table Sessions_tasks (
 	isFromAdmin boolean NOT NULL default true, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
-	start_date timestamp(0) default current_date,
-	end_date timestamp(0),
+	start_date timestamp(0) without time zone default current_date,
+	end_date timestamp(0) without time zone,
 
 	tasks_id int,
 	constraint fk__tasks__id /*OK*/
 		foreign key (tasks_id)
-			references Tasks(id),
+			references Tasks(id)
+			on Delete cascade,
 	sessions_id int,
 	constraint fk__sessions__id /*OK*/
 		foreign key (id)
 			references Sessions(id)
+			on Delete set null
 );
 
 /******************RANGEE N°6************/
@@ -193,25 +205,29 @@ create table Availabilities (
 	users_id int,
 	constraint fk__users__id /*OK*/
 		foreign key (id)
-			references Users(id),
+			references Users(id)
+			on Delete cascade,
 	sessions_tasks_id int,
 	constraint fk__session_tasks__id /*OK*/
 		foreign key (id)
 			references Sessions_tasks(id)
+			on Delete cascade
 );
 
 /******************RANGEE N°7************/
 
 create table Assignments (
-	id  SERIAL PRIMARY KEY, /*OK*/
+	id SERIAL PRIMARY KEY, /*OK*/
 	feedback text,
 
 	friends_id int,
 	constraint fk__friends__id /*OK*/
 		foreign key (id)
-			references Friends(id),
+			references Friends(id)
+			on Delete cascade,
 	availabilities_id int,
 	constraint fk__availabilities__id /*OK*/
 		foreign key (availabilities_id)
 			references Availabilities(id)
+			on Delete cascade
 );
