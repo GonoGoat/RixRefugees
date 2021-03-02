@@ -7,6 +7,8 @@ function Sessions (props) {
     const [users,setUsers] = React.useState();
     const [places_avail,setPlaces_avail] = React.useState();
 
+    const axios = require('axios');
+
     React.useEffect(() => {
         axios.get(`${process.env.REACT_APP_API}/places_availabilities`)
         .then(res => {
