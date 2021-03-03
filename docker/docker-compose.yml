@@ -11,11 +11,11 @@ services :
          - ./database:/docker-entrypoint-initdb.d
         environment:
          POSTGRES_PASSWORD: /run/secrets/db_password
-         POSTGRES_USER : /run/secrets/db_user
+         POSTGRES_USER : /run/secrets/db_username
          POSTGRES_DB : /run/secrets/db_name
         secrets:
          - db_password
-         - db_user
+         - db_username
          - db_name
         networks:
             rixrefugees:
@@ -35,7 +35,7 @@ services :
             rixrefugees:
                 ipv4_address: 172.18.0.3
 secrets:
-    db_user:
+    db_username:
         file : /home/secrets/PG_USER.txt
     db_password:
         file : /home/secrets/PG_PASSWORD.txt
