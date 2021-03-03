@@ -1,0 +1,51 @@
+version : '3.3'
+
+services :
+
+    postgresqldb :
+        image : postgres
+        container_name: pg
+        tty : true
+        volumes:
+         - /home/backup/postgresdata:/var/lib/postgresql/data
+         - ./database:/docker-entrypoint-initdb.d
+        environment:
+         POSTGRES_PASSWORD: /run/secrets/db_password
+         POSTGRES_USER : /run/secrets/db_user
+         POSTGRES_DB : /run/secrets/db_name
+        secrets:
+         - db_password
+         - db_user
+         - db_name
+        networks:
+            rixrefugees:
+                ipv4_address: 172.18.0.2
+
+
+    node:
+        build : "./Node"
+        container_name: api
+        tty: true
+        ports:
+         - "80:80"
+         - "443:443"
+        depends_on :
+         - postgresqldb
+        networks:
+            rixrefugees:
+                ipv4_address: 172.18.0.3
+secrets:
+    db_user:
+        file : /home/secrets/PG_USER.txt
+    db_password:
+        file : /home/secrets/PG_PASSWORD.txt
+    db_name:
+        file : /home/secrets/PG_DB.txt
+
+networks:
+    rixrefugees:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.18.0.0/24
