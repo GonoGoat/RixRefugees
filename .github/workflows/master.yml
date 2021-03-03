@@ -1,0 +1,21 @@
+name: CI on update of the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+
+  build:
+    name: Intégration serveur PROD
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update de l'API
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          sudo echo 'Hello world'
