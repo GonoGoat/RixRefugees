@@ -24,6 +24,7 @@ jobs:
           sudo docker build ./Node -t gonogoat/rixrefugees:api
           sudo docker push gonogoat/rixrefugees:api
           sudo docker-compose up -d
+          sudo docker exec api git pull
           sudo docker exec api npm install /home/RixRefugees/node
           sudo docker exec api npm install /home/RixRefugees/react-rixrefugees
           sudo docker exec api sh -c "cd /home/RixRefugees/react-rixrefugees && npm run build"
