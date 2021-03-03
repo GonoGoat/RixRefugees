@@ -2,7 +2,7 @@ import React from "react";
 import './App.css';
 import 'fontsource-roboto';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places} from "./Components"
+import {Accueil, Header, About,Places,Footer} from "./Components"
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
           <Route path="/about" exact component={() => <About />} />
           <Route path="/manage/places" exact component={() => <Places />} />
         </Switch>
+        <Footer/>
       </Router>
     </div>
   );
