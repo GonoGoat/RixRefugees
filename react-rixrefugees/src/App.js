@@ -14,7 +14,6 @@ function App() {
           <Route path="/about" exact component={() => <About />} />
           <Route path="/manage/places" exact component={() => <Places />} />
         </Switch>
-        <Footer/>
       </Router>
     </div>
   );
