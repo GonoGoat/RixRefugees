@@ -1,4 +1,4 @@
-name: CI on update of the master branch
+name: CI [master]
 on:
   push:
     branches: [ master ]
@@ -18,4 +18,13 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo echo 'Hello world !'
+          sudo docker exec api pm2 stop /home/RixRefugees/node/bin/www
+          sudo cd /home/gauth/RixRefugees/docker
+          sudo docker-compose down
+          sudo docker build ./Node -t gonogoat/rixrefugees:api
+          sudo docker push gonogoat/rixrefugees:api
+          sudo docker-compose up -d
+          sudo docker exec api npm install /home/RixRefugees/node
+          sudo docker exec api npm install /home/RixRefugees/react-rixrefugees
+          sudo docker exec api sh -c "cd /home/RixRefugees/react-rixrefugees && npm run build"
+          sudo docker exec api pm2 start /home/RixRefugees/node/bin/www
