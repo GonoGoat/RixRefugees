@@ -6,7 +6,7 @@ import LoadingIndicator from "../utils/LoadingIndicator";
 import DataList from "../utils/DataList";
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
-import PlacesForm from '../Forms/PlacesForm';
+import PlacesForm from '../Forms/Places/PlacesForm';
 import EditButton from "../utils/Buttons/EditButton";
 
 import {placesDataListKeys} from "../../utils/DataListKeys/places";

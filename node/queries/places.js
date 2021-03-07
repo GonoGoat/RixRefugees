@@ -27,9 +27,9 @@ function deletePlaces(req, res, next) {
   e.map((obj) => {
     pool.query('delete from places where id = ($1)',[obj],(err,rows) =>  {
       if (err) throw err;
-      return res.send({data : true});
     })
   });
+  return res.send({data : true});
 }
 
 function updatePlaces(req, res, next) {

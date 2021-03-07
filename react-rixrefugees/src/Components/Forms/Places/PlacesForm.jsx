@@ -2,12 +2,12 @@ import React from "react";
 import {Grid,Button,Modal} from "@material-ui/core"
 import "date-fns";
 
-import LoadingIndicator from "../utils/LoadingIndicator";
-import Equipments from "./Places/Equipments";
-import Places from "./Places/Places";
-import PlacesAvail from "./Places/PlacesAvail";
-import Accomodations from "./Places/Accomodations"
-import Sessions from './Places/Sessions';
+import LoadingIndicator from "../../utils/LoadingIndicator";
+import Equipments from "./Equipments";
+import Places from "./Places";
+import PlacesAvail from "./PlacesAvail";
+import Accomodations from "./Accomodations"
+import Sessions from './Sessions';
 
 function PlacesForm(props) {
 

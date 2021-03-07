@@ -21,9 +21,9 @@ function deletePlacesAvail(req, res, next) {
   e.map((obj) => {
     pool.query('delete from places_availabilities where id = ($1)',[obj],(err,rows) =>  {
       if (err) throw err;
-      return res.send({data : true});
     })
   });
+  return res.send({data : true});
 }
 
 function updatePlacesAvail(req, res, next) {

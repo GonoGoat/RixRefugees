@@ -20,9 +20,9 @@ function deleteEquipments(req, res, next) {
   e.map((obj) => {
     pool.query('delete from equipments where id = ($1)',[obj],(err,rows) =>  {
       if (err) throw err;
-      return res.send({data : true});
     })
   });
+  return res.send({data : true});
 }
 
 function updateEquipments(req, res, next) {
