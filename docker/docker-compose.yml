@@ -21,7 +21,6 @@ services :
             rixrefugees:
                 ipv4_address: 172.18.0.2
 
-
     node:
         build : "./Node"
         container_name: api
@@ -34,6 +33,26 @@ services :
         networks:
             rixrefugees:
                 ipv4_address: 172.18.0.3
+
+    pgadmin :
+        image : dpage/pgadmin4
+        container_name: pgadmin
+        tty : true
+        #volumes:
+        # - /home/backup/postgresdata:/var/lib/postgresql/data
+        # - ./database:/docker-entrypoint-initdb.d
+        ports:
+         - "80:8000"
+         - "443:4430"
+        environment:
+         PGADMIN_DEFAULT_EMAIL: /run/secrets/pga_email
+         PGADMIN_DEFAULT_PASSWORD: /run/secrets/pga_password
+        secrets:
+         - pga_email
+         - pga_password
+        networks:
+            rixrefugees:
+                ipv4_address: 172.18.0.4
 secrets:
     db_user:
         file : /home/secrets/PG_USER.txt
@@ -41,6 +60,10 @@ secrets:
         file : /home/secrets/PG_PASSWORD.txt
     db_name:
         file : /home/secrets/PG_DB.txt
+    pga_email:
+        file : /home/secrets/PGA_EMAIL.txt
+    pga_password:
+        file : /home/secrets/PGA_PASSWORD.txt
 
 networks:
     rixrefugees:
