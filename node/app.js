@@ -15,6 +15,7 @@ var accomodationsRouter = require('./routes/accomodations')
 var placesAvailRouter = require('./routes/places_availabilities')
 var sessionsRouter = require('./routes/sessions');
 var usersRouter = require ('./routes/users')
+var tasksRouter = require ('./routes/tasks')
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/equipments',equipmentsRouter)
 app.use('/api/places',placesRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use('/api/users',usersRouter);
+app.use('/api/tasks',tasksRouter)
 
 app.use('*', reactRouter);
 

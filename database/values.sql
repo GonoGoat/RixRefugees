@@ -11,3 +11,6 @@ insert into users (password,fname,lname,mail,isAdmin,isActive,lastActivity,conta
     ('test123','admin','admin','admin@admin.com',true,true,now(),'');
 insert into sessions (start_date,end_date,users_id,places_availabilities_id) 
     values (now(),now(),1,1),('2050-06-12','2050-06-12',1,2),(now(),now(),3,3)
+
+--Taches et taches de sessions--
+insert into tasks (name) values ('tache1'), ('tache2'), ('tache3');

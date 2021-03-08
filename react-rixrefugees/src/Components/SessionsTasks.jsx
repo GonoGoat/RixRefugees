@@ -3,6 +3,10 @@ import React from "react";
 import Button from '@material-ui/core/Button';
 
 import Managment from './SessionsTasks/Managment';
+import SessionsTasksTab from './SessionsTasks/SessionsTasksTab';
+
+import {sessionList} from "../utils/DataGridColumns/sessions";
+import {tasksList} from "../utils/DataGridColumns/tasks";
 
 function SessionTasks() {
     const [api,setApi] = React.useState();
@@ -10,11 +14,11 @@ function SessionTasks() {
     function displayInformations() {
         switch(api) {
             case 'tasks' :
-                return <Managment api={api}/>
+                return <Managment api={api} options={tasksList}/>
             case 'sessions' :
-                return <Managment api={api}/>
+                return <Managment api={api} options={sessionList}/>
             case 'sessionsTasks' :
-                return 'Other'
+                return <SessionsTasksTab/>
         }
     }
 
@@ -25,9 +29,7 @@ function SessionTasks() {
                 <Button onClick={() => setApi('sessions')}>Sessions</Button>
                 <Button onClick={() => setApi('sessionsTasks')}>Gestion des tâches des sessions</Button>
             </div>
-            <div>
-                {displayInformations()}
-            </div>
+            {displayInformations()}
         </div>
     )
 }

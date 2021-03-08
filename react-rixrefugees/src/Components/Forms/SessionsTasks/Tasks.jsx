@@ -1,13 +1,13 @@
 import React from "react";
 import {Grid,TextField} from "@material-ui/core"
 
-function Equipments (props) {
+function Tasks (props) {
     
     return (
         <Grid item>
             <TextField
                 name="name"
-                label="Nom de l'équipement"
+                label="Nom de la tâche"
                 type="text"
                 value={props.value.name}
                 onChange={props.handleInputChange}
@@ -16,4 +16,4 @@ function Equipments (props) {
         </Grid> 
     )
 }
-export default Equipments;
+export default Tasks;
