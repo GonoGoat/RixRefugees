@@ -2,7 +2,7 @@ import React from "react";
 import './App.css';
 import 'fontsource-roboto';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks} from "./Components"
+import {Accueil, Header, About,Places,SessionsTasks,Footer} from "./Components"
 
 import {useSelector,useDispatch} from "react-redux";
 
@@ -26,6 +26,7 @@ function App() {
           : ''
         }
         </Switch>
+
       </Router>
     </div>
   );
