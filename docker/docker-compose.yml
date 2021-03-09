@@ -32,6 +32,8 @@ services :
         image : dpage/pgadmin4
         container_name: pgadmin
         tty : true
+        volumes:
+        - /home/backup/pgadmin:/var/lib/pgadmin #sudo chown -R 5050:5050 <host_directory>
         ports:
          - "8000:80"
          - "4430:443"
