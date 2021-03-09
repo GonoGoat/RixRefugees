@@ -31,7 +31,7 @@ const places_availabilitiesList =
     },
     {
         field : 'bed_quantity',
-        headerName : 'Nombre de lit disponible',
+        headerName : 'Nombre de lits disponibles',
         flex : 1,
         type : 'number'
     }
