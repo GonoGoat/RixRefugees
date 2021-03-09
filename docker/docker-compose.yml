@@ -32,9 +32,8 @@ services :
         image : dpage/pgadmin4
         container_name: pgadmin
         tty : true
-        #volumes:
-        # - /home/backup/postgresdata:/var/lib/postgresql/data
-        # - ./database:/docker-entrypoint-initdb.d
+        volumes:
+        - /home/backup/pgadmin:/var/lib/pgadmin
         ports:
          - "8000:80"
          - "4430:443"
