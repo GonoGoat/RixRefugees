@@ -6,9 +6,8 @@ var db = require('../queries/sessions');
 
 router.get('/', db.getAllSessions);
 router.get('/:id',db.getSessionsInfo);
-/*router.post('/add',db.addPlaces);
-router.delete('/delete',db.deletePlaces);
-router.put('/update',db.updatePlaces);*/
-
+router.post('/add',db.addSessions);
+router.delete('/delete',db.deleteSessions);
+router.put('/update',db.updateSessions);
 
 module.exports = router;

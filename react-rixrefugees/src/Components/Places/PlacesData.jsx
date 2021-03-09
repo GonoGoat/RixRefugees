@@ -4,9 +4,10 @@ import ListingGrid from "../utils/ListingGrid";
 import ListingTab from "../utils/ListingTab";
 import LoadingIndicator from "../utils/LoadingIndicator";
 import DataList from "../utils/DataList";
+import PlacesForm from '../Forms/Places/PlacesForm';
+
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
-import PlacesForm from '../Forms/PlacesForm';
 import EditButton from "../utils/Buttons/EditButton";
 
 import {placesDataListKeys} from "../../utils/DataListKeys/places";
