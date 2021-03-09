@@ -31,4 +31,4 @@ jobs:
           sudo docker exec api npm install /home/RixRefugees/node
           sudo docker exec api npm install /home/RixRefugees/react-rixrefugees
           sudo docker exec api sh -c "cd /home/RixRefugees/react-rixrefugees && npm run build"
-          sudo docker exec -i api pm2 start /home/RixRefugees/node/bin/www
+          sudo docker exec -it api pm2 start /home/RixRefugees/node/bin/www
