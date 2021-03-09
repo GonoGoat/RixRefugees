@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-const places_availabilitiesList = 
+const places_availList = 
 [
     {
         field : 'id',
@@ -39,5 +39,5 @@ const places_availabilitiesList =
 ;
 
 module.exports = {
-    pavailList : places_availabilitiesList
+    pavailList : places_availList
 }
