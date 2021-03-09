@@ -42,6 +42,8 @@ services :
         ports:
          - "8000:80"
          - "4430:443"
+        env_file: 
+         - ./secrets/PGA/.env
         environment:
          PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
          PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
