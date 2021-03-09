@@ -11,10 +11,6 @@ services :
          - ./database:/docker-entrypoint-initdb.d
         env_file: 
          - ./secrets/PG/.env
-        environment:
-         POSTGRES_PASSWORD: ${PG_PASSWORD}
-         POSTGRES_USER : ${PG_USER}
-         POSTGRES_DB : ${PG_DB}
         networks:
             rixrefugees:
                 ipv4_address: 172.18.0.2
@@ -44,9 +40,6 @@ services :
          - "4430:443"
         env_file: 
          - ./secrets/PGA/.env
-        environment:
-         PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
-         PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
         networks:
             rixrefugees:
                 ipv4_address: 172.18.0.4
