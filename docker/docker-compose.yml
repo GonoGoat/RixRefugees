@@ -16,7 +16,7 @@ services :
                 ipv4_address: 172.18.0.2
 
     node:
-        build : "./Node"
+        image : gonogoat/rixrefugees:api
         container_name: api
         tty: true
         ports:
