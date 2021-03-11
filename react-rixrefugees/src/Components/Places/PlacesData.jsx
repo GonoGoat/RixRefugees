@@ -146,7 +146,7 @@ function PlacesData(props) {
             {data.length === 0 ? '' : 
                 (loading === true ? <LoadingIndicator/> : 
                     (isTab === true ? <ListingTab rows={data} header={columns}/> : 
-                        <ListingGrid filter={props.api === '/sessions'} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
+                        <ListingGrid api={props.api} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
                 )
             }
             <div>
