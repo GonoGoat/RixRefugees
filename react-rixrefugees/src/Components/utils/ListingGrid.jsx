@@ -8,11 +8,13 @@ import Select from "@material-ui/core/Select";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import '../../Style/ListingGrid.css';
+import classes from '../../Style/ListingGrid';
+const useStyles = classes;
 
 function ListingGrid (props) {
     const [filter,setFilter] = React.useState({state : false,selected : 0});
     const [placesFilter, setPlaces] = React.useState([]);
+    const styles= useStyles();
 
     const axios = require('axios');
 
@@ -53,7 +55,7 @@ function ListingGrid (props) {
       };
 
     return (
-        <div id='tab'>
+        <div className={styles.tab}>
             <Grid container alignItems="center" justify="center" direction="row">
                 {props.api === '/sessions' && placesFilter.length > 0 ? 
                     <Grid item>

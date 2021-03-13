@@ -1,5 +1,9 @@
 import React from "react";
-import {Grid,Button,Modal} from "@material-ui/core"
+import {makeStyles} from '@material-ui/core/styles';
+
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
 import "date-fns";
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
@@ -9,6 +13,19 @@ import PlacesAvail from "./PlacesAvail";
 import Accomodations from "./Accomodations"
 import Sessions from './Sessions';
 
+const classes = makeStyles((theme) => ({
+    paper: {
+        position: 'absolute',
+        width: 400,
+        top : '50%',
+        left : '50%',
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
+}));
+const useStyles = classes;
+
 function PlacesForm(props) {
 
     const axios = require('axios');
@@ -17,6 +34,7 @@ function PlacesForm(props) {
     const dateTime = moment().format("YYYY-MM-DDThh:mm");
     const date = moment().format("YYYY-MM-DD");
 
+    const styles = useStyles();
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
         equipments : {
@@ -184,6 +202,7 @@ function PlacesForm(props) {
             <Modal
                 open={true}
                 onClose={() => props.stopForm()}
+                className={styles.paper}
             >
                 <form>
                     <Grid container alignItems="center" justify="center" direction="column">
