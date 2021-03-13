@@ -143,10 +143,10 @@ function PlacesData(props) {
 
     return (
         <div>
-            {data.length === 0 ? '' : 
+            {data.length === 0 ? <React.Fragment/> : 
                 (loading === true ? <LoadingIndicator/> : 
                     (isTab === true ? <ListingTab rows={data} header={columns}/> : 
-                        <ListingGrid filter={props.api === '/sessions'} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
+                        <ListingGrid api={props.api} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>)
                 )
             }
             <div>
@@ -155,7 +155,7 @@ function PlacesData(props) {
                 <EditButton disabled={selected.length != 1 && props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
             {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} form={props.api}/> :
-             getDataList()) : ''
+             getDataList()) : <React.Fragment/>
             }
         </div>
         

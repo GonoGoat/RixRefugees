@@ -1,5 +1,9 @@
 import React from "react";
-import {Grid,Button,Modal} from "@material-ui/core"
+import {makeStyles} from '@material-ui/core/styles';
+
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
 import "date-fns";
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
@@ -9,6 +13,13 @@ import PlacesAvail from "./PlacesAvail";
 import Accomodations from "./Accomodations"
 import Sessions from './Sessions';
 
+const classes = makeStyles({
+    window : {
+        height : 500,
+    },
+  });
+const useStyles = classes;
+
 function PlacesForm(props) {
 
     const axios = require('axios');
@@ -17,6 +28,7 @@ function PlacesForm(props) {
     const dateTime = moment().format("YYYY-MM-DDThh:mm");
     const date = moment().format("YYYY-MM-DD");
 
+    const styles = useStyles();
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
         equipments : {
@@ -181,11 +193,8 @@ function PlacesForm(props) {
     }
     else {
         return (
-            <Modal
-                open={true}
-                onClose={() => props.stopForm()}
-            >
-                <form>
+            <Drawer anchor='bottom' open={true} onClose={() => props.stopForm()}>
+                <form className={styles.window}>
                     <Grid container alignItems="center" justify="center" direction="column">
                         {displayForm()}
                         <Button variant="contained" color="primary" onClick={handleSubmit}>
@@ -193,7 +202,7 @@ function PlacesForm(props) {
                         </Button>
                     </Grid>
                 </form>
-            </Modal>
+            </Drawer>
         )
     }
 }
