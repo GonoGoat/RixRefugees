@@ -4,7 +4,9 @@ import {useState} from "react";
 
 import Pannel_admin from "./Pannel_content/Pannel_admin";
 import Pannel_connected from './Pannel_content/Pannel_connected';
-import {Button,Drawer} from '@material-ui/core';
+
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
 
 import classes from '../../Style/Header';
 const useStyles = classes;

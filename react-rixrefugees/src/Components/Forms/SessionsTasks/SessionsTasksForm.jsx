@@ -1,32 +1,20 @@
 import React from "react";
-import {makeStyles, StylesProvider} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
+import Drawer from '@material-ui/core/Drawer';
 import "date-fns";
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import Sessions from '../Places/Sessions';
 import Tasks from './Tasks';
 
-const classes = makeStyles(theme => ({
-    paper: {
-      alignItems : 'center',
-      justifyContent : 'center',
-    }
-  }));
-
-function getModalStyle() {
-    const top = 50;
-    const left = 50;
-  
-    return {
-      top: `${top}%`,
-      left: `${left}%`,
-      transform: `translate(-${top}%, -${left}%)`
-    };
-  }
+const classes = makeStyles({
+    window : {
+        height : 500,
+    },
+  });
 const useStyles = classes;
 
 function SessionsTasksForm(props) {
@@ -36,7 +24,6 @@ function SessionsTasksForm(props) {
     const date = moment().format("YYYY-MM-DD");
 
     const styles=useStyles();
-    const [modalStyle] = React.useState(getModalStyle)
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
         tasks : {
@@ -117,13 +104,8 @@ function SessionsTasksForm(props) {
     }
     else {
         return (
-            <Modal
-                open={true}
-                onClose={() => props.stopForm()}
-                className={styles.paper}
-               
-            >
-                <form>
+            <Drawer anchor='bottom' open={true} onClose={() => props.stopForm()}>
+                <form className={styles.window}>
                     <Grid container alignItems="center" justify="center" direction="column">
                         {displayForm()}
                         <Button variant="contained" color="primary" onClick={handleSubmit}>
@@ -131,7 +113,7 @@ function SessionsTasksForm(props) {
                         </Button>
                     </Grid>
                 </form>
-            </Modal>
+            </Drawer>
         )
     }
 }

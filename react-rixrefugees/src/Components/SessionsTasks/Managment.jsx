@@ -75,7 +75,7 @@ function Managment(props) {
         return <LoadingIndicator/>
     }
     else if (data.length === 0) {
-        return ''
+        return <React.Fragment/>
     }
     else {
         return (
@@ -87,7 +87,7 @@ function Managment(props) {
                     <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
                 </div>
                 {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} api={props.api}/> :
-                    getDataList()) : ''
+                    getDataList()) : <React.Fragment/>
                 }
             </div>
         )

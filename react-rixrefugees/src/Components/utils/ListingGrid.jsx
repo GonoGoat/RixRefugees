@@ -74,7 +74,7 @@ function ListingGrid (props) {
                             })}
                         </Select>
                     </Grid>
-                    : ''
+                    : <React.Fragment/>
                 }
                 {props.api === '/places_avail' ?
                     <Grid item>
@@ -83,7 +83,7 @@ function ListingGrid (props) {
                             label="N'afficher que les lieu d'hébergement actuellement disponibles"
                         />
                     </Grid>
-                    : ''
+                    : <React.Fragment/>
                 }
             </Grid>
             <DataGrid
