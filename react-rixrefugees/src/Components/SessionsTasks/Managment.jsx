@@ -1,10 +1,10 @@
 import React from "react";
-import LoadingIndicator from "../utils/LoadingIndicator";
 
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
 import EditButton from "../utils/Buttons/EditButton";
 
+import LoadingIndicator from "../utils/LoadingIndicator";
 import DataList from "../utils/DataList";
 import ListingGrid from "../utils/ListingGrid";
 import SessionsTasksForm from '../Forms/SessionsTasks/SessionsTasksForm';

@@ -40,14 +40,16 @@ function ListingGrid (props) {
     }
 
     React.useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API}/places`)
-        .then(res => {
-            let values = [{id : 0,name : '--Choisissez un endroit--'}];
-            setPlaces(values.concat(res.data));
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        if (props.api === '/sessions') {
+            axios.get(`${process.env.REACT_APP_API}/places`)
+            .then(res => {
+                let values = [{id : 0,name : '--Choisissez un endroit--'}];
+                setPlaces(values.concat(res.data));
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
     }, [])
 
     const handleChange = (event) => {
@@ -57,23 +59,27 @@ function ListingGrid (props) {
     return (
         <div className={styles.tab}>
             <Grid container alignItems="center" justify="center" direction="row">
-                {props.api === '/sessions' && placesFilter.length > 0 ? 
-                    <Grid item>
-                        <FormControlLabel
-                            control={<Checkbox checked={filter.state} onChange={() => setFilter({...filter,state : !filter.state})}/>}
-                            label="N'afficher que les sessions en cours"
-                        />
-                        <InputLabel>Filtrer sur le lieu</InputLabel>
-                        <Select
-                            value={filter.selected.id}
-                            onChange={handleChange}
-                            name="places"
-                        >
+                {props.api === '/sessions' && placesFilter.length > 0 ?
+                    <React.Fragment>
+                        <Grid item>
+                            <FormControlLabel
+                                control={<Checkbox checked={filter.state} onChange={() => setFilter({...filter,state : !filter.state})}/>}
+                                label="N'afficher que les sessions en cours"
+                            />
+                            <InputLabel>Filtrer sur le lieu</InputLabel>
+                        </Grid>
+                        <Grid item>
+                            <Select
+                                value={filter.selected.id}
+                                onChange={handleChange}
+                                name="places"
+                            >
                             {placesFilter.map((obj) => {
                                 return <MenuItem value={obj.id}>{obj.name}</MenuItem>
                             })}
-                        </Select>
-                    </Grid>
+                            </Select>
+                        </Grid>
+                    </React.Fragment>
                     : <React.Fragment/>
                 }
                 {props.api === '/places_avail' ?
