@@ -8,9 +8,117 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
-import {sessionTasksList} from "../../utils/DataGridColumns/sessions_tasks";
 import classes from '../../Style/SessionsTasksTab';
+
+import CustomCheckIcon from '../utils/Icons/CustomCheckIcon';
+import CustomCloseIcon from '../utils/Icons/CustomCloseIcon';
+import CustomCheckCircleIcon from '../utils/Icons/CustomCheckCircleIcon';
+import CustomHourglassIcon from '../utils/Icons/CustomHourglassIcon';
+import CustomScheduleIcon from '../utils/Icons/CustomScheduleIcon';
+
+const moment = require('moment');
+
+function getState (params) {
+    let now = new Date();
+    let start = new Date(params.getValue('start_date'))
+    let end = new Date(params.getValue('end_date'))
+    if (now > start) {
+        if (now > end) {
+            return (
+                <strong>
+                    <CustomCheckCircleIcon/>
+                    Terminée
+                </strong>
+            )
+        }
+        return (
+            <strong>
+                <CustomHourglassIcon/>
+                En cours
+            </strong>
+        )
+    }
+    else {
+        return (
+            <strong>
+                <CustomScheduleIcon/>
+                A venir
+            </strong>
+        )
+    }
+}
+
+function getStyle(params) {
+    let now = new Date();
+    let start = new Date(params.getValue('start_date'))
+    let end = new Date(params.getValue('end_date'))
+    if (now > start) {
+        if (now > end) {
+            return "finished"
+        }
+        return "started"
+    }
+    else {
+        return "tostart"
+    }
+}
+
+const sessionTasksList = [
+    {
+        field : 'state',
+        headerName : 'Etat de la tâche',
+        flex : 1,
+        renderCell: getState,
+        cellClassName : getStyle
+    },
+    {
+        field : 'id',
+        headerName : 'Identifiant de la tâche de session',
+        flex : 1,
+        type : 'number'
+    },
+    {
+        field : 'name',
+        headerName : 'Nom de la tâche',
+        flex : 1,
+        type : 'string'
+    },
+    {
+        field : 'isfromadmin',
+        headerName : 'Tâche provenant d\'un coordinateur ?',
+        flex : 1,
+        renderCell: (params) => (
+            params.value === true ? <CustomCheckIcon/> : <CustomCloseIcon/>
+        )
+    },
+    {
+        field : 'start_date',
+        headerName : 'Date de début de la tâche',
+        flex : 1,
+        type : 'date',
+        valueFormatter : (params) => moment(params.value).format('DD/MM/YYYY HH:mm')
+    },
+    {
+        field : 'end_date',
+        headerName : 'Date de fin de la tâche',
+        flex : 1,
+        type : 'date',
+        valueFormatter : (params) => moment(params.value).format('DD/MM/YYYY HH:mm')
+    },
+    {
+        field : 'amountofpeople',
+        headerName : 'Nombre de bénévoles à assigner',
+        flex : 1,
+        type : 'number'
+    },
+];
 const useStyles=classes;
 
 function SessionsTasksTab() {
@@ -25,6 +133,7 @@ function SessionsTasksTab() {
         form : '',
         edit : false
     });
+    const [filter,setFilter] = React.useState(false);
     const styles = useStyles();
 
     const axios = require('axios');
@@ -52,6 +161,15 @@ function SessionsTasksTab() {
         setExpanded(isExpanded ? panel : false);
     };
 
+    function filterSession() {
+        if (filter) {
+            return sessions.filter(row => new Date(row.end_date) >= new Date());
+        }
+        else {
+            return sessions;
+        }
+    }
+
     function getSessions(value) {
         return (
             <div className={styles.root}>
@@ -66,7 +184,7 @@ function SessionsTasksTab() {
                         <Typography className={styles.secondaryHeading}>Coordonné par {value.username} au lieu "{value.name}"</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <ListingGrid filter={true} setForm={() => setForm({form : false, edit : false})} rows={sessionsTasks.filter(val => val.sessions_id === value.id)} columns={sessionTasksList} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
+                        <ListingGrid api='/sessions_tasks' filter={true} setForm={() => setForm({form : false, edit : false})} rows={sessionsTasks.filter(val => val.sessions_id === value.id)} columns={sessionTasksList} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
                     </AccordionDetails>
                 </Accordion>
             </div>
@@ -79,7 +197,15 @@ function SessionsTasksTab() {
     else {
         return (
             <div>
-                {sessions.map(getSessions)}
+                <Grid container direction='row' alignItems='center' justify='center'> 
+                    <Grid item>
+                        <FormControlLabel
+                            control={<Checkbox checked={filter.state} onChange={() => setFilter(!filter)}/>}
+                            label="N'afficher que les sessions en cours"
+                        />
+                    </Grid>
+                </Grid>
+                {filterSession().map(getSessions)}
             </div>
         )
     }

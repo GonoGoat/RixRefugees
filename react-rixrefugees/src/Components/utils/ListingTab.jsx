@@ -1,7 +1,7 @@
 import React from "react";
 
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
+import CustomCheckIcon from './Icons/CustomCheckIcon';
+import CustomCloseIcon from './Icons/CustomCloseIcon';
 
 import {Paper} from '@material-ui/core';
 import {Table,TableBody,TableCell,TableContainer,TableHead,TableRow }from '@material-ui/core'
@@ -22,7 +22,7 @@ function ListingTab(props) {
                         <TableCell component="th" scope="row">
                             {row.name}
                         </TableCell>
-                        {row.check.map((obj) => <TableCell> {obj === true ? <CheckIcon/> : <CloseIcon/>}</TableCell>)}
+                        {row.check.map((obj) => <TableCell> {obj === true ? <CustomCheckIcon/> : <CustomCloseIcon/>}</TableCell>)}
                         </TableRow>
                     ))}
                     </TableBody>
