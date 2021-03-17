@@ -1,9 +1,9 @@
 var pool = require('../db.js')
 
 // add query functions
-function getAllSessions(req, res, next) {
+function getAllSessionsTasks(req, res, next) {
   pool.query
-  ('select sessions.id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') as end_date,users_id, concat(users.fname, \' \', users.lname) as username, places.id as placesId,places.name,places_availabilities_id from sessions join places_availabilities on places_availabilities.id = sessions.places_availabilities_id join users on sessions.users_id = users.id join places on places_availabilities.places_id = places.id order by sessions.id desc'
+  ('select sessions_tasks.id, isfromadmin, concat(to_char(start_date,\'YYYY-MM-DD\'),\'T\',to_char(start_date, \'HH24:MI\')) as start_date,concat(to_char(end_date,\'YYYY-MM-DD\'),\'T\',to_char(end_date, \'HH24:MI\')) as end_date,amountofpeople, tasks.id,tasks.name, sessions_id from sessions_tasks join tasks on tasks.id = sessions_tasks.tasks_id' 
   ,(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
@@ -43,7 +43,7 @@ function updateSessions(req, res, next) {
 }
 
 module.exports = {
-  getAllSessions: getAllSessions,
+  getAllSessionsTasks: getAllSessionsTasks,
   getSessionsInfo : getSessionsInfo,
   addSessions : addSessions,
   deleteSessions : deleteSessions,

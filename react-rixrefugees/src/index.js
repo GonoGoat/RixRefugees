@@ -4,7 +4,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
 import Store from './redux/configureStore'
-import './index.css'
+import './index.css';
+import '@fontsource/roboto';
 
 ReactDOM.render(
   <React.StrictMode>

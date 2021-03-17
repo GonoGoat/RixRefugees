@@ -1,10 +1,10 @@
 import React from "react";
-import LoadingIndicator from "../utils/LoadingIndicator";
 
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
 import EditButton from "../utils/Buttons/EditButton";
 
+import LoadingIndicator from "../utils/LoadingIndicator";
 import DataList from "../utils/DataList";
 import ListingGrid from "../utils/ListingGrid";
 import SessionsTasksForm from '../Forms/SessionsTasks/SessionsTasksForm';
@@ -80,7 +80,7 @@ function Managment(props) {
     else {
         return (
             <div>
-                <ListingGrid filter={props.api === 'sessions'} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
+                <ListingGrid filter={props.api === 'sessions'} api={`/${props.api}`} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
                 <div>
                     <AddButton disabled={false} add={()=>setForm({form : true,edit : false})}/>
                     <DeleteButton disabled={selected.length <= 0} delete={()=>deleteRows()}/>
