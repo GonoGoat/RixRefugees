@@ -9,6 +9,7 @@ import "date-fns";
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import Sessions from '../Places/Sessions';
 import Tasks from './Tasks';
+import SessionsTasks from './SessionsTasks';
 
 const classes = makeStyles({
     window : {
@@ -22,6 +23,7 @@ function SessionsTasksForm(props) {
     const moment = require('moment');
 
     const date = moment().format("YYYY-MM-DD");
+    const dateTime = moment().format("YYYY-MM-DDThh:mm");
 
     const styles=useStyles();
     const [loading, setLoading] = React.useState(false);
@@ -34,6 +36,15 @@ function SessionsTasksForm(props) {
             start_date : date,
             end_date : date,
             places_availabilities_id : 0
+        },
+        sessionsTasks : {
+            isfromadmin : true,
+            description : '',
+            amountofpeople : 0,
+            start_date : dateTime,
+            end_date : dateTime,
+            tasks_id : 0,
+            sessions_id : 0
         }
     });
 
@@ -89,6 +100,10 @@ function SessionsTasksForm(props) {
             case 'sessions' :
                 return (
                     <Sessions value={formValues.sessions} handleInputChange={handleInputChange}/>
+                )
+            case '/sessions_tasks' :
+                return (
+                    <SessionsTasks value={formValues.sessionsTasks} handleInputChange={handleInputChange}/>
                 )
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
