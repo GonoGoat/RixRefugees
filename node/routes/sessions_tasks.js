@@ -5,9 +5,9 @@ var db = require('../queries/sessions_tasks');
 
 
 router.get('/', db.getAllSessionsTasks);
-/*router.get('/:id',db.getSessionsInfo);
-router.post('/add',db.addSessions);
-router.delete('/delete',db.deleteSessions);
-router.put('/update',db.updateSessions);*/
+router.get('/:id',db.getSessionsTasksInfo);
+router.post('/add',db.addSessionsTasks);
+router.delete('/delete',db.deleteSessionsTasks);
+router.put('/update',db.updateSessionsTasks);
 
 module.exports = router;

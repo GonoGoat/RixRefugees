@@ -16,6 +16,9 @@ const classes = makeStyles((theme) => ({
         fontSize : theme.typography.pxToRem(17),
       }
     },
+    inline : {
+      display : 'inline'
+    },
     heading: {
        //fontSize: theme.typography.pxToRem(15),
       flexBasis: '33.33%',
