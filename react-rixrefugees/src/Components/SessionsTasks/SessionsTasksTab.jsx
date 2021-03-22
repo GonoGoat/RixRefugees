@@ -205,7 +205,7 @@ function SessionsTasksTab() {
                             <DeleteButton disabled={selected.length <= 0} delete={()=>deleteRows()}/>
                             <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
-                        {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api}/> :
+                        {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
                            <DataList keys={sessionsTasksDataListKeys} api={`${api}/${id}`}/>) : <React.Fragment/>
                         }
                     </AccordionDetails>
