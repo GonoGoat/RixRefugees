@@ -190,7 +190,7 @@ create table Sessions_tasks (
 			on Delete cascade,
 	sessions_id int,
 	constraint fk__sessions__id /*OK*/
-		foreign key (id)
+		foreign key (sessions_id)
 			references Sessions(id)
 			on Delete set null
 );
@@ -209,7 +209,7 @@ create table Availabilities (
 			on Delete cascade,
 	sessions_tasks_id int,
 	constraint fk__session_tasks__id /*OK*/
-		foreign key (id)
+		foreign key (sessions_tasks_id)
 			references Sessions_tasks(id)
 			on Delete cascade
 );
