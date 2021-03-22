@@ -209,7 +209,7 @@ create table Availabilities (
 			on Delete cascade,
 	sessions_tasks_id int,
 	constraint fk__session_tasks__id /*OK*/
-		foreign key (id)
+		foreign key (sessions_tasks_id)
 			references Sessions_tasks(id)
 			on Delete cascade
 );
