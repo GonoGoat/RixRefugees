@@ -26,6 +26,7 @@ jobs:
           cd /home/gauth/RixRefugees/docker && sudo docker-compose down
           sudo docker build /home/gauth/RixRefugees/docker/Node -t gonogoat/rixrefugees:api
           sudo docker push gonogoat/rixrefugees:api
+          cd /home/gauth/RixRefugees/docker && sudo git pull
           cd /home/gauth/RixRefugees/docker && sudo docker-compose up -d
           sudo docker exec api sh -c "cd /home/RixRefugees && git pull"
           sudo docker exec api sh -c "cd /home/RixRefugees/node && npm install"
