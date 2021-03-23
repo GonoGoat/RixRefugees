@@ -25,7 +25,7 @@ function PlacesForm(props) {
     const axios = require('axios');
     const moment = require('moment');
 
-    const dateTime = moment().format("YYYY-MM-DDThh:mm");
+    const dateTime = moment().format("YYYY-MM-DDTHH:mm");
     const date = moment().format("YYYY-MM-DD");
 
     const styles = useStyles();

@@ -29,14 +29,13 @@ function Places (props) {
             </Grid>
             <Grid item>
                 <TextField
-                    id="places-desc"
                     name="description"
                     label="Description de l'endroit"
                     type="text"
                     value={props.value.description}
                     onChange={props.handleInputChange}
                     multiline
-                    rowsMax = {10}
+                    rows={5}
                 />
             </Grid>
         </React.Fragment>

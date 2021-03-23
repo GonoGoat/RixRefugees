@@ -23,7 +23,7 @@ function SessionsTasksForm(props) {
     const moment = require('moment');
 
     const date = moment().format("YYYY-MM-DD");
-    const dateTime = moment().format("YYYY-MM-DDThh:mm");
+    const dateTime = moment().format("YYYY-MM-DDTHH:mm");
 
     const styles=useStyles();
     const [loading, setLoading] = React.useState(false);
@@ -37,7 +37,7 @@ function SessionsTasksForm(props) {
             end_date : date,
             places_availabilities_id : 0
         },
-        sessionsTasks : {
+        sessions_tasks : {
             isfromadmin : true,
             description : '',
             amountofpeople : 0,
@@ -101,9 +101,9 @@ function SessionsTasksForm(props) {
                 return (
                     <Sessions value={formValues.sessions} handleInputChange={handleInputChange}/>
                 )
-            case '/sessions_tasks' :
+            case 'sessions_tasks' :
                 return (
-                    <SessionsTasks value={formValues.sessionsTasks} handleInputChange={handleInputChange}/>
+                    <SessionsTasks value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
                 )
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
