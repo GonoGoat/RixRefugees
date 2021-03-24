@@ -26,7 +26,7 @@ function SessionsTasks (props) {
             console.log(err);
         });
 
-        axios.get(`${process.env.REACT_APP_API}/sessions`)
+        axios.get(`${process.env.REACT_APP_API}/sessions/available`)
         .then(res => {
             setSessions(res.data);
         })

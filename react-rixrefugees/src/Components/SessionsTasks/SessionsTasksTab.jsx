@@ -25,6 +25,7 @@ import CustomCloseIcon from '../utils/Icons/CustomCloseIcon';
 import CustomCheckCircleIcon from '../utils/Icons/CustomCheckCircleIcon';
 import CustomHourglassIcon from '../utils/Icons/CustomHourglassIcon';
 import CustomScheduleIcon from '../utils/Icons/CustomScheduleIcon';
+import { getInitialFilterState } from "@material-ui/data-grid";
 
 const moment = require('moment');
 
@@ -206,7 +207,7 @@ function SessionsTasksTab() {
                             <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
                         {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
-                           <DataList keys={sessionsTasksDataListKeys} api={`${api}/${id}`}/>) : <React.Fragment/>
+                           (isMember(value.id) ? <DataList keys={sessionsTasksDataListKeys} api={`${api}/${id}`}/> : <React.Fragment/>)) : <React.Fragment/>
                         }
                     </AccordionDetails>
                 </Accordion>
