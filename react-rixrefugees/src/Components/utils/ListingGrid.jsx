@@ -167,7 +167,7 @@ function ListingGrid (props) {
                 hideFooterSelectedRowCount
                 disableColumnMenu
                 onRowClick={(row) => {
-                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu") || props.api.includes('sessions_tasks')) {
+                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu")) {
                         props.setId(row.row.id);
                         props.setForm();
                     }

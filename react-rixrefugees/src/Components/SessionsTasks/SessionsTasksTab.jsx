@@ -2,7 +2,6 @@ import React from "react";
 
 import LoadingIndicator from "../utils/LoadingIndicator";
 import ListingGrid from '../utils/ListingGrid';
-import DataList from "../utils/DataList";
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
 import EditButton from "../utils/Buttons/EditButton";
@@ -16,16 +15,15 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Grid from "@material-ui/core/Grid";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import SessionsTasksDesc from "./SessionsTasksDesc";
 
 import classes from '../../Style/SessionsTasksTab';
-import {sessionsTasksDataListKeys} from '../../utils/DataListKeys/sessionsTasks';
 
 import CustomCheckIcon from '../utils/Icons/CustomCheckIcon';
 import CustomCloseIcon from '../utils/Icons/CustomCloseIcon';
 import CustomCheckCircleIcon from '../utils/Icons/CustomCheckCircleIcon';
 import CustomHourglassIcon from '../utils/Icons/CustomHourglassIcon';
 import CustomScheduleIcon from '../utils/Icons/CustomScheduleIcon';
-import { getInitialFilterState } from "@material-ui/data-grid";
 
 const moment = require('moment');
 
@@ -122,6 +120,12 @@ const sessionTasksList = [
         flex : 1,
         type : 'number'
     },
+    {
+        field : 'description',
+        headerName : 'Affichage description',
+        flex : 1,
+        renderCell: (params) => <SessionsTasksDesc id={params.getValue('id')}/>
+    }
 ];
 const useStyles=classes;
 
@@ -206,8 +210,8 @@ function SessionsTasksTab() {
                             <DeleteButton disabled={selected.length <= 0} delete={()=>deleteRows()}/>
                             <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
-                        {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
-                           (isMember(value.id) ? <DataList keys={sessionsTasksDataListKeys} api={`${api}/${id}`}/> : <React.Fragment/>)) : <React.Fragment/>
+                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
+                            <React.Fragment/>
                         }
                     </AccordionDetails>
                 </Accordion>
