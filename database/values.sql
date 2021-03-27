@@ -16,4 +16,4 @@ insert into sessions (start_date,end_date,users_id,places_availabilities_id)
 insert into tasks (name) values ('Lessive'), ('Cours de boxe'), ('Atelier cuisine');
 insert into sessions_tasks (isfromadmin,description,amountofpeople, start_date,end_date,tasks_id,sessions_id)
     values (true,'Lessive de la semaine pour les 5 occupants',1,now(),now(),1,1),(true,'Cours avec coach adrien à LLN',2,'2022-08-22 19:10:25','2022-08-22 19:30:25',2,2),
-        (false,'Atelier à Mont-Saint-Guibert pour 2 amis',1,'2025-08-22 19:10:25','2025-08-22 19:20:25 '3,3);
+        (false,'Atelier à Mont-Saint-Guibert pour 2 amis',1,'2025-08-22 19:10:25','2025-08-22 19:20:25' ,3,3);

@@ -60,20 +60,6 @@ function SessionsTasks (props) {
                     </FormControl>
                 </Grid>
                 <Grid item>
-                    <FormControl>
-                        <InputLabel>Sessions</InputLabel>
-                        <Select
-                            value={props.value.sessions_id}
-                            onChange={props.handleInputChange}
-                            name="sessions_id"
-                        >
-                            {sessions.map((obj) => {
-                                return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_avail).format('DD/MM/YYYY hh:mm')} - {moment(obj.end_avail).format('DD/MM/YYYY hh:mm')}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item>
                     <TextField
                         label="Date de début de tâche"
                         type='datetime-local'

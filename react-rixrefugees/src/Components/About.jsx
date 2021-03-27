@@ -2,9 +2,18 @@ import React from "react";
 
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
-
-import LoadingIndicator from "../utils/LoadingIndicator";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+
+import LoadingIndicator from "./utils/LoadingIndicator";
 
 function About() {
     const [loading,setLoading] = React.useState(true);
@@ -19,6 +28,7 @@ function About() {
         axios.get(`${process.env.REACT_APP_API}/sessions`)
         .then(res => {
             setSessions(res.data);
+            setSelected(res.data[0].id)
             setLoading(false);
         })
         .catch(err => {
@@ -33,12 +43,28 @@ function About() {
         });
     }, [])
 
-    function cardRender(value,index) {
-
-    }
-
-    function titleRender(value,index) {
-
+    function getCards(obj,index) {
+        return (
+            <Card>
+              <CardContent>
+                <Typography color="textSecondary" gutterBottom>
+                    {moment(obj.start_date).format('DD/MM/YYYY HH:mm')} - {moment(obj.end_date).format('DD/MM/YYYY HH:mm')}
+                </Typography>
+                <Typography variant="h5" component="h2">
+                    {obj.name}
+                </Typography>
+                <Typography color="textSecondary">
+                    {obj.amountofpeople} personne{obj.amountofpeople > 1 ? "s" : ""}
+                </Typography>
+                <Typography variant="body2" component="p">
+                  {obj.description}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small">Postuler maintenant</Button>
+              </CardActions>
+            </Card>
+        );
     }
 
     const handleInputChange = (e) => {
@@ -62,9 +88,8 @@ function About() {
                     <FormControl>
                         <InputLabel>Sessions</InputLabel>
                         <Select
-                            value={props.value.sessions_id}
+                            value={selected}
                             onChange={handleInputChange}
-                            name="sessions_id"
                         >
                             {sessions.map((obj) => {
                                 return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_avail).format('DD/MM/YYYY hh:mm')} - {moment(obj.end_avail).format('DD/MM/YYYY hh:mm')}</MenuItem>
@@ -73,18 +98,7 @@ function About() {
                     </FormControl>
                 </Grid>
                 <Carousel arrows infinite>
-                    <div>
-                        
-                        <p className="legend">Legend 1</p>
-                    </div>
-                    <div>
-                        
-                        <p className="legend">Legend 2</p>
-                    </div>
-                    <div>
-                        
-                        <p className="legend">Legend 3</p>
-                    </div>
+                    {sessionsTasks.filter(obj => obj.sessions_id === selected).map(getCards)}
                 </Carousel>
             </div>
 
