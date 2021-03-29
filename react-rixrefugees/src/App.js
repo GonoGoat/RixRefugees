@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer} from "./Components"
+import {Accueil, Header, About,Places,SessionsTasks,Footer,UserActivity,NewUserActivity} from "./Components"
 
 import {useSelector,useDispatch} from "react-redux";
 
@@ -16,6 +16,8 @@ function App() {
         <Switch>
           <Route path="/" exact component={() => <Accueil />} />
           <Route path="/about" exact component={() => <About />} />
+          <Route path="/user/activity/add" exact component={() => <NewUserActivity />} />
+          <Route path="/user/activity/add/:id" exact component={() => <UserActivity />} />
           {userId === 2 ?
           <React.Fragment>
             <Route path="/manage/places" exact component={() => <Places />} />

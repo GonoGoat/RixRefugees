@@ -25,7 +25,7 @@ function SessionsTasksDesc(props) {
 
   async function fetchData() {
     setLoading(true);
-    await axios.get(`${process.env.REACT_APP_API}/sessions_tasks/${props.id}`)
+    await axios.get(`${process.env.REACT_APP_API}/sessions_tasks/desc/${props.id}`)
     .then(res => {
         setDesc(res.data);
         setLoading(false);

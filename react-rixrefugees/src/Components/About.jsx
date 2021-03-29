@@ -1,4 +1,5 @@
 import React from "react";
+import {useHistory} from "react-router-dom";
 
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
@@ -23,6 +24,7 @@ function About() {
 
     const axios = require('axios');
     const moment = require('moment');
+    const history = useHistory();
 
     React.useEffect(() => {
         axios.get(`${process.env.REACT_APP_API}/sessions`)
@@ -61,7 +63,7 @@ function About() {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small">Postuler maintenant</Button>
+                <Button size="small" onClick={() => history.push(`/user/activity/add/${obj.id}`)}>Postuler maintenant</Button>
               </CardActions>
             </Card>
         );
@@ -100,6 +102,8 @@ function About() {
                 <Carousel arrows infinite>
                     {sessionsTasks.filter(obj => obj.sessions_id === selected).map(getCards)}
                 </Carousel>
+                <br/>
+                <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push('/user/activity')}>Cliquez ici !</Button>
             </div>
 
         );

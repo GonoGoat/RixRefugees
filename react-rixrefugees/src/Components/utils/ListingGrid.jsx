@@ -97,7 +97,7 @@ function ListingGrid (props) {
                 console.log(err);
             });
         }
-    })
+    },[])
 
     const handleChange = (event) => {
         setFilter({...filter, selected : event.target.value});
