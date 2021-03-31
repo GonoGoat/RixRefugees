@@ -46,7 +46,7 @@ function SessionsTasks (props) {
             <React.Fragment>
                 <Grid item>
                     <FormControl>
-                        <InputLabel>Coordinateur</InputLabel>
+                        <InputLabel>Nom de la tâche</InputLabel>
                         <Select
                             value={props.value.tasks_id}
                             onChange={props.handleInputChange}

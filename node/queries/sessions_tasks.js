@@ -44,10 +44,13 @@ function getSessionsTasksDesc(req, res, next) {
 }
 
 function addSessionsTasks(req, res, next) {
-  console.log(req.body);
-  pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7)',[req.body.isfromadmin,req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id],(err,rows) =>  {
+  pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7) returning id'
+  ,[req.body.isfromadmin,req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id],(err,rows) =>  {
     if (err) throw err;
-    return res.send({data : true});
+    return res.send({
+      success : true,
+      data : rows.rows[0].id
+    });
   })
 }
 
