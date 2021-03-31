@@ -15,7 +15,6 @@ function SessionsTasks (props) {
     const [sessions,setSessions] = React.useState();
 
     const axios = require('axios');
-    const moment = require('moment');
 
     React.useEffect(() => {
         axios.get(`${process.env.REACT_APP_API}/tasks`)
