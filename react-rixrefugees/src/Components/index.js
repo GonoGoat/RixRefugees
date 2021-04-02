@@ -4,3 +4,4 @@ export { default as About } from "./About";
 export { default as Places } from "./Places";
 export { default as SessionsTasks } from "./SessionsTasks";
 export { default as Footer } from './Footer';
+export { default as AddUserActivity } from './AddUserActivity';

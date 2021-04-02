@@ -27,8 +27,9 @@ function getSessionsInfo(req, res, next) {
   })
 }
 
-function addSessions(req, res, next) {
-  pool.query('insert into sessions (start_date,end_date,users_id,places_availabilities_id) values ($1,$2,$3,$4)',[req.body.start_date,req.body.end_date,req.body.users_id, req.body.places_availabilities_id],(err,rows) =>  {
+function addAvailabilities(req, res, next) {
+  pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',
+  [req.body.description,req.body.iscanceled,req.body.users_id, req.body.sessions_tasks_id],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })
@@ -55,7 +56,7 @@ module.exports = {
   getAllSessions: getAllSessions,
   getSessionsInfo : getSessionsInfo,
   getAvailableSessions : getAvailableSessions,
-  addSessions : addSessions,
+  addAvailabilities : addAvailabilities,
   deleteSessions : deleteSessions,
   updateSessions : updateSessions
 };

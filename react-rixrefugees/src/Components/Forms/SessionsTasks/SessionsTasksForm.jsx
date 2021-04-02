@@ -55,6 +55,14 @@ function SessionsTasksForm(props) {
                 [props.api]: props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]
             });
         }
+        if (!props.selected.length) {
+            let next = formValues[props.api];
+            next.sessions_id = props.selected;
+            setFormValues({
+            ...formValues,
+            [props.api]: next
+            });
+        }
     }, [props.selected,props.data])
 
     //Submit button for Accomodations and the others

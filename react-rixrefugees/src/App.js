@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer} from "./Components"
+import {Accueil, Header, About,Places,SessionsTasks,Footer,AddUserActivity,} from "./Components"
 
 import {useSelector,useDispatch} from "react-redux";
 

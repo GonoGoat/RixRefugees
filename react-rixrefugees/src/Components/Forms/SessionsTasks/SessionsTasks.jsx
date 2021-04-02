@@ -15,7 +15,6 @@ function SessionsTasks (props) {
     const [sessions,setSessions] = React.useState();
 
     const axios = require('axios');
-    const moment = require('moment');
 
     React.useEffect(() => {
         axios.get(`${process.env.REACT_APP_API}/tasks`)
@@ -26,7 +25,7 @@ function SessionsTasks (props) {
             console.log(err);
         });
 
-        axios.get(`${process.env.REACT_APP_API}/sessions`)
+        axios.get(`${process.env.REACT_APP_API}/sessions/available`)
         .then(res => {
             setSessions(res.data);
         })
@@ -47,7 +46,7 @@ function SessionsTasks (props) {
             <React.Fragment>
                 <Grid item>
                     <FormControl>
-                        <InputLabel>Coordinateur</InputLabel>
+                        <InputLabel>Nom de la tâche</InputLabel>
                         <Select
                             value={props.value.tasks_id}
                             onChange={props.handleInputChange}
@@ -55,20 +54,6 @@ function SessionsTasks (props) {
                         >
                             {tasks.map((obj) => {
                                 return <MenuItem value={obj.id}>{obj.name}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item>
-                    <FormControl>
-                        <InputLabel>Sessions</InputLabel>
-                        <Select
-                            value={props.value.sessions_id}
-                            onChange={props.handleInputChange}
-                            name="sessions_id"
-                        >
-                            {sessions.map((obj) => {
-                                return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_avail).format('DD/MM/YYYY hh:mm')} - {moment(obj.end_avail).format('DD/MM/YYYY hh:mm')}</MenuItem>
                             })}
                         </Select>
                     </FormControl>

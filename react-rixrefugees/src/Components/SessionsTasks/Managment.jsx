@@ -74,13 +74,10 @@ function Managment(props) {
     if (loading === true) {
         return <LoadingIndicator/>
     }
-    else if (data.length === 0) {
-        return <React.Fragment/>
-    }
     else {
         return (
             <div>
-                <ListingGrid filter={props.api === 'sessions'} api={`/${props.api}`} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
+                {data.length === 0 ? <React.Fragment/> : <ListingGrid filter={props.api === 'sessions'} api={`/${props.api}`} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>}
                 <div>
                     <AddButton disabled={false} add={()=>setForm({form : true,edit : false})}/>
                     <DeleteButton disabled={selected.length <= 0} delete={()=>deleteRows()}/>

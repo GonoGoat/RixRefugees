@@ -2,7 +2,6 @@ import React from "react";
 
 import LoadingIndicator from "../utils/LoadingIndicator";
 import ListingGrid from '../utils/ListingGrid';
-import DataList from "../utils/DataList";
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
 import EditButton from "../utils/Buttons/EditButton";
@@ -16,9 +15,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Grid from "@material-ui/core/Grid";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import SessionsTasksDesc from "./SessionsTasksDesc";
 
 import classes from '../../Style/SessionsTasksTab';
-import {sessionsTasksDataListKeys} from '../../utils/DataListKeys/sessionsTasks';
 
 import CustomCheckIcon from '../utils/Icons/CustomCheckIcon';
 import CustomCloseIcon from '../utils/Icons/CustomCloseIcon';
@@ -60,8 +59,8 @@ function getState (params) {
 
 function getStyle(params) {
     let now = new Date();
-    let start = new Date(params.getValue('start_date'))
-    let end = new Date(params.getValue('end_date'))
+    let start = new Date(params.getValue('start_date'));
+    let end = new Date(params.getValue('end_date'));
     if (now > start) {
         if (now > end) {
             return "finished"
@@ -121,6 +120,12 @@ const sessionTasksList = [
         flex : 1,
         type : 'number'
     },
+    {
+        field : 'description',
+        headerName : 'Affichage description',
+        flex : 1,
+        renderCell: (params) => <SessionsTasksDesc id={params.getValue('id')}/>
+    }
 ];
 const useStyles=classes;
 
@@ -177,7 +182,7 @@ function SessionsTasksTab() {
     }
 
     function filterSession() {
-        if (filter) {
+        if (!filter) {
             return sessions.filter(row => new Date(row.end_date) >= new Date());
         }
         else {
@@ -194,6 +199,7 @@ function SessionsTasksTab() {
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
+                        onClick={() => setSelected(value.id)}
                     >
                         <Typography className={styles.heading}>Session n°{value.id} : {moment(value.start_date).format("DD/MM/YYYY")} - {moment(value.end_date).format("DD/MM/YYYY")}</Typography>
                         <Typography className={styles.secondaryHeading}>Coordonné par {value.username} au lieu "{value.name}"</Typography>
@@ -201,12 +207,12 @@ function SessionsTasksTab() {
                     <AccordionDetails classes={{root : styles.inline}}>
                         <ListingGrid api={api} filter={true} setForm={() => setForm({form : false, edit : false})} rows={sessionsTasks.filter(val => val.sessions_id === value.id)} columns={sessionTasksList} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
                         <div>
-                            <AddButton disabled={false} add={()=>setForm({form : true,edit : false})}/>
-                            <DeleteButton disabled={selected.length <= 0} delete={()=>deleteRows()}/>
-                            <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
+                            <AddButton disabled={new Date() > new Date(value.end_date)} add={()=>setForm({form : true,edit : false})}/>
+                            <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)}/>
+                            <EditButton disabled={selected.length != 1 || new Date() > new Date(value.end_date)} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
-                        {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
-                           <DataList keys={sessionsTasksDataListKeys} api={`${api}/${id}`}/>) : <React.Fragment/>
+                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
+                            <React.Fragment/>
                         }
                     </AccordionDetails>
                 </Accordion>
@@ -224,7 +230,7 @@ function SessionsTasksTab() {
                     <Grid item>
                         <FormControlLabel
                             control={<Checkbox checked={filter.state} onChange={() => setFilter(!filter)}/>}
-                            label="N'afficher que les sessions en cours"
+                            label="Afficher toutes les sessions"
                         />
                     </Grid>
                 </Grid>

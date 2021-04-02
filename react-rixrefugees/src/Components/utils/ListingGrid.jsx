@@ -54,7 +54,7 @@ function ListingGrid (props) {
         let filtered = props.rows;
         switch (props.api) {
             case '/sessions' :
-                if (filter.selected != 0) {
+                if (filter.selected !== 0) {
                     filtered = filtered.filter(row => row.id === filter.selected)
                 }
                 if (filter.state) {
@@ -77,6 +77,8 @@ function ListingGrid (props) {
                     case 3 :
                         filtered = filtered.filter(row => new Date() > new Date(row.end_date));
                         break;
+                    default :
+                        break;
                 }
                 return filtered;
             default :
@@ -95,7 +97,7 @@ function ListingGrid (props) {
                 console.log(err);
             });
         }
-    }, [])
+    },[])
 
     const handleChange = (event) => {
         setFilter({...filter, selected : event.target.value});
@@ -165,7 +167,7 @@ function ListingGrid (props) {
                 hideFooterSelectedRowCount
                 disableColumnMenu
                 onRowClick={(row) => {
-                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu") || props.api.includes('sessions_tasks')) {
+                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu")) {
                         props.setId(row.row.id);
                         props.setForm();
                     }

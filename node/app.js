@@ -10,13 +10,14 @@ const bodyParser = require('body-parser');
 
 var reactRouter = require('./routes/react');
 var placesRouter = require('./routes/places');
-var equipmentsRouter = require('./routes/equipments')
-var accomodationsRouter = require('./routes/accomodations')
-var placesAvailRouter = require('./routes/places_availabilities')
+var equipmentsRouter = require('./routes/equipments');
+var accomodationsRouter = require('./routes/accomodations');
+var placesAvailRouter = require('./routes/places_availabilities');
 var sessionsRouter = require('./routes/sessions');
-var usersRouter = require ('./routes/users')
-var tasksRouter = require ('./routes/tasks')
+var usersRouter = require ('./routes/users');
+var tasksRouter = require ('./routes/tasks');
 var sessionsTasksRouter = require('./routes/sessions_tasks');
+var availabilitiesRouter = require('./routes/availabilities');
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/sessions',sessionsRouter);
 app.use('/api/users',usersRouter);
 app.use('/api/tasks',tasksRouter);
 app.use('/api/sessions_tasks',sessionsTasksRouter);
+app.use('/api/availabilities',availabilitiesRouter);
 
 app.use('*', reactRouter);
 
