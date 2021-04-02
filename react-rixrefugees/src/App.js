@@ -16,6 +16,8 @@ function App() {
         <Switch>
           <Route path="/" exact component={() => <Accueil />} />
           <Route path="/about" exact component={() => <About />} />
+          <Route path="/user/activity/add" exact component={() => <AddUserActivity />} />
+          <Route path="/user/activity/add/:id" exact component={() => <AddUserActivity />} />
           <Route path="/manage/places" exact component={() => <Places />} />
           <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/> 
         </Switch>

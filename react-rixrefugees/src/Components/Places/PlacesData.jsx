@@ -158,8 +158,6 @@ function PlacesData(props) {
              getDataList()) : <React.Fragment/>
             }
         </div>
-        
-
     )
 }
 export default PlacesData;
