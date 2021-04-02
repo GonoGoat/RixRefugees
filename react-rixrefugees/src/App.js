@@ -18,13 +18,8 @@ function App() {
           <Route path="/about" exact component={() => <About />} />
           <Route path="/user/activity/add" exact component={() => <AddUserActivity />} />
           <Route path="/user/activity/add/:id" exact component={() => <AddUserActivity />} />
-          {userId === 2 ?
-          <React.Fragment>
-            <Route path="/manage/places" exact component={() => <Places />} />
-            <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/> 
-          </React.Fragment>
-          : ''
-        }
+          <Route path="/manage/places" exact component={() => <Places />} />
+          <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/> 
         </Switch>
       </Router>
     </div>
