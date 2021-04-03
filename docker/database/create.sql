@@ -204,7 +204,7 @@ create table Availabilities (
 
 	users_id int,
 	constraint fk__users__id /*OK*/
-		foreign key (id)
+		foreign key (users_id)
 			references Users(id)
 			on Delete cascade,
 	sessions_tasks_id int,
@@ -222,7 +222,7 @@ create table Assignments (
 
 	friends_id int,
 	constraint fk__friends__id /*OK*/
-		foreign key (id)
+		foreign key (friends_id)
 			references Friends(id)
 			on Delete cascade,
 	availabilities_id int,
