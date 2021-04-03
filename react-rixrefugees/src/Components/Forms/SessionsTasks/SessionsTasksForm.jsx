@@ -50,20 +50,28 @@ function SessionsTasksForm(props) {
 
     React.useEffect(() => {
         if (props.edit) {
+            let sess = props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))];
+            axios.get(`${process.env.REACT_APP_API}/sessions_tasks/desc/${sess.id}`)
+            .then(res => {
+                sess.description = res.data.description
+            })
+            .catch(err => {
+                console.log(err);
+            });
             setFormValues({
                 ...formValues,
-                [props.api]: props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]
+                [props.api]: sess
             });
         }
-        if (!props.selected) {
+        else {
             let next = formValues[props.api];
-            next.sessions_id = props.selected;
+            next.sessions_id = props.sessions;
             setFormValues({
             ...formValues,
             [props.api]: next
             });
         }
-    }, [props.selected,props.data])
+    }, [props.selected,props.data,props.sessions])
 
     //Submit button for Accomodations and the others
     async function handleSubmit() {

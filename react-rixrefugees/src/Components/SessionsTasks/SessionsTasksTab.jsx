@@ -212,7 +212,7 @@ function SessionsTasksTab() {
                             <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)} delete={()=>deleteRows()}/>
                             <EditButton disabled={selected.length != 1 || new Date() > new Date(value.end_date)} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
-                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={panel} api={api.substr(1)}/> :
+                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} sessions={panel} selected={selected} api={api.substr(1)}/> :
                             <React.Fragment/>
                         }
                     </AccordionDetails>
