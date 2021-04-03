@@ -30,23 +30,22 @@ function getSessionsInfo(req, res, next) {
 function addNewAvailabilities(req, res, next) {
 
   console.log(req.body);
-  let tasks_id,sessions_tasks_id;
   pool.query('insert into tasks (name) values ($1) returning id',[req.body.tasks.name],(err,rows) =>  {
     if (err) throw err;
-    tasks_id = rows.rows[0].id;
-  });
+    let tasks_id = rows.rows[0].id;
 
-  pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7) returning id'
-  ,[req.body.sessions_tasks.isfromadmin,req.body.sessions_tasks.description,req.body.sessions_tasks.amountofpeople,
+    pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7) returning id'
+    ,[req.body.sessions_tasks.isfromadmin,req.body.sessions_tasks.description,req.body.sessions_tasks.amountofpeople,
     req.body.sessions_tasks.start_date, req.body.sessions_tasks.end_date,tasks_id, req.body.sessions_tasks.sessions_id],(err,rows) =>  {
-    if (err) throw err;
-    sessions_tasks_id = rows.rows[0].id
-  })
+      if (err) throw err;
+      let sessions_tasks_id = rows.rows[0].id
 
-  pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',
-  [req.body.availabilities.description,req.body.availabilities.iscanceled,req.body.availabilities.users_id, sessions_tasks_id],(err,rows) =>  {
-    if (err) throw err;
-    return res.send({data : true});
+      pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',
+      [req.body.availabilities.description,req.body.availabilities.iscanceled,req.body.availabilities.users_id, sessions_tasks_id],(err,rows) =>  {
+        if (err) throw err;
+        return res.send({data : true});
+      });
+    })
   });
 }
 
