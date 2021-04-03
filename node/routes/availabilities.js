@@ -6,6 +6,7 @@ var db = require('../queries/availabilities');
 
 //router.get('/', db.getAllAccomodations);
 router.post('/add', db.addAvailabilities);
+router.post('/add/new', db.addNewAvailabilities);
 //router.delete('/delete',db.deleteAllAccomodations)
 
 

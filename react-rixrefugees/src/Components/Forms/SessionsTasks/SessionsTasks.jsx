@@ -15,26 +15,28 @@ function SessionsTasks (props) {
     const [sessions,setSessions] = React.useState();
 
     const axios = require('axios');
+    const moment = require('moment');
 
     React.useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API}/tasks`)
-        .then(res => {
-            setTasks(res.data);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
-        axios.get(`${process.env.REACT_APP_API}/sessions/available`)
-        .then(res => {
-            setSessions(res.data);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        if (props.api) {
+            axios.get(`${process.env.REACT_APP_API}/tasks`)
+            .then(res => {
+                setTasks(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+            axios.get(`${process.env.REACT_APP_API}/sessions/available`)
+            .then(res => {
+                setSessions(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }, [])
 
-    if (!tasks || !sessions) {
+    if ((!tasks && props.api) || !sessions) {
         return (
             <React.Fragment>
                 <LoadingIndicator/>
@@ -44,20 +46,37 @@ function SessionsTasks (props) {
     else {
         return (
             <React.Fragment>
-                <Grid item>
-                    <FormControl>
-                        <InputLabel>Nom de la tâche</InputLabel>
-                        <Select
-                            value={props.value.tasks_id}
-                            onChange={props.handleInputChange}
-                            name="tasks_id"
-                        >
-                            {tasks.map((obj) => {
-                                return <MenuItem value={obj.id}>{obj.name}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-                </Grid>
+                {props.api ?
+                    <Grid item>
+                        <FormControl>
+                            <InputLabel>Nom de la tâche</InputLabel>
+                            <Select
+                                value={props.value.tasks_id}
+                                onChange={props.handleInputChange}
+                                name="tasks_id"
+                            >
+                                {tasks.map((obj) => {
+                                    return <MenuItem value={obj.id}>{obj.name}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                :
+                    <Grid item>
+                        <FormControl>
+                            <InputLabel>Session concernée</InputLabel>
+                            <Select
+                                value={props.value.sessions_id}
+                                onChange={props.handleInputChange}
+                                name="sessions_id"
+                            >
+                                {sessions.map((obj) => {
+                                    return <MenuItem value={obj.id}>{obj.username} à "{obj.name}" : {moment(obj.start_date).format('DD/MM/YYYY')} - {moment(obj.end_date).format('DD/MM/YYYY')}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                }                
                 <Grid item>
                     <TextField
                         label="Date de début de tâche"
