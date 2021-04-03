@@ -80,7 +80,7 @@ function Managment(props) {
                 {data.length === 0 ? <React.Fragment/> : <ListingGrid filter={props.api === 'sessions'} api={`/${props.api}`} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>}
                 <div>
                     <AddButton disabled={false} add={()=>setForm({form : true,edit : false})}/>
-                    <DeleteButton disabled={selected.length <= 0} delete={()=>deleteRows()}/>
+                    <DeleteButton disabled={selected.length === 0} delete={()=>deleteRows()}/>
                     <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
                 </div>
                 {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} api={props.api}/> :

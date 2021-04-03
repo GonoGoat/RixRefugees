@@ -55,7 +55,7 @@ function SessionsTasksForm(props) {
                 [props.api]: props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))]
             });
         }
-        if (!props.selected.length) {
+        if (!props.selected) {
             let next = formValues[props.api];
             next.sessions_id = props.selected;
             setFormValues({
