@@ -136,6 +136,7 @@ function SessionsTasksTab() {
     const [sessions,setSessions] = React.useState([]);
     const [selected, setSelected] = React.useState([]);
     const [id,setId] = React.useState(0);
+    const [panel,setPanel] = React.useState();
     const [expanded, setExpanded] = React.useState(false);
     const [isForm, setForm] = React.useState({
         form : '',
@@ -199,7 +200,7 @@ function SessionsTasksTab() {
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
-                        onClick={() => setSelected(value.id)}
+                        onClick={() => setPanel(value.id)}
                     >
                         <Typography className={styles.heading}>Session n°{value.id} : {moment(value.start_date).format("DD/MM/YYYY")} - {moment(value.end_date).format("DD/MM/YYYY")}</Typography>
                         <Typography className={styles.secondaryHeading}>Coordonné par {value.username} au lieu "{value.name}"</Typography>
@@ -208,10 +209,10 @@ function SessionsTasksTab() {
                         <ListingGrid api={api} filter={true} setForm={() => setForm({form : false, edit : false})} rows={sessionsTasks.filter(val => val.sessions_id === value.id)} columns={sessionTasksList} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
                         <div>
                             <AddButton disabled={new Date() > new Date(value.end_date)} add={()=>setForm({form : true,edit : false})}/>
-                            <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)}/>
+                            <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)} delete={()=>deleteRows()}/>
                             <EditButton disabled={selected.length != 1 || new Date() > new Date(value.end_date)} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
-                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={selected} api={api.substr(1)}/> :
+                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} selected={panel} api={api.substr(1)}/> :
                             <React.Fragment/>
                         }
                     </AccordionDetails>

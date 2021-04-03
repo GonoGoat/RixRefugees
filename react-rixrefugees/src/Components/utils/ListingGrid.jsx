@@ -160,7 +160,9 @@ function ListingGrid (props) {
                         props.setForm();
                     }
                 }}
-                onSelectionChange={(select) => props.setSelected(select.rowIds)}
+                onSelectionModelChange={(newSelection) => {
+                    props.setSelected(newSelection.selectionModel);
+                }}
             />
         </div>
     );
