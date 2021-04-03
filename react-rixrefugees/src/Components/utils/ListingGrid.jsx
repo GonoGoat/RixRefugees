@@ -1,7 +1,6 @@
 import React from "react";
 
-import PropTypes from 'prop-types';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid,useGridSlotComponentProps } from '@material-ui/data-grid';
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -12,36 +11,25 @@ import Pagination from '@material-ui/lab/Pagination';
 
 import classes from '../../Style/ListingGrid';
 const useStyles = classes;
-
-function CustomPagination(props) {
-    const { state, api } = props;
-    const styles = useStyles();
+  
+  function CustomPagination() {
+    const { state, apiRef } = useGridSlotComponentProps();
+    const classes = useStyles();
   
     return (
       <Pagination
-        className={styles.root}
+        className={classes.root}
         color="primary"
         count={state.pagination.pageCount}
         page={state.pagination.page + 1}
-        onChange={(event, value) => api.current.setPage(value - 1)}
+        onChange={(event, value) => apiRef.current.setPage(value - 1)}
       />
     );
-}
+  }
 
 const sessTasksFilter = ["Tout","A venir", "En cours", "Terminé"]
   
-CustomPagination.propTypes = {
-    /**
-     * GridApiRef that let you manipulate the grid.
-     */
-    api: PropTypes.shape({
-      current: PropTypes.object.isRequired,
-    }).isRequired,
-    /**
-     * The GridState object containing the current grid state.
-     */
-    state: PropTypes.object.isRequired,
-};
+
 
 function ListingGrid (props) {
     const [filter,setFilter] = React.useState({state : false,selected : 0});

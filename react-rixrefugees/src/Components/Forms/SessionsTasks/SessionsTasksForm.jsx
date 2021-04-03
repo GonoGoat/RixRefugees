@@ -111,7 +111,7 @@ function SessionsTasksForm(props) {
                 )
             case 'sessions_tasks' :
                 return (
-                    <SessionsTasks value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
+                    <SessionsTasks api={true} value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
                 )
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");

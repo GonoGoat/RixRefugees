@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 import DataList from './utils/DataList';
 import UserActivityForm from "./Forms/UserActivity/UserActivityForm";
 import LoadingIndicator from "./utils/LoadingIndicator";
+import SessionsTasks from "./Forms/SessionsTasks/SessionsTasks";
+import Tasks from "./Forms/SessionsTasks/Tasks";
 
 import {sessionsTasksInfoDataListKeys} from '../utils/DataListKeys/sessionsTasksInfo'
 
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
-import SessionsTasks from "./Forms/SessionsTasks/SessionsTasks";
 import Button from '@material-ui/core/Button';
 
 function AddUserActivity() {
@@ -20,6 +21,9 @@ function AddUserActivity() {
     const dateTime = moment().format("YYYY-MM-DDTHH:mm");
     
     const [formValues,setFormValues] = React.useState({
+        tasks : {
+            name : ''
+        },
         availabilities : {
             description : '',
             users_id : 1,
@@ -27,16 +31,25 @@ function AddUserActivity() {
             iscanceled : false
         },
         sessions_tasks : {
-            isfromadmin : true,
+            isfromadmin : false,
             description : '',
             amountofpeople : 0,
             start_date : dateTime,
             end_date : dateTime,
-            tasks_id : 0,
             sessions_id : 0
         }
     });
     const [loading, setLoading] = React.useState(false);
+
+    const handleTasksChange = (e) => {
+        const { name, value } = e.target;
+        let next = formValues.tasks;
+        next[name] = value;
+        setFormValues({
+          ...formValues,
+          tasks: next
+        });
+    };
 
     const handleAvailabilitiesChange = (e) => {
         const { name, value } = e.target;
@@ -61,28 +74,23 @@ function AddUserActivity() {
     async function handleSubmit() {
         setLoading(true);
         if (!formValues.availabilities.sessions_tasks_id) {
-            await axios.post(`${process.env.REACT_APP_API}/sessions_tasks/add`, formValues.sessions_tasks)
+            await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
             .then(res => {
-                let next = formValues.availabilities;
-                next.sessions_tasks_id = res.data.data;
-                console.log(res.data);
-                setFormValues({
-                    ...formValues,
-                    availabilities : next
-                });
                 setLoading(false);
             })
             .catch(err => {
                 console.log(err);
             });
         }
-        await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
-        .then(res => {
-            setLoading(false);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        else {
+            await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
+            .then(res => {
+                setLoading(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
     }
 
     if (loading) {
@@ -96,11 +104,14 @@ function AddUserActivity() {
         return (
             <div>
                 {!formValues.availabilities.sessions_tasks_id ?
-                    <SessionsTasks value={formValues.sessions_tasks} handleInputChange={handleSessionsTasksChange}/>
+                    <React.Fragment>
+                        <Tasks value={formValues.tasks} handleInputChange={handleTasksChange}/>
+                        <SessionsTasks api={false} value={formValues.sessions_tasks} handleInputChange={handleSessionsTasksChange}/>
+                    </React.Fragment>
                     :
                     <React.Fragment>
                         <Typography>Vous êtes en train de postuler pour la tâche suivante :</Typography>
-                        <DataList api={formValues.availabilities.sessions_tasks_id} keys={sessionsTasksInfoDataListKeys}/>
+                        <DataList api={`/sessions_tasks/${formValues.availabilities.sessions_tasks_id}`} keys={sessionsTasksInfoDataListKeys}/>
                     </React.Fragment>
                 }
                 <Divider/>
