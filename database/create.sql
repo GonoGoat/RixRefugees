@@ -201,6 +201,7 @@ create table Availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	description text, /*OK*/
 	isCanceled boolean NOT NULL default false,
+	updateDate timestamp(0) without time zone default now(),
 
 	users_id int,
 	constraint fk__users__id /*OK*/

@@ -6,6 +6,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from "@material-ui/core/FormLabel";
+import Switch from '@material-ui/core/Switch';
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import "date-fns";
@@ -76,7 +79,18 @@ function SessionsTasks (props) {
                             </Select>
                         </FormControl>
                     </Grid>
-                }                
+                }
+                {props.edit ?
+                    <Grid item>
+                        <FormLabel component="legend">La tâche est-elle validée par un coordinateur ?</FormLabel>
+                        <FormControlLabel
+                            control={<Switch checked={props.value.isfromadmin} onChange={props.handleInputChange} name="isfromadmin" />}
+                            label={props.value.isfromadmin ? "Oui" : "Non"}
+                        />
+                    </Grid>
+                :
+                    <React.Fragment/>
+                }
                 <Grid item>
                     <TextField
                         label="Date de début de tâche"

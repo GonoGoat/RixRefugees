@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
 
-import DataList from './utils/DataList';
-import UserActivityForm from "./Forms/UserActivity/UserActivityForm";
-import LoadingIndicator from "./utils/LoadingIndicator";
-import SessionsTasks from "./Forms/SessionsTasks/SessionsTasks";
-import Tasks from "./Forms/SessionsTasks/Tasks";
+import DataList from '../utils/DataList';
+import UserActivityForm from "../Forms/UserActivity/UserActivityForm";
+import LoadingIndicator from "../utils/LoadingIndicator";
+import SessionsTasks from "../Forms/SessionsTasks/SessionsTasks";
+import Tasks from "../Forms/SessionsTasks/Tasks";
 
-import {sessionsTasksInfoDataListKeys} from '../utils/DataListKeys/sessionsTasksInfo'
+import {sessionsTasksInfoDataListKeys} from '../../utils/DataListKeys/sessionsTasksInfo'
 
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
@@ -106,7 +106,7 @@ function AddUserActivity() {
                 {!formValues.availabilities.sessions_tasks_id ?
                     <React.Fragment>
                         <Tasks value={formValues.tasks} handleInputChange={handleTasksChange}/>
-                        <SessionsTasks api={false} value={formValues.sessions_tasks} handleInputChange={handleSessionsTasksChange}/>
+                        <SessionsTasks edit={false} api={false} value={formValues.sessions_tasks} handleInputChange={handleSessionsTasksChange}/>
                     </React.Fragment>
                     :
                     <React.Fragment>
