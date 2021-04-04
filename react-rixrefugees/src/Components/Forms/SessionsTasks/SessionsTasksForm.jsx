@@ -98,9 +98,14 @@ function SessionsTasksForm(props) {
 
     // Select of Accomodations
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {checked, name, value } = e.target;
         let next = formValues[props.api];
-        next[name] = value;
+        if (checked) {
+            next[name] = checked;
+        }
+        else {
+            next[name] = value;
+        }
         setFormValues({
           ...formValues,
           [props.api]: next
@@ -119,7 +124,7 @@ function SessionsTasksForm(props) {
                 )
             case 'sessions_tasks' :
                 return (
-                    <SessionsTasks api={true} value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
+                    <SessionsTasks api={true} edit={props.edit} value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
                 )
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");

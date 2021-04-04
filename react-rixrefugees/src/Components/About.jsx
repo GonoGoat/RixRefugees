@@ -103,7 +103,7 @@ function About() {
                     {sessionsTasks.filter(obj => obj.sessions_id === selected).map(getCards)}
                 </Carousel>
                 <br/>
-                <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push('/user/activity')}>Cliquez ici !</Button>
+                <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push('/user/activity/add')}>Cliquez ici !</Button>
             </div>
 
         );

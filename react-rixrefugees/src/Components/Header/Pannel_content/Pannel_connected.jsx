@@ -13,7 +13,7 @@ function Pannel_connected() {
                 <ListItemText><Link to="/user/profile">Paramètres du compte</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/user/activity">Activités proposées</Link></ListItemText>
+                <ListItemText><Link to="/user/activity">Historique des disponibilités soumises</Link></ListItemText>
             </ListItem>
         </List>
     )
