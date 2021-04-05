@@ -19,9 +19,12 @@ function getAvailabilitiesPerUser(req, res, next) {
   })
 }
 
-function getSessionsInfo(req, res, next) {
-  pool.query('select sessions.id as id, to_char(pla.start_avail,\'DD/MM/YYYY HH24:MI\') as start_avail, to_char(pla.end_avail,\'DD/MM/YYYY HH24:MI\') as end_avail, places.address, places.description, users.mail  from sessions join users on sessions.users_id = users.id join places_availabilities as pla on pla.id = sessions.places_availabilities_id join places on places.id = pla.places_id where sessions.id = $1'
-  ,[parseInt(req.params.id)],(err,rows) =>  {
+function getAvailabilitiesInfo(req, res, next) {
+  pool.query
+  ('select id,description,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate,sessions_tasks_id,'+
+  ' case when iscanceled = true then \'Annulée\' when iscanceled = false then \'En cours\' else \'Inconnu\' end as iscanceled' +
+  ' from availabilities where id = $1',[req.params.id]
+  ,(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows[0]);
   })
@@ -76,7 +79,7 @@ function updateSessions(req, res, next) {
 
 module.exports = {
   getAllSessions: getAllSessions,
-  getSessionsInfo : getSessionsInfo,
+  getAvailabilitiesInfo : getAvailabilitiesInfo,
   getAvailabilitiesPerUser : getAvailabilitiesPerUser,
   addAvailabilities : addAvailabilities,
   addNewAvailabilities : addNewAvailabilities,

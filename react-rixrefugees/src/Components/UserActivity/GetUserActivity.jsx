@@ -34,6 +34,7 @@ function GetUserActivity() {
                     Etat : {value.iscanceled ? "Annulée" : "En cours"}<br/>
                     Description : {value.description}
                 </Typography>
+                <Button size="small" onClick={() => history.push(`/user/activity/${value.id}`)}>Plus d'informations</Button>
                 <Divider/>
             </div>
         )
