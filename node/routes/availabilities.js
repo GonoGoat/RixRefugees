@@ -9,6 +9,8 @@ router.get('/user/:id', db.getAvailabilitiesPerUser);
 router.get('/:id', db.getAvailabilitiesInfo);
 router.post('/add', db.addAvailabilities);
 router.post('/add/new', db.addNewAvailabilities);
+router.put('/update',db.updateAvailabilities);
+router.put('/cancel',db.cancelAvailabilities);
 //router.delete('/delete',db.deleteAllAccomodations)
 
 

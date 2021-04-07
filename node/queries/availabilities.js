@@ -60,18 +60,15 @@ function addAvailabilities(req, res, next) {
   });
 }
 
-function deleteSessions(req, res, next) {
-  let e = req.body;
-  e.map((obj) => {
-    pool.query('delete from sessions where id = ($1)',[obj],(err,rows) =>  {
-      if (err) throw err;
-    })
-  });
+function cancelAvailabilities(req, res, next) {
+  pool.query('update availabilities set iscanceled=true, updatedate = now() where id = ($1)',[req.body.id],(err,rows) =>  {
+    if (err) throw err;
+  })
   return res.send({data : true});
 }
 
-function updateSessions(req, res, next) {
-  pool.query('update sessions set start_date=$1, end_date = $2, users_id = $3, places_availabilities_id = $4 where id = $5',[req.body.start_date,req.body.end_date,req.body.users_id, req.body.places_availabilities_id, req.body.id],(err,rows) =>  {
+function updateAvailabilities(req, res, next) {
+  pool.query('update availabilities set description=$1, updatedate = now() where id = ($2)',[req.body.description,req.body.id],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })
@@ -83,6 +80,6 @@ module.exports = {
   getAvailabilitiesPerUser : getAvailabilitiesPerUser,
   addAvailabilities : addAvailabilities,
   addNewAvailabilities : addNewAvailabilities,
-  deleteSessions : deleteSessions,
-  updateSessions : updateSessions
+  updateAvailabilities : updateAvailabilities,
+  cancelAvailabilities : cancelAvailabilities
 };
