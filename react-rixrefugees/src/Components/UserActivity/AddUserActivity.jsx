@@ -7,7 +7,7 @@ import LoadingIndicator from "../utils/LoadingIndicator";
 import SessionsTasks from "../Forms/SessionsTasks/SessionsTasks";
 import Tasks from "../Forms/SessionsTasks/Tasks";
 
-import {sessionsTasksInfoDataListKeys} from '../../utils/DataListKeys/sessionsTasksInfo'
+import {sessionsTasksInfoDataListKeys} from '../../utils/DataListKeys/sessionsTasksInfo';
 
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';

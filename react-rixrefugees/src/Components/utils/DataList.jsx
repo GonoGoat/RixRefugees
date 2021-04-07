@@ -13,6 +13,9 @@ function DataList(props) {
         await axios.get(`${process.env.REACT_APP_API}${props.api}`)
         .then(res => {
             setDetails(res.data);
+            if (props.api.includes('availabilities') && props.hasOwnProperty('setDetails')) {
+                props.setDetails(res.data.sessions_tasks_id)
+            }
             setLoading(false);
         })
         .catch(err => {
