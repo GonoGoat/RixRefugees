@@ -17,3 +17,12 @@ insert into tasks (name) values ('Lessive'), ('Cours de boxe'), ('Atelier cuisin
 insert into sessions_tasks (isfromadmin,description,amountofpeople, start_date,end_date,tasks_id,sessions_id)
     values (true,'Lessive de la semaine pour les 5 occupants',1,now(),now(),1,1),(true,'Cours avec coach adrien à LLN',2,'2022-08-22 19:10:25','2022-08-22 19:30:25',2,2),
         (false,'Atelier à Mont-Saint-Guibert pour 2 amis',1,'2025-08-22 19:10:25','2025-08-22 19:20:25' ,3,3);
+
+--Amis--
+insert into friends (fname) values ('Paul'),('Pierre'),('Jacque'),('Toto');
+
+--Disponibilités et Assignations--
+insert into availabilities (description,isCanceled,users_id,sessions_tasks_id)
+    values ('dispo 1',false,1,1),('dispo 2',false,2,1),('dispo 3',false,3,1),
+        ('dispo 1',false,1,2),('dispo 2',false,2,2),('dispo 1',false,3,3);
+insert into Assignments (friends_id,availabilities_id) values (1,1),(1,2),(2,2),(2,3),(3,4),(3,5);

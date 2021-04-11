@@ -30,6 +30,7 @@ function SessionsTasks (props) {
                 console.log(err);
             });
         }
+        else {
             axios.get(`${process.env.REACT_APP_API}/sessions/available`)
             .then(res => {
                 setSessions(res.data);
@@ -37,13 +38,12 @@ function SessionsTasks (props) {
             .catch(err => {
                 console.log(err);
             });
+        }
     }, [])
 
-    if ((!tasks && props.api) || !sessions) {
+    if ((!tasks && props.api) || (!sessions && !props.api)) {
         return (
-            <React.Fragment>
-                <LoadingIndicator/>
-            </React.Fragment>
+            <LoadingIndicator/>
         )
     }
     else {

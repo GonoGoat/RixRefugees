@@ -150,17 +150,11 @@ function SessionsTasksTab() {
     const moment = require('moment');
 
     React.useEffect(() => {
+        setLoading(true);
         axios.get(`${process.env.REACT_APP_API}/sessions`)
         .then(res => {
             setSessions(res.data);
             setLoading(false);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-        axios.get(`${process.env.REACT_APP_API}${api}`)
-        .then(res => {
-            setSessionsTasks(res.data);
         })
         .catch(err => {
             console.log(err);
@@ -191,6 +185,20 @@ function SessionsTasksTab() {
         }
     }
 
+
+    async function getSessionsTasks(id) {
+        if (id != panel) {
+            axios.get(`${process.env.REACT_APP_API}${api}/sessions/${id}`)
+            .then(res => {
+                setSessionsTasks(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        setPanel(id);
+    }
+
     function getSessions(value) {
         return (
             <div className={styles.root}>
@@ -200,13 +208,17 @@ function SessionsTasksTab() {
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
-                        onClick={() => setPanel(value.id)}
+                        onClick={() => getSessionsTasks(value.id)}
                     >
                         <Typography className={styles.heading}>Session n°{value.id} : {moment(value.start_date).format("DD/MM/YYYY")} - {moment(value.end_date).format("DD/MM/YYYY")}</Typography>
                         <Typography className={styles.secondaryHeading}>Coordonné par {value.username} au lieu "{value.name}"</Typography>
                     </AccordionSummary>
                     <AccordionDetails classes={{root : styles.inline}}>
-                        <ListingGrid api={api} filter={true} setForm={() => setForm({form : false, edit : false})} rows={sessionsTasks.filter(val => val.sessions_id === value.id)} columns={sessionTasksList} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
+                        {sessionsTasks ?
+                            <ListingGrid api={api} filter={true} setForm={() => setForm({form : false, edit : false})} rows={sessionsTasks} columns={sessionTasksList} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>
+                        :
+                            <LoadingIndicator/>
+                        }
                         <div>
                             <AddButton disabled={new Date() > new Date(value.end_date)} add={()=>setForm({form : true,edit : false})}/>
                             <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)} delete={()=>deleteRows()}/>

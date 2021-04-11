@@ -35,6 +35,19 @@ function getSessionsTasksInfo(req, res, next) {
   })
 }
 
+function getSessionsTasksPerSessions(req, res, next) {
+  pool.query
+  ('select sessions_tasks.id, isfromadmin, amountofpeople, sessions_id, tasks.id as tasks_id,tasks.name,' +
+   ' concat(to_char(start_date,\'YYYY-MM-DD\'),\'T\',to_char(start_date, \'HH24:MI\')) as start_date,' +
+   ' concat(to_char(end_date,\'YYYY-MM-DD\'),\'T\',to_char(end_date, \'HH24:MI\')) as end_date '+
+   ' from sessions_tasks join tasks on tasks.id = sessions_tasks.tasks_id' +
+   ' where sessions_id = $1',[parseInt(req.params.id)]
+  ,(err,rows) =>  {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
+}
+
 function getSessionsTasksDesc(req, res, next) {
   pool.query('select id, description from sessions_tasks id where id = $1'
   ,[parseInt(req.params.id)],(err,rows) =>  {
@@ -78,6 +91,7 @@ module.exports = {
   getAvailableSessionsTasks : getAvailableSessionsTasks,
   getSessionsTasksDesc : getSessionsTasksDesc,
   getSessionsTasksInfo : getSessionsTasksInfo,
+  getSessionsTasksPerSessions : getSessionsTasksPerSessions,
   addSessionsTasks : addSessionsTasks,
   deleteSessionsTasks : deleteSessionsTasks,
   updateSessionsTasks : updateSessionsTasks

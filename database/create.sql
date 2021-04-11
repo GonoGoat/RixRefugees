@@ -232,3 +232,49 @@ create table Assignments (
 			references Availabilities(id)
 			on Delete cascade
 );
+
+/******************PROCEDURES************/
+
+CREATE OR REPLACE FUNCTION hasEnoughAssignments (sess_tasks_id int)  
+RETURNS int 
+LANGUAGE plpgsql  
+AS  
+$$  
+DECLARE  
+assignNumber int;
+
+BEGIN  
+select count(*) into assignNumber from assignments
+left join availabilities on availabilities.id = assignments.availabilities_id
+left join sessions_tasks on availabilities.sessions_tasks_id = sessions_tasks.id
+where sessions_tasks_id = sess_tasks_id;
+
+return assignNumber;
+END
+$$;
+
+
+
+
+CREATE OR REPLACE FUNCTION isAssigned (avail_id int)  
+RETURNS boolean  
+LANGUAGE plpgsql  
+AS  
+$$  
+DECLARE  
+assignNumber int := (select count(*) from assignments
+				left join availabilities on availabilities.id = assignments.availabilities_id
+				where availabilities_id = avail_id);
+
+isAssigned boolean;
+
+BEGIN  
+	select case 
+		when assignNumber > 0 then true
+		else false 
+	end 
+	into isAssigned;
+	
+	return isAssigned;
+END
+$$;

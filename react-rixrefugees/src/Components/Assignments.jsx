@@ -37,26 +37,23 @@ function Assignments() {
 
     function getListSessionsTasks(value) {
         return (
-            'Hello world'
+            <ListItemText
+                primary={`Tâche de sessions n°${value.id} : ${moment(value.start_date).format('DD/MM/YYYY HH:mm')} - ${moment(value.end_date).format('DD/MM/YYYY HH:mm')}`}
+                secondary={`${value.name} pour ${value.amountofpeople} personne${value.amountofpeople > 1 ? "s" : ""}`}
+            />
         )
     }
 
-    /*{!sessionsTasks ?
-        (loading ?
-            <LoadingIndicator/>
-        :
-            <React.Fragment/>
-        )
-    :
-        <Collapse in={expanded && expanded === value.id} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-                {sessionsTasks.map(getListSessionsTasks)}                         
-            </List>
-        </Collapse>
-    }  */
-
-    function handleClick(id) {
+    async function handleClick(id) {
         if (expanded === false || expanded != id) {
+            await axios.get(`${process.env.REACT_APP_API}/sessions_tasks/sessions/${id}`)
+            .then(res => {
+                setSessionsTasks(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
             setExpanded(id)
         }
         else {
@@ -74,13 +71,19 @@ function Assignments() {
                     />
                     {expanded ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse in={expanded && expanded === value.id} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItem button className={styles.nested}>
-                            <ListItemText primary="Hello world" />
-                        </ListItem>                            
-                    </List>
-                </Collapse>
+                {!sessionsTasks ?
+                    (loading ?
+                        <LoadingIndicator/>
+                    :
+                        <React.Fragment/>
+                    )
+                :
+                    <Collapse in={expanded && expanded === value.id} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            {sessionsTasks.map(getListSessionsTasks)}                         
+                        </List>
+                    </Collapse>
+                } 
             </React.Fragment>
         )
     }
