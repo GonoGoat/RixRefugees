@@ -1,7 +1,13 @@
 const { makeStyles } = require("@material-ui/core")
 
 const classes = makeStyles((theme) => ({
-    root : {},
+    root : {
+        width : '100%',
+        display : "flex"
+    },
+    formRoot : {
+        width : "100%"
+    },
     listRoot : {
         width: '100%',
         maxWidth: 600,
