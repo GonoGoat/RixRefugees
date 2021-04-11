@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer} from "./Components";
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
@@ -24,7 +24,8 @@ function App() {
           <Route path="/user/activity/add/:id" exact component={() => <AddUserActivity />} />
           <Route path="/user/activity/:id" exact component={() => <RetrieveAndChangeUserActivity />} />
           <Route path="/manage/places" exact component={() => <Places />} />
-          <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/> 
+          <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/>
+          <Route path="/manage/assignments" exact component={() => <Assignments />}/>
         </Switch>
         <Footer/>
       </Router>
