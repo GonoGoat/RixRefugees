@@ -25,7 +25,7 @@ function getAvailableSessionsTasks(req, res, next) {
 
 function getSessionsTasksInfo(req, res, next) {
   pool.query((
-    'select sessions_tasks.id, tasks.id as tasks_id,tasks.name,sessions_tasks.description,sessions_id, concat(users.fname, \' \', users.lname) as username,' +
+    'select sessions_tasks.id, tasks.id as tasks_id,tasks.name,sessions_tasks.description,sessions_id, concat(users.lname, \' \', users.fname) as username,' +
     ' to_char(sessions_tasks.start_date,\'DD/MM/YYYY HH24:MI\') as start_date, to_char(sessions_tasks.end_date,\'DD/MM/YYYY HH24:MI\') as end_date' +
     ' from sessions_tasks join tasks on tasks.id = sessions_tasks.tasks_id join sessions on sessions.id = sessions_tasks.sessions_id join users on sessions.users_id = users.id' +
     ' where sessions_tasks.id = $1'),[parseInt(req.params.id)]

@@ -115,7 +115,7 @@ function Assignments() {
                 </List>
                 {selected ?
                     <div className={styles.formRoot}>
-                        <AssignmentsForm value={selected}/>
+                        <AssignmentsForm id={selected}/>
                     </div>                  
                 :
                     <React.Fragment/>

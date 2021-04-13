@@ -24,5 +24,5 @@ insert into friends (fname) values ('Paul'),('Pierre'),('Jacque'),('Toto');
 --Disponibilités et Assignations--
 insert into availabilities (description,isCanceled,users_id,sessions_tasks_id)
     values ('dispo 1',false,1,1),('dispo 2',false,2,1),('dispo 3',false,3,1),
-        ('dispo 1',false,1,2),('dispo 2',false,2,2),('dispo 1',false,3,3);
+        ('dispo 1',false,1,2),('dispo 2',false,2,2),('dispo 1',false,3,3),('pas assigné',false,3,2);
 insert into Assignments (friends_id,availabilities_id) values (1,1),(1,2),(2,2),(2,3),(3,4),(3,5);
