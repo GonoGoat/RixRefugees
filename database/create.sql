@@ -254,9 +254,7 @@ END
 $$;
 
 
-
-
-CREATE OR REPLACE FUNCTION isAssigned (avail_id int)  
+CREATE OR REPLACE FUNCTION isAvailAssigned (avail_id int)
 RETURNS boolean  
 LANGUAGE plpgsql  
 AS  
@@ -276,5 +274,51 @@ BEGIN
 	into isAssigned;
 	
 	return isAssigned;
+END
+$$;
+
+CREATE OR REPLACE FUNCTION isFriendAssigned (sess_tasks_id int, f_id int)
+RETURNS boolean  
+LANGUAGE plpgsql  
+AS  
+$$  
+DECLARE  
+assignNumber int := (select count(*) from assignments
+				left join availabilities on availabilities.id = assignments.availabilities_id
+				left join sessions_tasks on availabilities.sessions_tasks_id = sessions_tasks.id
+				where sessions_tasks_id = sess_tasks_id and friends_id = f_id and availabilities.isCanceled = false);
+
+isAssigned boolean;
+
+BEGIN  
+	select case 
+		when assignNumber > 0 then true
+		else false 
+	end 
+	into isAssigned;
+	
+	return isAssigned;
+END
+$$;
+
+CREATE OR REPLACE FUNCTION hasAvailabilities (sess_tasks_id int, u_id int)  
+RETURNS boolean  
+LANGUAGE plpgsql  
+AS  
+$$  
+DECLARE  
+availNumber int := (select count(*) from availabilities
+				where sessions_tasks_id = sess_tasks_id and users_id = u_id);
+
+hasAvailabilities boolean;
+
+BEGIN  
+	select case 
+		when availNumber > 0 then true
+		else false 
+	end 
+	into hasAvailabilities;
+	
+	return hasAvailabilities;
 END
 $$;

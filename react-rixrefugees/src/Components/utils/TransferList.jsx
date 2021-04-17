@@ -46,7 +46,7 @@ function TransferList(props) {
   const handleCheckedRight = () => {
     props.setRight(props.right.concat(leftChecked));
     props.setLeft(not(props.left, leftChecked));
-    props.setChecked(not(checked, leftChecked));
+    setChecked(not(checked, leftChecked));
   };
 
   const handleCheckedLeft = () => {
@@ -62,7 +62,7 @@ function TransferList(props) {
           const labelId = `transfer-list-item-${value.id}-label`;
 
           return (
-            <ListItem key={value.id} role="listitem" button>
+            <ListItem key={value.id} role="listitem" button onClick={() => props.setSelected(value.id)}>
               <ListItemIcon>
                 <Checkbox
                   checked={checked.findIndex((obj) => obj.id ===value.id) !== -1}

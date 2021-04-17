@@ -1,9 +1,8 @@
 import React from 'react';
 
-import LoadingIndicator from "../../utils/LoadingIndicator";
-import Assignments from "./Assignments";
+import Friends from "./Friends";
 import Users from "./Users";
-import DataList from "../../utils/DataList";
+import Admins from "./Admins";
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -12,25 +11,29 @@ import Button from '@material-ui/core/Button';
 
 function AssignmentsForm(props) {
     const [activeStep, setActiveStep] = React.useState(0);
-    const [assignments,setAssignments] = React.useState();
+    const [admins,setAdmins] = React.useState();
     const [users,setUsers] = React.useState();
+    const [friends,setFriends] = React.useState()
 
-    const steps = ["Personnes à assigner",'Amis à assigner',"Confirmation"];
+    const stepsRef = React.useRef(null)
+
+    const steps = ["Bénévoles à assigner","Administrateur à assigner",'Amis à assigner',"Confirmation"];
 
     function getStepContent() {
         switch (activeStep) {
           case 0:
-            return <Assignments id={props.id} setAssignments={(ass) => setAssignments(ass)}/>;
+            return <Users id={props.id} setUsers={(u) => setUsers(u)} ref={stepsRef}/>;
           case 1:
-            return <Users id={props.id} setUsers={(u) => setUsers(u)}/>;
+            return <Admins id={props.id} setAdmins={(a) => setAdmins(a)} ref={stepsRef}/>;
           case 2:
-            return 'Yes !';
+            return <Friends id={props.id} setFriends={(f) => setFriends(f)}/>
           default:
             return 'Erreur';
         }
       }
   
     const handleNext = () => {
+      stepsRef.current.setState()
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
   
@@ -48,20 +51,20 @@ function AssignmentsForm(props) {
           ))}
         </Stepper>
         <div>
+          <div>
+            {getStepContent()}
             <div>
-              {getStepContent()}
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                >
-                  Back
-                </Button>
-                <Button variant="contained" color="primary" onClick={handleNext}>
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </div>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+              <Button variant="contained" color="primary" onClick={handleNext}>
+                {activeStep === steps.length - 1 ? 'Terminer' : 'Continuer'}
+              </Button>
             </div>
+          </div>
         </div>
       </div>
     );

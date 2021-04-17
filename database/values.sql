@@ -19,7 +19,8 @@ insert into sessions_tasks (isfromadmin,description,amountofpeople, start_date,e
         (false,'Atelier à Mont-Saint-Guibert pour 2 amis',1,'2025-08-22 19:10:25','2025-08-22 19:20:25' ,3,3);
 
 --Amis--
-insert into friends (fname) values ('Paul'),('Pierre'),('Jacque'),('Toto');
+insert into status (name) values ('Demandeur'),('CGRA'),('Réfugié');
+insert into friends (fname,status_id) values ('Paul',1),('Pierre',2),('Jacque',3),('Toto',1);
 
 --Disponibilités et Assignations--
 insert into availabilities (description,isCanceled,users_id,sessions_tasks_id)

@@ -4,7 +4,9 @@ import DataList from "../../utils/DataList";
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import TransferList from "../../utils/TransferList"
 
-function Assignments(props) {
+import {friendsDataListKeys} from "../../../utils/DataListKeys/friends";
+
+const Friends = React.forwardRef((props, ref) => {
     
     const [loading,setLoading] = React.useState(false);
     const [right, setRight] = React.useState([]);
@@ -12,10 +14,16 @@ function Assignments(props) {
     const [selected,setSelected] = React.useState()
 
     const axios = require('axios')
+
+    React.useImperativeHandle(ref, () => ({
+        setState() {
+            
+        }
+    }));
      
     React.useEffect(() => {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_API}/availabilities/assigned/${props.id}`)
+        axios.get(`${process.env.REACT_APP_API}/friends/assigned/${props.id}`)
         .then(res => {
             setRight(res.data.filter((value) => value.isassigned === true));
             setLeft(res.data.filter((value) => value.isassigned === false));
@@ -35,12 +43,12 @@ function Assignments(props) {
                 <TransferList
                     right={right} setRight={(r) => setRight(r)}
                     left={left} setLeft={(l) => setLeft(l)}
-                    setSelected={(id) => setSelected(id != selected ? id : undefined)}
+                    setSelected={(id) => setSelected(id != selected ? id : false)}
                 />
-                {selected ? <DataList api={`/availabilities/${selected}`}/> : <React.Fragment/>}
+                {selected ? <DataList api={`/friends/present/${selected}`} keys={friendsDataListKeys}/> : <React.Fragment/>}
             </React.Fragment>
         )
     }
-}
+});
 
-export default Assignments;
+export default Friends;

@@ -12,7 +12,7 @@ function getAllSessions(req, res, next) {
 
 function getValidAvailabilitiesPerSessionsTasks(req, res, next) {
   pool.query
-  ('select availabilities.id,users_id,sessions_tasks_id, concat(users.lname, \' \', users.fname) as username, isAssigned(availabilities.id) as isassigned from availabilities' +
+  ('select availabilities.id,users_id,sessions_tasks_id, concat(users.lname, \' \', users.fname) as username, isavailAssigned(availabilities.id) as isassigned from availabilities' +
    ' join users on users.id = availabilities.users_id where availabilities.sessions_tasks_id = $1 and availabilities.iscanceled = false'
    ,[req.params.id],(err,rows) =>  {
     if (err) throw err;
