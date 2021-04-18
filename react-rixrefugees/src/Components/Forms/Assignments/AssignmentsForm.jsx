@@ -3,6 +3,7 @@ import React from 'react';
 import Friends from "./Friends";
 import Users from "./Users";
 import Admins from "./Admins";
+import AssignmentsRecap from "./AssignmentsRecap";
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -17,7 +18,7 @@ function AssignmentsForm(props) {
 
     const stepsRef = React.useRef(null)
 
-    const steps = ["Bénévoles à assigner","Administrateur à assigner",'Amis à assigner',"Confirmation"];
+    const steps = ["Bénévoles à assigner","Administrateurs à assigner",'Amis à assigner',"Confirmation"];
 
     function getStepContent() {
         switch (activeStep) {
@@ -26,15 +27,22 @@ function AssignmentsForm(props) {
           case 1:
             return <Admins id={props.id} setAdmins={(a) => setAdmins(a)} ref={stepsRef}/>;
           case 2:
-            return <Friends id={props.id} setFriends={(f) => setFriends(f)}/>
+            return <Friends id={props.id} setFriends={(f) => setFriends(f)} ref={stepsRef}/>
+          case 3:
+            return <AssignmentsRecap users={users} admins={admins} friends={friends} />
           default:
             return 'Erreur';
         }
       }
   
     const handleNext = () => {
-      stepsRef.current.setState()
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      if (activeStep === steps.length - 1) {
+        
+      }
+      else {
+        stepsRef.current.setState()
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
     };
   
     const handleBack = () => {
@@ -58,10 +66,10 @@ function AssignmentsForm(props) {
                 disabled={activeStep === 0}
                 onClick={handleBack}
               >
-                Back
+                Précédent
               </Button>
               <Button variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Terminer' : 'Continuer'}
+                {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
               </Button>
             </div>
           </div>

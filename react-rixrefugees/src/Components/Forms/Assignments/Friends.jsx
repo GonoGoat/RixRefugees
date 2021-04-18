@@ -17,7 +17,16 @@ const Friends = React.forwardRef((props, ref) => {
 
     React.useImperativeHandle(ref, () => ({
         setState() {
-            
+            let r = [...right]
+            r.forEach(obj => {
+                obj.isassigned === true ? obj.state = 'set' : obj.state = 'add'
+            })
+            let l = [...left]
+            l.forEach(obj => {
+                obj.isassigned === true ? obj.state = 'del' : obj.state = null
+            })
+            let values = r.concat(l.filter(obj => obj.state != null));
+            props.setFriends(values);
         }
     }));
      

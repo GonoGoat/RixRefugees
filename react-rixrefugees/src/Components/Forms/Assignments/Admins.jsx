@@ -14,7 +14,7 @@ const Admins = React.forwardRef((props, ref) => {
 
     React.useImperativeHandle(ref, () => ({
         setState() {
-            console.log("oui")
+            props.setAdmins(right);
         }
     }));
      
