@@ -4,6 +4,7 @@ import Friends from "./Friends";
 import Users from "./Users";
 import Admins from "./Admins";
 import AssignmentsRecap from "./AssignmentsRecap";
+import LoadingIndicatior from "../../utils/LoadingIndicator";
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -15,29 +16,130 @@ function AssignmentsForm(props) {
     const [admins,setAdmins] = React.useState();
     const [users,setUsers] = React.useState();
     const [friends,setFriends] = React.useState()
+    const [loading,setLoading] = React.useState(false)
 
-    const stepsRef = React.useRef(null)
+    const stepsRef = React.useRef(null);
+
+    const axios = require('axios');
 
     const steps = ["Bénévoles à assigner","Administrateurs à assigner",'Amis à assigner',"Confirmation"];
 
     function getStepContent() {
-        switch (activeStep) {
-          case 0:
-            return <Users id={props.id} setUsers={(u) => setUsers(u)} ref={stepsRef}/>;
-          case 1:
-            return <Admins id={props.id} setAdmins={(a) => setAdmins(a)} ref={stepsRef}/>;
-          case 2:
-            return <Friends id={props.id} setFriends={(f) => setFriends(f)} ref={stepsRef}/>
-          case 3:
-            return <AssignmentsRecap users={users} admins={admins} friends={friends} />
-          default:
-            return 'Erreur';
+      switch (activeStep) {
+        case 0:
+          return <Users id={props.id} setUsers={(u) => setUsers(u)} ref={stepsRef}/>;
+        case 1:
+          return <Admins id={props.id} setAdmins={(a) => setAdmins(a)} ref={stepsRef}/>;
+        case 2:
+          return <Friends id={props.id} setFriends={(f) => setFriends(f)} ref={stepsRef}/>
+        case 3:
+          return <AssignmentsRecap users={users} admins={admins} friends={friends} />
+        default:
+          return 'Erreur';
+      }
+    }
+
+    async function handleDelete(del) {
+      console.log(del);
+    }
+
+    async function handleAdmins(admin) {
+      await axios.post(`${process.env.REACT_APP_API}/assignments/add/admins`, {
+        admin : admin,
+        sessions_tasks : props.id
+        })
+        .then(res => {
+            console.log('admin ok');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    async function handleAdd(add) {
+      setLoading(true);
+      await axios.post(`${process.env.REACT_APP_API}/assignments/add/users`, add)
+        .then(res => {
+          console.log('users ok');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    function handleSubmit() {
+      
+      setLoading(true);
+
+      let del = {};
+      if (users.filter(obj => obj.state === "del").length > 0) {
+        del.users = [];
+        users.filter(obj => obj.state === "del").forEach(value => del.users.push(value.id))
+      }
+      if (friends.filter(obj => obj.state === "del").length > 0) {
+        del.friends = {
+          friends : [],
+          users : []
+        }
+        friends.filter(obj => obj.state === "del").forEach(value => del.friends.friends.push(value.id))
+        users.filter(obj => obj.state === "set").forEach(value => del.friends.users.push(value.id))
+      }
+
+      let add = [];
+      let uAdd = false;
+      if (users.filter(obj => obj.state === "add").length > 0) {
+        users.filter(obj => obj.state === "add").forEach((value) => {
+          add.push({
+            id : value.id,
+            friends : friends.filter(obj => obj.state === "set").map(f => f.id)
+          });
+        });
+        uAdd = true;
+      }
+      if (friends.filter(obj => obj.state === "add").length > 0) {
+        users.filter(obj => obj.state === "set").forEach((value) => {
+          add.push({
+            id : value.id,
+            isAdmin : false,
+            friends : friends.filter(obj => obj.state === "add").map(f => f.id)
+          });
+        });
+        if (uAdd) {
+          let id;
+          let newUsers = users.filter(obj => obj.state === "add");
+          let newFriends = friends.filter(obj => obj.state === "add");
+          newUsers.forEach((value) => {
+            id = add.findIndex(obj => obj.id === value.id)
+            add[id].friends = add[id].friends.concat(newFriends.map(f => f.id))
+          });
         }
       }
+      let admin = [];
+      if (admins.length > 0) {
+        admins.forEach(value => {
+          admin.push({
+            id : value.id,
+            friends : friends.filter(obj => obj.state === "add" || obj.state === "set").map(f => f.id)
+          });
+        })
+      }
+
+      if (admin.length > 0) {
+        handleAdmins(admin);
+      }
+      if (Object.keys(del).length > 0) {
+        handleDelete(del);
+      }
+      if (add.length > 0) {
+        handleAdd(add);
+      }
+      
+      setLoading(false);
+    }
   
     const handleNext = () => {
       if (activeStep === steps.length - 1) {
-        
+        handleSubmit();
       }
       else {
         stepsRef.current.setState()
@@ -49,33 +151,38 @@ function AssignmentsForm(props) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
   
-    return (
-      <div>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+    if (loading) {
+      return <LoadingIndicatior/>
+    }
+    else {
+      return (
         <div>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
           <div>
-            {getStepContent()}
             <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-              >
-                Précédent
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
-              </Button>
+              {getStepContent()}
+              <div>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                >
+                  Précédent
+                </Button>
+                <Button variant="contained" color="primary" onClick={handleNext}>
+                  {activeStep === steps.length - 1 ? 'Terminer' : 'Suivant'}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
 }
 
 export default AssignmentsForm;

@@ -8,7 +8,7 @@ insert into places_availabilities (start_avail,end_avail,bed_quantity,places_id)
 --Sessions et utilisateurs--
 insert into users (password,fname,lname,mail,isAdmin,isActive,lastActivity,contact)
     values ('test123','Marc','Deville','marc.deville54@outlook.fr',true,true,now(),''),('test123','Gauthier','Verschraegen','gauth.vrsgn@outlook.be',false,true,now(),''),
-    ('test123','Claude','Masson','c.masson@ephec.be',true,true,now(),'');
+    ('test123','Claude','Masson','c.masson@ephec.be',true,true,now(),''),('test123','Lucas','Pastori','lucas.pastori@gmail.com',true,true,now(),'');
 insert into sessions (start_date,end_date,users_id,places_availabilities_id) 
     values (now(),now(),1,1),('2050-06-12','2050-06-12',1,2),(now(),now(),3,3);
 
