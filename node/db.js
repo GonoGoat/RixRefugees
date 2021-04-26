@@ -18,10 +18,16 @@ let pool = new pg.Pool({
   password: process.env.DB_PASSWORD,
   port:  process.env.DB_PORT
 });
+
 pool.connect(function (err) {
   if (err) throw err;
   else {
     console.log('Connection with database done.');
   }
 });
+/*
+pool.on('error', (err, client) => {
+  console.error('Error:', err);
+});
+*/
 module.exports = pool;

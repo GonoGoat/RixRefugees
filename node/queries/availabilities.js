@@ -3,8 +3,18 @@ var pool = require('../db.js')
 // add query functions
 function getAllSessions(req, res, next) {
   pool.query
-  ('select sessions.id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') as end_date,users_id, concat(users.fname, \' \', users.lname) as username, places.id as placesId,places.name,places_availabilities_id from sessions join places_availabilities on places_availabilities.id = sessions.places_availabilities_id join users on sessions.users_id = users.id join places on places_availabilities.places_id = places.id order by sessions.id desc'
+  ('select sessions.id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') as end_date,users_id, concat(users.lname, \' \', users.fname) as username, places.id as placesId,places.name,places_availabilities_id from sessions join places_availabilities on places_availabilities.id = sessions.places_availabilities_id join users on sessions.users_id = users.id join places on places_availabilities.places_id = places.id order by sessions.id desc'
   ,(err,rows) =>  {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
+}
+
+function getValidAvailabilitiesPerSessionsTasks(req, res, next) {
+  pool.query
+  ('select availabilities.id,users_id,sessions_tasks_id, concat(users.lname, \' \', users.fname) as username, isavailAssigned(availabilities.id) as isassigned from availabilities' +
+   ' join users on users.id = availabilities.users_id where availabilities.sessions_tasks_id = $1 and availabilities.iscanceled = false'
+   ,[req.params.id],(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
   })
@@ -31,8 +41,6 @@ function getAvailabilitiesInfo(req, res, next) {
 }
 
 function addNewAvailabilities(req, res, next) {
-
-  console.log(req.body);
   pool.query('insert into tasks (name) values ($1) returning id',[req.body.tasks.name],(err,rows) =>  {
     if (err) throw err;
     let tasks_id = rows.rows[0].id;
@@ -76,6 +84,7 @@ function updateAvailabilities(req, res, next) {
 
 module.exports = {
   getAllSessions: getAllSessions,
+  getValidAvailabilitiesPerSessionsTasks : getValidAvailabilitiesPerSessionsTasks,
   getAvailabilitiesInfo : getAvailabilitiesInfo,
   getAvailabilitiesPerUser : getAvailabilitiesPerUser,
   addAvailabilities : addAvailabilities,

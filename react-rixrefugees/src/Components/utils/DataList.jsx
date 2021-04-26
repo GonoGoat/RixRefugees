@@ -12,11 +12,25 @@ function DataList(props) {
         setLoading(true);
         await axios.get(`${process.env.REACT_APP_API}${props.api}`)
         .then(res => {
-            setDetails(res.data);
             if (props.api.includes('availabilities') && props.hasOwnProperty('setDetails')) {
                 props.setDetails(res.data.sessions_tasks_id)
             }
-            setLoading(false);
+            if (res.data.nationality) {
+                axios.get(`https://restcountries.eu/rest/v2/alpha/${res.data.nationality}?fields=translations`)
+                .then(country => {
+                    let data = res.data
+                    data.nationality = country.data.translations.fr
+                    setDetails(data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                setDetails(res.data);
+                setLoading(false);
+            }
         })
         .catch(err => {
             console.log(err);

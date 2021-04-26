@@ -18,6 +18,8 @@ var usersRouter = require ('./routes/users');
 var tasksRouter = require ('./routes/tasks');
 var sessionsTasksRouter = require('./routes/sessions_tasks');
 var availabilitiesRouter = require('./routes/availabilities');
+var friendsRouter = require('./routes/friends');
+var assignmentsRouter = require('./routes/assignments');
 
 var app = express();
 
@@ -46,6 +48,8 @@ app.use('/api/users',usersRouter);
 app.use('/api/tasks',tasksRouter);
 app.use('/api/sessions_tasks',sessionsTasksRouter);
 app.use('/api/availabilities',availabilitiesRouter);
+app.use('/api/friends',friendsRouter);
+app.use('/api/assignments',assignmentsRouter);
 
 app.use('*', reactRouter);
 
