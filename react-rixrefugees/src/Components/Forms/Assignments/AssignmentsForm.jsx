@@ -40,7 +40,13 @@ function AssignmentsForm(props) {
     }
 
     async function handleDelete(del) {
-      console.log(del);
+      await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/friends`, {data : del})
+        .then(res => {
+            console.log('del ok');
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     async function handleAdmins(admin) {
@@ -57,7 +63,6 @@ function AssignmentsForm(props) {
     }
 
     async function handleAdd(add) {
-      setLoading(true);
       await axios.post(`${process.env.REACT_APP_API}/assignments/add/users`, add)
         .then(res => {
           console.log('users ok');
