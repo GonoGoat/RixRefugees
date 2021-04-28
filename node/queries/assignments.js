@@ -4,7 +4,7 @@ var moment = require("moment");
 
 // add query functions
 async function getAssignmentsPerUser(req, res, next) {
-  await pool.query('insert into registrations(users_ud) values ($1)', [10]).catch(e => {console.log(e)});
+  //await pool.query('insert into registrations(users_ud) values ($1)', [10]).catch(e => {console.log(e)});
   return res.send('ok')
 }
 
@@ -36,7 +36,6 @@ async function addUsersAssignments(req, res, next) {
 }
 
 async function deleteAssignmentsPerFriends(req, res, next) {
-  console.log(req.body)
   if ("users" in req.body) {
     await pool.query(format('delete from assignments where availabilities_id in (%L)',req.body.users));
   }
@@ -48,7 +47,7 @@ async function deleteAssignmentsPerFriends(req, res, next) {
 }
 
 module.exports = {
-    getAllAccomodations: getAllAccomodations,
+    getAssignmentsPerUser: getAssignmentsPerUser,
     addAdminAssignments : addAdminAssignments,
     addUsersAssignments : addUsersAssignments,
     deleteAssignmentsPerFriends : deleteAssignmentsPerFriends
