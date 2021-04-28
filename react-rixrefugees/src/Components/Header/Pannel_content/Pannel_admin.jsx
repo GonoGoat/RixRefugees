@@ -1,43 +1,41 @@
 import React from 'react';
-import {Link,useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import Pannel_connected from "./Pannel_connected";
 import {List,ListItem, ListItemText,Divider,Button} from '@material-ui/core';
 
-function Pannel_admin() {
-
-    const history = useHistory();
+function Pannel_admin(props) {
 
     return (
         <List>
-            <Pannel_connected/>
+            <Pannel_connected handleClick={(route) => props.handleClick(route)}/>
             <Divider/>
-            <Button onClick={() => history.push("/manage")}>Panel d'administration</Button>
+            <Button onClick={() =>props.handleClick("/manage")}>Panel d'administration</Button>
             <ListItem>
-                <ListItemText><Link to="/manage/calendar">Calendrier</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/calendar")}>Calendrier</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/friends">Amis</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/friends")}>Amis</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/places">Gestion sessions et lieux d'hébergement</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/places")}>Gestion sessions et lieux d'hébergement</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/sessions">Tâches et sessions</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/sessions")}>Tâches et sessions</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/assignments">Assignations</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/assignments")}>Assignations</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/users">Utilisateurs</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/users")}>Utilisateurs</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/web">Site web</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/web")}>Site web</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/relations">Relations</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/relations")}>Relations</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link to="/manage/accounting">Compatiblité</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/accounting")}>Compatiblité</Link></ListItemText>
             </ListItem>
         </List>
     )

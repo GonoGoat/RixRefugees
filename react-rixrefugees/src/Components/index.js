@@ -5,3 +5,4 @@ export { default as Places } from "./Places";
 export { default as SessionsTasks } from "./SessionsTasks";
 export { default as Footer } from './Footer';
 export { default as Assignments } from './Assignments';
+export { default as UserAssignments } from './UserAssignments';

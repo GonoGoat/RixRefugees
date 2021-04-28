@@ -4,8 +4,17 @@ var moment = require("moment");
 
 // add query functions
 async function getAssignmentsPerUser(req, res, next) {
-  //await pool.query('insert into registrations(users_ud) values ($1)', [10]).catch(e => {console.log(e)});
-  return res.send('ok')
+  await pool.query("select distinct on (sessions_tasks.id) sessions_tasks_id as sess_tasks_id ,assignments.id as id, availabilities.id as availabilities_id, sessions_tasks.id sessions_tasks_id, users.id as users_id,"
+  + " assignments.feedback, tasks.name, sessions_tasks.amountofpeople,"
+  + " to_char(sessions_tasks.start_date,'DD/MM/YYYY HH24:MI') as start_date,"
+  + " to_char(sessions_tasks.end_date,'DD/MM/YYYY HH24:MI') as end_date,"
+  + " (select count(*) from assignments as assign where availabilities_id = assignments.availabilities_id) as assignedFriends"
+  + " from assignments"
+  + " join availabilities on assignments.availabilities_id = availabilities.id join users on availabilities.users_id = users.id"
+  +" join sessions_tasks on availabilities.sessions_tasks_id = sessions_tasks.id join tasks on sessions_tasks.tasks_id = tasks.id"
+  +" where users_id = $1 and sessions_tasks.end_date > now()", [req.params.id])
+  .then(result => res.send(result.rows))
+  .catch(e => {console.log(e)});
 }
 
 async function addAdminAssignments(req, res, next) {
@@ -21,7 +30,7 @@ async function addAdminAssignments(req, res, next) {
     })
   });
   pool.query(format('insert into assignments (availabilities_id,friends_id) values %L',queryTwo))
-    .then(result => res.send({data : true}));
+    .then(res.send({data : true}));
 }
 
 async function addUsersAssignments(req, res, next) {
@@ -32,7 +41,7 @@ async function addUsersAssignments(req, res, next) {
     })
   });
   await pool.query(format('insert into assignments (availabilities_id,friends_id) values %L',query))
-    .then(result => res.send({data : true}));
+    .then(res.send({data : true}));
 }
 
 async function deleteAssignmentsPerFriends(req, res, next) {
