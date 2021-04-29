@@ -1,8 +1,8 @@
 var pool = require('../db.js');
 
 // add query functions
-function getAllPlacesAvail(req, res, next) {
-  pool.query('select places_availabilities.id as id,places_id,name,bed_quantity,concat(to_char(start_avail,\'YYYY-MM-DD\'),\'T\',to_char(start_avail, \'HH24:MI\')) as start_avail,concat(to_char(end_avail,\'YYYY-MM-DD\'),\'T\',to_char(end_avail, \'HH24:MI\')) as end_avail from places_availabilities join places on places_availabilities.places_id = places.id',(err,rows) =>  {
+function getAllPresentsFriends(req, res, next) {
+  pool.query('select id, fname, lname, to_char(in_date,\'DD/MM/YYYY\') as in_date from friends where out_date is null ',(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
   })
@@ -16,7 +16,7 @@ function getValidFriendsAssignmentPerSessionsTasks(req, res, next) {
     })
 }
 
-function getPresentsFriendsInfo(req, res, next) {
+function getFriendsInfo(req, res, next) {
   pool.query((
     'select friends.id as friends_id, fname, lname, nationality, notes, phone, status.id as status_id, status.name, extract (YEAR from age(current_date,birth_date)) as age,' +
     ' to_char(in_date,\'DD/MM/YYYY\') as in_date from friends join status on friends.status_id = status.id where friends.id = $1')
@@ -53,9 +53,9 @@ function updatePlacesAvail(req, res, next) {
 }
 
 module.exports = {
-    getAllPlacesAvail: getAllPlacesAvail,
+    getAllPresentsFriends: getAllPresentsFriends,
     getValidFriendsAssignmentPerSessionsTasks : getValidFriendsAssignmentPerSessionsTasks,
-    getPresentsFriendsInfo : getPresentsFriendsInfo,
+    getFriendsInfo : getFriendsInfo,
     addPlacesAvail : addPlacesAvail,
     deletePlacesAvail : deletePlacesAvail,
     updatePlacesAvail : updatePlacesAvail
