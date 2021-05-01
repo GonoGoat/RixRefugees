@@ -1,7 +1,7 @@
 const friendsDataListKeys = [
     {
         name : 'Identifiant',
-        key : 'friends_id'
+        key : 'id'
     },
     {
         name : 'Prénom',

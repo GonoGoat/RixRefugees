@@ -20,6 +20,7 @@ var sessionsTasksRouter = require('./routes/sessions_tasks');
 var availabilitiesRouter = require('./routes/availabilities');
 var friendsRouter = require('./routes/friends');
 var assignmentsRouter = require('./routes/assignments');
+var statusRouter = require('./routes/status');
 
 var app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/sessions_tasks',sessionsTasksRouter);
 app.use('/api/availabilities',availabilitiesRouter);
 app.use('/api/friends',friendsRouter);
 app.use('/api/assignments',assignmentsRouter);
+app.use('/api/status',statusRouter);
 
 app.use('*', reactRouter);
 

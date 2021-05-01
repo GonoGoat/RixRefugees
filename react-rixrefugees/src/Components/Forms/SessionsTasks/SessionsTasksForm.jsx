@@ -49,7 +49,7 @@ function SessionsTasksForm(props) {
     });
 
     React.useEffect(() => {
-        if (props.edit) {
+        if (props.edit && props.api === "sessions_tasks") {
             let sess = props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))];
             axios.get(`${process.env.REACT_APP_API}/sessions_tasks/desc/${sess.id}`)
             .then(res => {

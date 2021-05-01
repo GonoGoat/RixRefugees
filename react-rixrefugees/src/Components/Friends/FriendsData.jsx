@@ -61,13 +61,13 @@ function FriendsData(props) {
     }
 
     function getDataList() {
-        let keys;
+        let keys,api;
         switch (props.api) {
             case 'friends' :
                 keys = friendsDataListKeys;
+                api = `/${props.api}/display/${id}`
                 break;
         }
-        let api = `/${props.api}/${id}`
         return <DataList keys={keys} api={api} />
     }
 

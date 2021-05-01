@@ -69,6 +69,11 @@ function ListingGrid (props) {
                         break;
                 }
                 return filtered;
+            case '/friends' : 
+                if (!filter.state) {
+                    filtered = filtered.filter(row => row.out_date === null);
+                }
+            return filtered
             default :
                 return filtered;
         }
@@ -138,6 +143,15 @@ function ListingGrid (props) {
                                 return <MenuItem value={index}>{obj}</MenuItem>
                             })}
                             </Select>
+                    </Grid>
+                    : <React.Fragment/>
+                }
+                {props.api === '/friends' ?
+                    <Grid item>
+                        <FormControlLabel
+                            control={<Checkbox checked={filter.state} onChange={() => setFilter({...filter,state : !(filter.state)})}/>}
+                            label="Afficher les amis partis"
+                        />
                     </Grid>
                     : <React.Fragment/>
                 }
