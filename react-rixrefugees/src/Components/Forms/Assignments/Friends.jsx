@@ -54,7 +54,7 @@ const Friends = React.forwardRef((props, ref) => {
                     left={left} setLeft={(l) => setLeft(l)}
                     setSelected={(id) => setSelected(id != selected ? id : false)}
                 />
-                {selected ? <DataList api={`/friends/present/${selected}`} keys={friendsDataListKeys}/> : <React.Fragment/>}
+                {selected ? <DataList api={`/friends/display/${selected}`} keys={friendsDataListKeys}/> : <React.Fragment/>}
             </React.Fragment>
         )
     }

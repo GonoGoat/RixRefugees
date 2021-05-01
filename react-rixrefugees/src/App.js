@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments} from "./Components";
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
@@ -27,6 +27,7 @@ function App() {
           <Route path="/manage/places" exact component={() => <Places />} />
           <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/>
           <Route path="/manage/assignments" exact component={() => <Assignments />}/>
+          <Route path="/manage/friends" exact component={() => <Friends />}/>
         </Switch>
         <Footer/>
       </Router>

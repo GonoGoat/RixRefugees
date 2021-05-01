@@ -7,9 +7,9 @@ import Drawer from '@material-ui/core/Drawer';
 import "date-fns";
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
-import Sessions from '../Places/Sessions';
-import Tasks from './Tasks';
-import SessionsTasks from './SessionsTasks';
+import Friends from './Friends';/*
+import Status from './Status';
+import Appointments from './Appointments';*/
 
 const classes = makeStyles({
     window : {
@@ -18,57 +18,48 @@ const classes = makeStyles({
   });
 const useStyles = classes;
 
-function SessionsTasksForm(props) {
+function FriendsForm(props) {
     const axios = require('axios');
     const moment = require('moment');
 
     const date = moment().format("YYYY-MM-DD");
-    const dateTime = moment().format("YYYY-MM-DDTHH:mm");
 
     const styles=useStyles();
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
-        tasks : {
+        status : {
             name : ''
         },
-        sessions : {
-            users_id : 0,
-            start_date : date,
-            end_date : date,
-            places_availabilities_id : 0
+        friends : {
+            fname : '',
+            lname : '',
+            nationality : '',
+            notes : '',
+            birth_date : date,
+            in_date : date,
+            phone : '',
+            status_id : 0
         },
-        sessions_tasks : {
-            isfromadmin : true,
+        appointments : {
+            appointmnent : date,
             description : '',
-            amountofpeople : 0,
-            start_date : dateTime,
-            end_date : dateTime,
-            tasks_id : 0,
-            sessions_id : 0
+            status_id : 0,
+            friends_id : 0
         }
     });
 
-    React.useEffect(() => {
-        if (props.edit && props.api === "sessions_tasks") {
-            let sess = props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))];
-            axios.get(`${process.env.REACT_APP_API}/sessions_tasks/desc/${sess.id}`)
+    React.useEffect(async () => {
+        if (props.edit) {
+            let fr = props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))];
+            axios.get(`${process.env.REACT_APP_API}/friends/${fr.id}`)
             .then(res => {
-                sess.description = res.data.description
+                setFormValues({
+                    ...formValues,
+                    friends: res.data
+                    });
             })
             .catch(err => {
                 console.log(err);
-            });
-            setFormValues({
-                ...formValues,
-                [props.api]: sess
-            });
-        }
-        else {
-            let next = formValues[props.api];
-            next.sessions_id = props.sessions;
-            setFormValues({
-            ...formValues,
-            [props.api]: next
             });
         }
     }, [props.selected,props.data,props.sessions])
@@ -114,18 +105,18 @@ function SessionsTasksForm(props) {
 
     function displayForm() {
         switch (props.api) {
-            case 'tasks':
+            case 'friends':
                 return (
-                    <Tasks value={formValues.tasks} handleInputChange={handleInputChange}/>
+                    <Friends edit={props.edit} value={formValues.friends} handleInputChange={handleInputChange}/>
                 );
-            case 'sessions' :
+            /*case 'sessions' :
                 return (
                     <Sessions value={formValues.sessions} handleInputChange={handleInputChange}/>
                 )
             case 'sessions_tasks' :
                 return (
                     <SessionsTasks api={true} edit={props.edit} value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
-                )
+                )*/
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
         }
@@ -154,4 +145,4 @@ function SessionsTasksForm(props) {
     }
 }
 
-export default SessionsTasksForm
+export default FriendsForm;

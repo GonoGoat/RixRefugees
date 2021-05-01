@@ -69,6 +69,11 @@ function ListingGrid (props) {
                         break;
                 }
                 return filtered;
+            case '/friends' : 
+                if (!filter.state) {
+                    filtered = filtered.filter(row => row.out_date === null);
+                }
+            return filtered
             default :
                 return filtered;
         }
@@ -121,7 +126,7 @@ function ListingGrid (props) {
                     <Grid item>
                         <FormControlLabel
                             control={<Checkbox checked={filter.state} onChange={() => setFilter({...filter,state : !(filter.state)})}/>}
-                            label="N'afficher que les lieu d'hébergement actuellement disponibles"
+                            label="N'afficher que les lieux d'hébergement actuellement disponibles"
                         />
                     </Grid>
                     : <React.Fragment/>
@@ -141,6 +146,15 @@ function ListingGrid (props) {
                     </Grid>
                     : <React.Fragment/>
                 }
+                {props.api === '/friends' ?
+                    <Grid item>
+                        <FormControlLabel
+                            control={<Checkbox checked={filter.state} onChange={() => setFilter({...filter,state : !(filter.state)})}/>}
+                            label="Afficher les amis partis"
+                        />
+                    </Grid>
+                    : <React.Fragment/>
+                }
             </Grid>
             <DataGrid
                 pagination
@@ -155,7 +169,7 @@ function ListingGrid (props) {
                 hideFooterSelectedRowCount
                 disableColumnMenu
                 onRowClick={(row) => {
-                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu")) {
+                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu") || props.columns[(props.columns.length)-1].headerName.includes("arrivée")) {
                         props.setId(row.row.id);
                         props.setForm();
                     }
