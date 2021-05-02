@@ -21,6 +21,7 @@ var availabilitiesRouter = require('./routes/availabilities');
 var friendsRouter = require('./routes/friends');
 var assignmentsRouter = require('./routes/assignments');
 var statusRouter = require('./routes/status');
+var appointmentsRouter = require('./routes/appointments');
 
 var app = express();
 
@@ -52,6 +53,7 @@ app.use('/api/availabilities',availabilitiesRouter);
 app.use('/api/friends',friendsRouter);
 app.use('/api/assignments',assignmentsRouter);
 app.use('/api/status',statusRouter);
+app.use('/api/appointments',appointmentsRouter);
 
 app.use('*', reactRouter);
 

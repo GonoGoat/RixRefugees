@@ -32,6 +32,10 @@ const friendsDataListKeys = [
         key : 'in_date'
     },
     {
+        name : 'Date de départ',
+        key : 'out_date'
+    },
+    {
         name : 'Notes',
         key : 'notes'
     },

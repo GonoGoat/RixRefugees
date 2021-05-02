@@ -73,7 +73,7 @@ function ListingGrid (props) {
                 if (!filter.state) {
                     filtered = filtered.filter(row => row.out_date === null);
                 }
-            return filtered
+                return filtered
             default :
                 return filtered;
         }
@@ -169,7 +169,7 @@ function ListingGrid (props) {
                 hideFooterSelectedRowCount
                 disableColumnMenu
                 onRowClick={(row) => {
-                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu") || props.columns[(props.columns.length)-1].headerName.includes("arrivée")) {
+                    if (props.columns[(props.columns.length)-1].headerName.includes("lieu") || props.columns[(props.columns.length)-1].headerName.includes("ami")) {
                         props.setId(row.row.id);
                         props.setForm();
                     }

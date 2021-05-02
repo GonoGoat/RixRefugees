@@ -21,6 +21,8 @@ insert into sessions_tasks (isfromadmin,description,amountofpeople, start_date,e
 --Amis--
 insert into status (name) values ('Demandeur'),('CGRA'),('Réfugié');
 insert into friends (fname,status_id) values ('Paul',1),('Pierre',2),('Jacque',3),('Toto',1);
+insert into appointments (appointment,iscanceled, status_id, friends_id)
+    values ('2025-08-22',false,1,2),('2025-08-22',false,2,3),('2025-08-22',false,3,1)
 
 --Disponibilités et Assignations--
 insert into availabilities (description,isCanceled,users_id,sessions_tasks_id)

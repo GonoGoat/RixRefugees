@@ -7,8 +7,8 @@ import Drawer from '@material-ui/core/Drawer';
 import "date-fns";
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
-import Friends from './Friends';/*
-import Status from './Status';
+import Friends from './Friends';
+import Status from './Status';/*
 import Appointments from './Appointments';*/
 
 const classes = makeStyles({
@@ -50,17 +50,40 @@ function FriendsForm(props) {
 
     React.useEffect(async () => {
         if (props.edit) {
-            let fr = props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))];
-            axios.get(`${process.env.REACT_APP_API}/friends/${fr.id}`)
-            .then(res => {
-                setFormValues({
-                    ...formValues,
-                    friends: res.data
+            let selected = props.data[props.data.findIndex(obj => obj.id === parseInt(props.selected[0]))];
+            switch (props.api) {
+                case 'friends' :
+                    axios.get(`${process.env.REACT_APP_API}/friends/${selected.id}`)
+                    .then(res => {
+                        setFormValues({
+                            ...formValues,
+                            friends: res.data
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
                     });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+                    break;
+                case 'status' :
+                    setFormValues({
+                        ...formValues,
+                        status : selected
+                    });
+                    break;
+                case 'appointments' :
+                    axios.get(`${process.env.REACT_APP_API}/appointments/desc/${selected.id}`)
+                    .then(res => {
+                        selected.description = res.data
+                        setFormValues({
+                            ...formValues,
+                            appointments: selected
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                    break;
+            }
         }
     }, [props.selected,props.data,props.sessions])
 
@@ -109,10 +132,10 @@ function FriendsForm(props) {
                 return (
                     <Friends edit={props.edit} value={formValues.friends} handleInputChange={handleInputChange}/>
                 );
-            /*case 'sessions' :
+            case 'status' :
                 return (
-                    <Sessions value={formValues.sessions} handleInputChange={handleInputChange}/>
-                )
+                    <Status value={formValues.status} handleInputChange={handleInputChange}/>
+                )/*
             case 'sessions_tasks' :
                 return (
                     <SessionsTasks api={true} edit={props.edit} value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>

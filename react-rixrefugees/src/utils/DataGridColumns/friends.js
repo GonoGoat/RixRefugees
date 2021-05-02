@@ -7,6 +7,13 @@ const friendsList =
         type : 'number'
     },
     {
+        field : 'in_date',
+        headerName : 'Date d\'arrivée',
+        flex : 1,
+        type : 'date',
+        valueFormatter : (params) => moment(params.value).format('DD/MM/YYYY')
+    },
+    {
         field : 'fname',
         headerName : 'Prénom de l\'ami',
         flex : 1,
@@ -17,12 +24,6 @@ const friendsList =
         headerName : 'Nom de l\'ami',
         flex : 1,
         type : 'string'
-    },
-    {
-        field : 'in_date',
-        headerName : 'Date d\'arrivée',
-        flex : 1,
-        type : 'date'
     },
 ]
 ;
