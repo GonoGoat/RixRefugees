@@ -32,7 +32,7 @@ const sessTasksFilter = ["Tout","A venir", "En cours", "Terminé"]
 
 
 function ListingGrid (props) {
-    const [filter,setFilter] = React.useState({state : false,selected : 0});
+    const [filter,setFilter] = React.useState({state : false,selected : false,running : false});
     const [placesFilter, setPlaces] = React.useState([]);
     const styles= useStyles();
 
@@ -74,6 +74,14 @@ function ListingGrid (props) {
                     filtered = filtered.filter(row => row.out_date === null);
                 }
                 return filtered
+            case '/appointments' :
+                if (!filter.running) {
+                    filtered = filtered.filter(row => new Date(row.appointment) >= new Date());
+                }
+                if (!filter.state) {
+                    filtered = filtered.filter(row => !row.iscanceled);
+                }
+                return filtered;
             default :
                 return filtered;
         }
@@ -154,6 +162,23 @@ function ListingGrid (props) {
                         />
                     </Grid>
                     : <React.Fragment/>
+                }
+                {props.api === '/appointments' ?
+                    <React.Fragment>
+                        <Grid item>
+                            <FormControlLabel
+                                control={<Checkbox checked={filter.running} onChange={() => setFilter({...filter,running : !filter.running})}/>}
+                                label="Afficher les rendez-vous passés"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <FormControlLabel
+                                control={<Checkbox checked={filter.state} onChange={() => setFilter({...filter,state : !filter.state})}/>}
+                                label="Afficher les rendez-vous annulés"
+                            />
+                        </Grid>
+                    </React.Fragment>
+                : <React.Fragment/>
                 }
             </Grid>
             <DataGrid

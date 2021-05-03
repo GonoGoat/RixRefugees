@@ -1,4 +1,5 @@
-var pool = require('../db.js')
+const pool = require('../db.js');
+const format = require('pg-format');
 
 // add query functions
 function getAllAppointments(req, res, next) {
@@ -51,38 +52,32 @@ function getSessionsTasksPerSessions(req, res, next) {
 }
 
 function getAppointmentsDesc(req, res, next) {
-  pool.query('select id, description from appointments id where id = $1'
+  pool.query('select id, description, case when iscanceled = true then \'Oui\' when iscanceled = false then \'Non\' else \'Inconnu\' end as iscanceled from appointments id where id = $1'
   ,[parseInt(req.params.id)],(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows[0]);
   })
 }
 
-function addSessionsTasks(req, res, next) {
-  pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7) returning id'
-  ,[req.body.isfromadmin,req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id],(err,rows) =>  {
+function addAppointments(req, res, next) {
+  pool.query('insert into appointments (appointment,description,iscanceled, status_id, friends_id) values ($1,$2,$3,$4,$5)'
+  ,[req.body.appointment,req.body.description,req.body.iscanceled,req.body.status_id,req.body.friends_id],(err,rows) =>  {
     if (err) throw err;
-    return res.send({
-      success : true,
-      data : rows.rows[0].id
-    });
+    return res.send({data : true});
   })
 }
 
-function deleteSessionsTasks(req, res, next) {
-  let e = req.body;
-  e.map((obj) => {
-    pool.query('delete from sessions_tasks where id = ($1)',[obj],(err,rows) =>  {
-      if (err) throw err;
-    })
-  });
-  return res.send({data : true});
+function deleteAppointments(req, res, next) {
+  pool.query(format('delete from appointments where id in (%L)',req.body),(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  }) 
 }
 
-function updateSessionsTasks(req, res, next) {
+function updateAppointments(req, res, next) {
   console.log(req.body);
-  pool.query('update sessions_tasks set isfromadmin = $1, description = $2, amountofpeople = $3, start_date = $4, end_date = $5, tasks_id = $6, sessions_id = $7 where id = $8'
-  ,[Boolean(req.body.isfromadmin),req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id, req.body.id],(err,rows) =>  {
+  pool.query('update appointments set appointment = $1, description = $2, iscanceled = $3, status_id = $4, friends_id = $5 where id = $6'
+  ,[req.body.appointment,req.body.description,Boolean(req.body.iscanceled),req.body.status_id,req.body.friends_id, req.body.id],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })
@@ -94,7 +89,7 @@ module.exports = {
   getAppointmentsDesc : getAppointmentsDesc,
   getSessionsTasksInfo : getSessionsTasksInfo,
   getSessionsTasksPerSessions : getSessionsTasksPerSessions,
-  addSessionsTasks : addSessionsTasks,
-  deleteSessionsTasks : deleteSessionsTasks,
-  updateSessionsTasks : updateSessionsTasks
+  addAppointments : addAppointments,
+  deleteAppointments : deleteAppointments,
+  updateAppointments : updateAppointments
 };

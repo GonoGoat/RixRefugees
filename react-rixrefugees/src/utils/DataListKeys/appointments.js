@@ -7,6 +7,10 @@ const appointmentsDataListKeys = [
         name : 'Description',
         key : 'description'
     },
+    {
+        name : 'Rendez-vous annulé',
+        key : 'iscanceled'
+    },
 ]
 
 module.exports = {

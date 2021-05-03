@@ -8,8 +8,8 @@ import "date-fns";
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import Friends from './Friends';
-import Status from './Status';/*
-import Appointments from './Appointments';*/
+import Status from './Status';
+import Appointments from './Appointments';
 
 const classes = makeStyles({
     window : {
@@ -41,10 +41,11 @@ function FriendsForm(props) {
             status_id : 0
         },
         appointments : {
-            appointmnent : date,
+            appointment : date,
             description : '',
             status_id : 0,
-            friends_id : 0
+            friends_id : 0,
+            iscanceled : false
         }
     });
 
@@ -73,7 +74,7 @@ function FriendsForm(props) {
                 case 'appointments' :
                     axios.get(`${process.env.REACT_APP_API}/appointments/desc/${selected.id}`)
                     .then(res => {
-                        selected.description = res.data
+                        selected.description = res.data.description
                         setFormValues({
                             ...formValues,
                             appointments: selected
@@ -135,11 +136,11 @@ function FriendsForm(props) {
             case 'status' :
                 return (
                     <Status value={formValues.status} handleInputChange={handleInputChange}/>
-                )/*
-            case 'sessions_tasks' :
+                )
+            case 'appointments' :
                 return (
-                    <SessionsTasks api={true} edit={props.edit} value={formValues.sessions_tasks} handleInputChange={handleInputChange}/>
-                )*/
+                    <Appointments edit={props.edit} value={formValues.appointments} handleInputChange={handleInputChange}/>
+                )
             default:
                 return ("Erreur : mauvais formulaire choisi. Veuillez réessayer. ");
         }
