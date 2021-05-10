@@ -1,0 +1,151 @@
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing(3),
+  },
+}));
+
+function Register () {
+    const axios = require('axios');
+
+    const classes = useStyles();
+    const [register,setRegister] = React.useState({
+      mail : '',
+      password : '',
+      confirm : '',
+      lname : '',
+      fname : '',
+      isadmin : false,
+      motivation : '',
+      contact : '',
+    });
+
+    const handleInputChange = (e) => {
+        const {name, value } = e.target;
+        setRegister({
+        ...register,
+        [name]: value
+        });
+    };
+
+    async function handleSubmit() {
+        await axios.post(`${process.env.REACT_APP_API}/users/add`, register)
+        .then(res => {
+            console.log("ok")
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+  return (
+    <Container className={classes.container} maxWidth="xs">
+      <form>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                    fullWidth
+                    label="Nom"
+                    name="lname" 
+                    size="small" 
+                    variant="outlined"
+                    value={register.lname}
+                    onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                    fullWidth
+                    label="Prénom"
+                    name="fname" 
+                    size="small" 
+                    variant="outlined"
+                    value={register.fname}
+                    onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                    fullWidth
+                    label="Adresse email"
+                    name="mail" 
+                    size="small" 
+                    variant="outlined"
+                    value={register.email}
+                    onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Mot de passe"
+                  name="password"
+                  size="small"
+                  type="password"
+                  variant="outlined"
+                  value={register.password}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Confirmer le mot de passe"
+                  name="confirm"
+                  size="small"
+                  type="password"
+                  variant="outlined"
+                  value={register.confirm}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Quelles sont vos motivations à rejoindre l'équipe RixRefugees ?"
+                  name="motivation"
+                  size="small"
+                  type="password"
+                  variant="outlined"
+                  multiline
+                  rows={5}
+                  value={register.motivation}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Informations de contact"
+                  name="contact"
+                  size="small"
+                  type="password"
+                  variant="outlined"
+                  multiline
+                  rows={5}
+                  value={register.contact}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Button color="secondary" fullWidth onClick={handleSubmit} variant="contained">
+              S'inscrire
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Container>
+  );
+};
+
+export default Register;

@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends} from "./Components";
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
@@ -19,6 +19,8 @@ function App() {
         <Switch>
           <Route path="/" exact component={() => <Accueil />} />
           <Route path="/about" exact component={() => <About />} />
+          <Route path="/login" exact component={() => <Login />} />
+          <Route path="/register" exact component={() => <Register />} />
           <Route path="/user/assignments" exact component={() => <UserAssignments />} />
           <Route path="/user/activity" exact component={() => <GetUserActivity />} />
           <Route path="/user/activity/add" exact component={() => <AddUserActivity />} />
