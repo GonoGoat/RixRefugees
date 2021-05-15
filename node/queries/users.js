@@ -38,8 +38,29 @@ async function addUsers(req, res, next) {
   })
 }
 
+async function login(req, res, next) {
+  console.log(req.body)
+  pool.query ('select * from users where mail = $1 and password = $2',
+  [req.body.mail,req.body.password], (err,rows) =>  {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    console.log(rows.rows)
+    if (rows.rows.length > 0) {
+      return res.send(rows.rows[0].isadmin)
+    }
+    else {
+      return res.status(403).send("Invalid username/password")
+    }
+  })
+}
+
+
+
 module.exports = {
     getAllAdminUsers: getAllAdminUsers,
     getUnavailableAdminUsersPerSessionsTasks : getUnavailableAdminUsersPerSessionsTasks,
-    addUsers : addUsers
+    addUsers : addUsers,
+    login : login
   };

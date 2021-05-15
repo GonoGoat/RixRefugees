@@ -1,4 +1,6 @@
 import React from 'react';
+import {useDispatch} from "react-redux";
+import {switchUser} from "../redux/Actions/index";
 // MUI Core
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -13,7 +15,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Login () {
+  const axios = require('axios');
+
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const [login,setLogin] = React.useState({
+    mail : '',
+    password : '',
+  });
+
+  const handleInputChange = (e) => {
+      const {name, value } = e.target;
+      setLogin({
+      ...login,
+      [name]: value
+      });
+  };
+
+  async function handleSubmit() {
+      await axios.post(`${process.env.REACT_APP_API}/users/login`, login)
+      .then(res => {
+          console.log(res.data)
+          dispatch(switchUser({user : (res.data ? 2 : 1)}))
+      })
+      .catch(err => {
+          console.log(err);
+      });
+  }
 
   return (
     <Container className={classes.container} maxWidth="xs">
@@ -22,22 +50,30 @@ function Login () {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField fullWidth label="Email" name="email" size="small" variant="outlined" />
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="mail"
+                  size="small"
+                  variant="outlined"
+                  onChange={handleInputChange}
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Password"
+                  label="Mot de passe"
                   name="password"
                   size="small"
                   type="password"
                   variant="outlined"
+                  onChange={handleInputChange}
                 />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Button color="secondary" fullWidth type="submit" variant="contained">
+            <Button color="secondary" fullWidth onClick={handleSubmit}  variant="contained">
               Se connecter
             </Button>
           </Grid>
