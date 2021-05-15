@@ -18,7 +18,49 @@ function getUnavailableAdminUsersPerSessionsTasks(req, res, next) {
   })
 }
 
+async function addUsers(req, res, next) {
+  pool.query ('insert into users (password,fname,lname,mail,isadmin,isactive,lastActivity,contact) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id',
+  [req.body.password,req.body.fname,req.body.lname,req.body.mail,req.body.isadmin,true, new Date(),req.body.contact], (err,rows) =>  {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    id = rows.rows[0].id
+
+    pool.query ('insert into registrations (motivation,users_id) values ($1,$2)',
+    [req.body.motivation,id], (err,rows) =>  {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+      return res.send(true)
+    })
+  })
+}
+
+async function login(req, res, next) {
+  console.log(req.body)
+  pool.query ('select * from users where mail = $1 and password = $2',
+  [req.body.mail,req.body.password], (err,rows) =>  {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    console.log(rows.rows)
+    if (rows.rows.length > 0) {
+      return res.send(rows.rows[0].isadmin)
+    }
+    else {
+      return res.status(403).send("Invalid username/password")
+    }
+  })
+}
+
+
+
 module.exports = {
     getAllAdminUsers: getAllAdminUsers,
-    getUnavailableAdminUsersPerSessionsTasks : getUnavailableAdminUsersPerSessionsTasks
+    getUnavailableAdminUsersPerSessionsTasks : getUnavailableAdminUsersPerSessionsTasks,
+    addUsers : addUsers,
+    login : login
   };

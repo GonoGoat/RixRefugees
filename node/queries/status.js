@@ -1,4 +1,5 @@
 var pool = require('../db.js')
+var format = require('pg-format');
 
 // add query functions
 function getAllStatus(req, res, next) {
@@ -16,13 +17,10 @@ function addStatus(req, res, next) {
 }
 
 function deleteStatus(req, res, next) {
-  let e = req.body;
-  e.map((obj) => {
-    pool.query('delete from status where id = ($1)',[obj],(err,rows) =>  {
-      if (err) throw err;
-    })
-  });
-  return res.send({data : true});
+  pool.query(format('delete from status where id in (%L)',req.body),(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  }) 
 }
 
 function updateStatus(req, res, next) {

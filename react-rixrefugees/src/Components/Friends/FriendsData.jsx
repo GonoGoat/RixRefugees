@@ -10,6 +10,7 @@ import ListingGrid from "../utils/ListingGrid";
 import FriendsForm from '../Forms/Friends/FriendsForm';
 
 import {friendsDataListKeys} from '../../utils/DataListKeys/friends';
+import {appointmentsDataListKeys} from '../../utils/DataListKeys/appointments';
 
 function FriendsData(props) {
 
@@ -66,6 +67,10 @@ function FriendsData(props) {
             case 'friends' :
                 keys = friendsDataListKeys;
                 api = `/${props.api}/display/${id}`
+                break;
+            case 'appointments' :
+                keys = appointmentsDataListKeys;
+                api = `/${props.api}/desc/${id}`
                 break;
         }
         return <DataList keys={keys} api={api} />

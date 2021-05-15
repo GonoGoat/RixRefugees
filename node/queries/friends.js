@@ -3,7 +3,7 @@ var format = require('pg-format');
 
 // add query functions
 function getAllFriends(req, res, next) {
-  pool.query('select id, fname, lname, to_char(in_date,\'YYYY-MM-DD\') as _date,to_char(out_date,\'YYYY-MM-DD\') as out_date from friends '  
+  pool.query('select id, fname, lname, to_char(in_date,\'YYYY-MM-DD\') as in_date,to_char(out_date,\'YYYY-MM-DD\') as out_date from friends '  
   ,(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
@@ -30,7 +30,7 @@ function getValidFriendsAssignmentPerSessionsTasks(req, res, next) {
 function getFriendsDisplayInfo(req, res, next) {
   pool.query((
     'select friends.id as id, fname, lname, nationality, notes, phone, status.id as status_id, status.name, extract (YEAR from age(current_date,birth_date)) as age,' +
-    ' to_char(in_date,\'DD/MM/YYYY\') as in_date from friends join status on friends.status_id = status.id where friends.id = $1')
+    ' to_char(in_date,\'DD/MM/YYYY\') as in_date,to_char(out_date,\'DD/MM/YYYY\') as out_date  from friends join status on friends.status_id = status.id where friends.id = $1')
   ,[parseInt(req.params.id)],(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows[0]);

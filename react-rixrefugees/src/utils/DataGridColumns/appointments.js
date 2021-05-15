@@ -1,29 +1,30 @@
 const moment = require('moment');
 
-const friendsList = 
+const appointmentsList = 
 [
     {
         field : 'id',
-        headerName : 'Identifiant de l\'ami',
+        headerName : 'Identifiant du rendez-vous',
         flex : 1,
         type : 'number'
     },
     {
-        field : 'in_date',
-        headerName : 'Date d\'arrivée',
+        field : 'appointment',
+        headerName : 'Début de rendez-vous',
         flex : 1,
         type : 'date',
         valueFormatter : (params) => moment(params.value).format('DD/MM/YYYY')
+
     },
     {
-        field : 'fname',
-        headerName : 'Prénom de l\'ami',
+        field : 'status_name',
+        headerName : 'Statut en cours d\'acquisition',
         flex : 1,
         type : 'string'
     },
     {
-        field : 'lname',
-        headerName : 'Nom de l\'ami',
+        field : 'friends_name',
+        headerName : 'Nom de l\'ami concerné',
         flex : 1,
         type : 'string'
     },
@@ -31,5 +32,5 @@ const friendsList =
 ;
 
 module.exports = {
-    friendsList : friendsList
+    appointmentsList : appointmentsList
 }

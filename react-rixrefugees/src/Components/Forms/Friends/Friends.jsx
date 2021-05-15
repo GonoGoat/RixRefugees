@@ -6,9 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from "@material-ui/core/FormLabel";
-import Switch from '@material-ui/core/Switch';
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import "date-fns";
