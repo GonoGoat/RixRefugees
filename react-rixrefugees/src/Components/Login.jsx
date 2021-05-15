@@ -33,14 +33,18 @@ function Login () {
   };
 
   async function handleSubmit() {
+    if (check()) {;
       await axios.post(`${process.env.REACT_APP_API}/users/login`, login)
       .then(res => {
-          console.log(res.data)
           dispatch(switchUser({user : (res.data ? 2 : 1)}))
       })
       .catch(err => {
           console.log(err);
       });
+    }
+    else {
+
+    }
   }
 
   return (

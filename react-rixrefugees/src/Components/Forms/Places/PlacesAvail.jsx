@@ -53,7 +53,6 @@ function PlacesAvail (props) {
                     <TextField
                         label="Date de début de disponibilité"
                         type='datetime-local'
-                        defaultValue={props.value.start_avail}
                         name="start_avail"
                         value={props.value.start_avail}
                         onChange={props.handleInputChange}
@@ -66,7 +65,6 @@ function PlacesAvail (props) {
                     <TextField
                         label="Date de fin de disponibilité"
                         type='datetime-local'
-                        defaultValue={props.value.end_avail}
                         name="end_avail"
                         value={props.value.end_avail}
                         onChange={props.handleInputChange}
@@ -79,7 +77,6 @@ function PlacesAvail (props) {
                     <TextField
                         label="Nombre de lit"
                         type='number'
-                        defaultValue={props.value.bed_quantity}
                         name="bed_quantity"
                         value={props.value.bed_quantity}
                         onChange={props.handleInputChange}
