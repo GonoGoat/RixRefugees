@@ -177,7 +177,7 @@ create table Sessions (
 
 create table Sessions_tasks (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	isFromAdmin boolean NOT NULL default true, /*OK*/
+	isFromAdmin boolean NOT NULL default false, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
 	start_date timestamp(0) without time zone default current_date,

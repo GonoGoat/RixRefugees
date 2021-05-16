@@ -1,5 +1,6 @@
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,6 +11,8 @@ import LoadingIndicator from "../../utils/LoadingIndicator";
 import Friends from './Friends';
 import Status from './Status';
 import Appointments from './Appointments';
+
+import check from "../../../utils/FormValidations/validators"
 
 const classes = makeStyles({
     window : {
@@ -24,6 +27,7 @@ function FriendsForm(props) {
 
     const date = moment().format("YYYY-MM-DD");
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const styles=useStyles();
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
@@ -90,7 +94,29 @@ function FriendsForm(props) {
 
     //Submit button for Accomodations and the others
     async function handleSubmit() {
+        let values;
+        /*switch (props.api) {
+            case 'friends' :
+                values = check.checkForm([
+                    check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+                  ])
+                break;
+            case 'status' :
+                values = check.checkForm([
+                    check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+                  ])
+                break;
+            case 'appointments' :
+                values = check.checkForm([
+                    check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+                  ])
+                break;
+            default :
+                values = ["Formulaire invalide."]
+                break;
+        }*/
         setLoading(true);
+        
         if (props.edit) {
             await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
             .then(res => {

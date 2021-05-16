@@ -13,7 +13,6 @@ function mail (str) {
 };
 
 function password (str) {
-    console.log(str)
     return (str.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/) && str.length <= 30 ? true : "Veuillez entrer un mot de passe suffisament fort : entre 8 et 30 caractères avec au moins 1 lettre majuscule, 1 lettre minuscule et 1 caractère spécial." ) 
 };
 
@@ -28,7 +27,7 @@ function stringOnly (str,notEmpty) {
 function limitedString (str, notEmpty, limit) {
     if (notEmpty && str.length === 0) { return 'Veuillez entrer une valeur.';};
     if (str.length > limit) { return `Veuillez n'écrire que maximum ${limit} caractères.`}
-    let reg = (notEmpty ? new RegExp(`^[a-z]{1,${limit}}`) : new RegExp(`^[a-z]{0,${limit}}`));
+    let reg = (notEmpty ? new RegExp(`^[a-z]{1,${limit}}`,"i") : new RegExp(`^[a-z]{0,${limit}}`,"i"));
     let query = str.match(reg);
     return (query ? true : "Veuillez n'insérer que des lettres." )    
 };

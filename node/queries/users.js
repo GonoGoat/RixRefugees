@@ -20,7 +20,7 @@ function getUnavailableAdminUsersPerSessionsTasks(req, res, next) {
 
 async function addUsers(req, res, next) {
   pool.query ('insert into users (password,fname,lname,mail,isadmin,isactive,lastActivity,contact) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id',
-  [req.body.password,req.body.fname,req.body.lname,req.body.mail,req.body.isadmin,true, new Date(),req.body.contact], (err,rows) =>  {
+  [req.body.password,req.body.fname,req.body.lname,req.body.mail.toLowerCase(),req.body.isadmin,true, new Date(),req.body.contact], (err,rows) =>  {
     if (err) {
       console.log(err);
       return res.status(500).send(err);
@@ -39,14 +39,12 @@ async function addUsers(req, res, next) {
 }
 
 async function login(req, res, next) {
-  console.log(req.body)
   pool.query ('select * from users where mail = $1 and password = $2',
-  [req.body.mail,req.body.password], (err,rows) =>  {
+  [req.body.mail.toLowerCase(),req.body.password], (err,rows) =>  {
     if (err) {
       console.log(err);
       return res.status(500).send(err);
     }
-    console.log(rows.rows)
     if (rows.rows.length > 0) {
       return res.send(rows.rows[0].isadmin)
     }

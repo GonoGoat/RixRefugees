@@ -1,12 +1,15 @@
 import React from 'react';
 import {useDispatch} from "react-redux";
 import {switchUser} from "../redux/Actions/index";
+import { useSnackbar } from 'notistack';
 // MUI Core
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+
+import check from "../utils/FormValidations/validators"
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -17,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 function Login () {
   const axios = require('axios');
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const classes = useStyles();
   const [login,setLogin] = React.useState({
@@ -33,7 +37,10 @@ function Login () {
   };
 
   async function handleSubmit() {
-    if (check()) {;
+    let values = check.checkForm([
+      check.mail(login.mail),check.password(login.password)
+    ])
+    if (values === true) {;
       await axios.post(`${process.env.REACT_APP_API}/users/login`, login)
       .then(res => {
           dispatch(switchUser({user : (res.data ? 2 : 1)}))
@@ -43,7 +50,9 @@ function Login () {
       });
     }
     else {
-
+      values.filter(val => val !== true).forEach(obj => {
+        enqueueSnackbar(obj, {variant : "error"});
+      })
     }
   }
 
