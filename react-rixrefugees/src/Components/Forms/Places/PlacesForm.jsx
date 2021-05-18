@@ -86,27 +86,54 @@ function PlacesForm(props) {
     async function handleSubmit() {
         setLoading(true);
         if (props.form === '/accomodations') {
-            await axios.delete(`${process.env.REACT_APP_API}/accomodations/delete`, {data : {places_id : formValues.accomodations.places_id}})
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
+            let existing;
+            await axios.get(`${process.env.REACT_APP_API}/accomodations/places/${formValues.accomodations.places_id}`)
+                .then(res => {
+                    existing = res.data.map(obj => obj.id)
+                })
+                .catch(err => {
+                    console.log(err);
             });
-            let acc = [];
+
             let head = props.header.slice(1);
-            for (let i = 0;i<head.length;i++) {
-                if (props.data[props.data.findIndex(obj => obj.id === formValues.accomodations.places_id)].check[i] === true) {
-                    acc.push(head[i].id);
+            let acc = head.map((val,index) => {
+                return {
+                    id : val.id,
+                    state : props.data[props.data.findIndex(obj => obj.id === formValues.accomodations.places_id)].check[index]
                 }
-            }
-            await axios.post(`${process.env.REACT_APP_API}/accomodations/add`, {places : formValues.accomodations.places_id,equipments : acc})
-            .then(res => {
-                setLoading(false);
             })
-            .catch(err => {
-                console.log(err);
-            });
+
+            let toAdd = acc.filter(obj => obj.state === true).map(val => val.id);
+            let toRemove = acc.filter(obj => obj.state === false).map(val => val.id);
+
+            acc.forEach(obj => {
+                if (obj.state === true && existing.indexOf(obj.id) !== -1) {
+                  toAdd = toAdd.filter(val => val !== obj.id)
+                }
+                if (obj.state === false && existing.indexOf(obj.id) === -1) {
+                  toRemove = toRemove.filter(val => val !== obj.id)
+                }
+            })
+
+            if (toAdd.length > 0) {
+                await axios.post(`${process.env.REACT_APP_API}/accomodations/add`, {places : formValues.accomodations.places_id,equipments : toAdd})
+                .then(res => {
+                    console.log("add ok")
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            if (toRemove.length > 0) {
+                await axios.delete(`${process.env.REACT_APP_API}/accomodations/delete`, {data : {places : formValues.accomodations.places_id,equipments : toRemove}})
+                .then(res => {
+                    console.log("remove ok")
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            setLoading(false);
         }
         else {
             let key = props.form.substr(1);
