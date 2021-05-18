@@ -1,9 +1,13 @@
 import React from 'react';
+import { useSnackbar } from 'notistack';
+
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+
+import check from "../utils/FormValidations/validators"
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -14,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 function Register () {
     const axios = require('axios');
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const classes = useStyles();
     const [register,setRegister] = React.useState({
       mail : '',
@@ -35,13 +40,28 @@ function Register () {
     };
 
     async function handleSubmit() {
-        await axios.post(`${process.env.REACT_APP_API}/users/add`, register)
-        .then(res => {
-            console.log("ok")
-        })
-        .catch(err => {
-            console.log(err);
-        });
+      if (register.password !== register.confirm) {
+        enqueueSnackbar('Veillez à bien rentrer 2 mots de passe similaires.', {variant : "error"});
+      }
+      else {
+        let values = check.checkForm([
+          check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+        ])
+        if (values === true) {
+          await axios.post(`${process.env.REACT_APP_API}/users/add`, register)
+          .then(res => {
+              console.log("ok")
+          })
+          .catch(err => {
+              console.log(err);
+          });
+        }
+        else {
+          values.filter(val => val !== true).forEach(obj => {
+            enqueueSnackbar(obj, {variant : "error"});
+          })
+        }
+      }
     }
 
   return (

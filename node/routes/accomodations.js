@@ -1,12 +1,14 @@
 var express = require('express');
+const { getAccomodationsPerPlaces } = require('../queries/accomodations');
 var router = express.Router();
 
 var db = require('../queries/accomodations');
 
 
 router.get('/', db.getAllAccomodations);
-router.post('/add', db.addAllAccomodations);
-router.delete('/delete',db.deleteAllAccomodations)
+router.get('/places/:id',db.getAccomodationsPerPlaces)
+router.post('/add', db.addAccomodations);
+router.delete('/delete',db.deleteAccomodations)
 
 
 module.exports = router;

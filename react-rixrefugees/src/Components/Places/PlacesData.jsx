@@ -152,7 +152,7 @@ function PlacesData(props) {
             <div>
                 <AddButton disabled={props.api === "/accomodations"} add={()=>setForm({form : true,edit : false})}/>
                 <DeleteButton disabled={props.api === "/accomodations" || selected.length === 0} delete={()=>deleteRows()}/>
-                <EditButton disabled={selected.length != 1 || props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
+                <EditButton disabled={selected.length != 1 && props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
             {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} form={props.api}/> :
              getDataList()) : <React.Fragment/>

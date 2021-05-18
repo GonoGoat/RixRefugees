@@ -1,5 +1,6 @@
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,6 +11,8 @@ import LoadingIndicator from "../../utils/LoadingIndicator";
 import Friends from './Friends';
 import Status from './Status';
 import Appointments from './Appointments';
+
+import check from "../../../utils/FormValidations/validators"
 
 const classes = makeStyles({
     window : {
@@ -24,6 +27,7 @@ function FriendsForm(props) {
 
     const date = moment().format("YYYY-MM-DD");
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const styles=useStyles();
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
@@ -35,7 +39,7 @@ function FriendsForm(props) {
             lname : '',
             nationality : '',
             notes : '',
-            birth_date : date,
+            birth_date : '',
             in_date : date,
             phone : '',
             status_id : 0
@@ -90,25 +94,60 @@ function FriendsForm(props) {
 
     //Submit button for Accomodations and the others
     async function handleSubmit() {
-        setLoading(true);
-        if (props.edit) {
-            await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        let values;
+        switch (props.api) {
+            case 'friends' :
+                values = check.checkForm([
+                    check.phoneNumber(formValues.friends.phone),
+                    check.status(formValues.friends.status_id),
+                    check.n_lname(formValues.friends.lname),
+                    check.n_fname(formValues.friends.fname),
+                    check.nationality(formValues.friends.nationality)
+                ])
+                break;
+            case 'status' :
+                values = check.checkForm([
+                    check.name(formValues.status.name)
+                  ])
+                break;
+            case 'appointments' :
+                values = check.checkForm([
+                    check.status(formValues.appointments.status_id),
+                    check.friends(formValues.appointments.friends_id),
+                  ])
+                break;
+            default :
+                values = ["Formulaire invalide."]
+                break;
+        }
+
+        if (values === true) {
+            setLoading(true)
+            if (props.edit) {
+                await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
         }
         else {
-            await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
-            .then(res => {
-                setLoading(false);
+            values.filter(val => val !== true).forEach(obj => {
+                enqueueSnackbar(obj, {variant : "error"});
             })
-            .catch(err => {
-                console.log(err);
-            });
         }
+        
     }
 
     // Select of Accomodations

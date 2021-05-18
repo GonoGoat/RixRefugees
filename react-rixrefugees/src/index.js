@@ -6,11 +6,14 @@ import { Provider } from 'react-redux'
 import Store from './redux/configureStore'
 import './index.css';
 import '@fontsource/roboto';
+import { SnackbarProvider } from 'notistack';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={Store}>
-      <App />
+      <SnackbarProvider maxSnack={7}>
+        <App />
+      </SnackbarProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
