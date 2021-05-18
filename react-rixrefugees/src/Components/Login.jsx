@@ -38,7 +38,8 @@ function Login () {
 
   async function handleSubmit() {
     let values = check.checkForm([
-      check.mail(login.mail),check.password(login.password)
+      check.mail(login.mail),
+      check.password(login.password)
     ])
     if (values === true) {;
       await axios.post(`${process.env.REACT_APP_API}/users/login`, login)

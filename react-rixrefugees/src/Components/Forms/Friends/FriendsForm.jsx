@@ -39,7 +39,7 @@ function FriendsForm(props) {
             lname : '',
             nationality : '',
             notes : '',
-            birth_date : date,
+            birth_date : '',
             in_date : date,
             phone : '',
             status_id : 0
@@ -95,46 +95,59 @@ function FriendsForm(props) {
     //Submit button for Accomodations and the others
     async function handleSubmit() {
         let values;
-        /*switch (props.api) {
+        switch (props.api) {
             case 'friends' :
                 values = check.checkForm([
-                    check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
-                  ])
+                    check.phoneNumber(formValues.friends.phone),
+                    check.status(formValues.friends.status_id),
+                    check.n_lname(formValues.friends.lname),
+                    check.n_fname(formValues.friends.fname),
+                    check.nationality(formValues.friends.nationality)
+                ])
                 break;
             case 'status' :
                 values = check.checkForm([
-                    check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+                    check.name(formValues.status.name)
                   ])
                 break;
             case 'appointments' :
                 values = check.checkForm([
-                    check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+                    check.status(formValues.appointments.status_id),
+                    check.friends(formValues.appointments.friends_id),
                   ])
                 break;
             default :
                 values = ["Formulaire invalide."]
                 break;
-        }*/
-        setLoading(true);
-        
-        if (props.edit) {
-            await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        }
+
+        if (values === true) {
+            setLoading(true)
+            if (props.edit) {
+                await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
         }
         else {
-            await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
-            .then(res => {
-                setLoading(false);
+            values.filter(val => val !== true).forEach(obj => {
+                enqueueSnackbar(obj, {variant : "error"});
             })
-            .catch(err => {
-                console.log(err);
-            });
         }
+        
     }
 
     // Select of Accomodations
