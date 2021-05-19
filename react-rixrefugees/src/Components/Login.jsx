@@ -51,6 +51,7 @@ function Login () {
       });
     }
     else {
+      closeSnackbar();
       values.filter(val => val !== true).forEach(obj => {
         enqueueSnackbar(obj, {variant : "error"});
       })

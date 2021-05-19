@@ -39,13 +39,9 @@ function limitedString (str, notEmpty, limit) {
 
 //===================INTEGER====================
 
-function intOnly (str) {
-    return (str.match(/^\d+$/) ? true : "Veuillez n'insérer que des chiffres." )   
-};
-
 function noNegativeInt (str) {
     if (parseInt(str) < 0) {
-        return "Veuillez insérer des valeurs positives.";
+        return "Veuillez insérer un nombre positif.";
     }
     return true;
 };
@@ -56,6 +52,13 @@ function validFk (str) {
     }
     return true;
 };
+
+function validDates(start,end) {
+    if (new Date(start) > new Date(end)) {
+        return "Veuillez entrer des dates adéquates.";
+    }
+    return true;
+}
 
 let check = {
     mail : function (val) { 
@@ -103,7 +106,34 @@ let check = {
         key : "Ami",
         value : validFk(val)
     }},
-    
+    address : function (val) { return {
+        key : "Adresse",
+        value : limitedText(val,60)
+    }},
+    places : function (val) { return {
+        key : "Lieu d'hébergement",
+        value : validFk(val)
+    }},
+    avail_dates : function (start,end) { return {
+        key : "Dates de disponibilité",
+        value : validDates(start,end)
+    }},
+    bedQuantity : function (val) { return {
+        key : "Nombre de lits",
+        value : noNegativeInt(val)
+    }},
+    dates : function (start,end) { return {
+        key : "Date de début et fin",
+        value : validDates(start,end)
+    }},
+    users : function (val) { return {
+        key : "Coordinateur",
+        value : validFk(val)
+    }},
+    places_avail : function (val) { return {
+        key : "Lieu d'hébergement disponible",
+        value : validFk(val)
+    }},
 
 
     //===================CHECK====================
