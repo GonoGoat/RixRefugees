@@ -3,35 +3,28 @@ var format = require('pg-format');
 
 // add query functions
 function getAllFriends(req, res, next) {
-  pool.query('select id, fname, lname, to_char(in_date,\'YYYY-MM-DD\') as in_date,to_char(out_date,\'YYYY-MM-DD\') as out_date from friends '  
-  ,(err,rows) =>  {
+  pool.query('select id, fname, lname, to_char(in_date,\'YYYY-MM-DD\') as in_date,to_char(out_date,\'YYYY-MM-DD\') as out_date from friends ',(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows);
   })
 }
 
 function getFriendsInfo(req, res, next) {
-  pool.query('select friends.id as id, fname, lname, nationality, notes, phone, status_id, to_char(birth_date,\'YYYY-MM-DD\') as birth_date,'
-  + ' to_char(in_date,\'YYYY-MM-DD\') as in_date,to_char(out_date,\'YYYY-MM-DD\') as out_date'
-  + ' from friends join status on status.id = friends.status_id where friends.id = $1',[req.params.id],(err,rows) =>  {
+  pool.query('select friends.id as id, fname, lname, nationality, notes, phone, status_id, to_char(birth_date,\'YYYY-MM-DD\') as birth_date, to_char(in_date,\'YYYY-MM-DD\') as in_date,to_char(out_date,\'YYYY-MM-DD\') as out_date from friends join status on status.id = friends.status_id where friends.id = $1',[req.params.id],(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows[0]);
   })
 }
 
 function getValidFriendsAssignmentPerSessionsTasks(req, res, next) {
-    pool.query('select id, concat(lname, \' \', fname) as username, isFriendAssigned($1,id) as isassigned from friends where out_date is null',
-    [req.params.id],(err,rows) =>  {
-      if (err) throw err;
-      return res.send(rows.rows);
-    })
+  pool.query('select id, concat(lname, \' \', fname) as username, isFriendAssigned($1,id) as isassigned from friends where out_date is null',[req.params.id],(err,rows) =>  {
+    if (err) throw err;
+    return res.send(rows.rows);
+  })
 }
 
 function getFriendsDisplayInfo(req, res, next) {
-  pool.query((
-    'select friends.id as id, fname, lname, nationality, notes, phone, status.id as status_id, status.name, extract (YEAR from age(current_date,birth_date)) as age,' +
-    ' to_char(in_date,\'DD/MM/YYYY\') as in_date,to_char(out_date,\'DD/MM/YYYY\') as out_date  from friends join status on friends.status_id = status.id where friends.id = $1')
-  ,[parseInt(req.params.id)],(err,rows) =>  {
+  pool.query(('select friends.id as id, fname, lname, nationality, notes, phone, status.id as status_id, status.name, extract (YEAR from age(current_date,birth_date)) as age, to_char(in_date,\'DD/MM/YYYY\') as in_date,to_char(out_date,\'DD/MM/YYYY\') as out_date  from friends join status on friends.status_id = status.id where friends.id = $1'),[parseInt(req.params.id)],(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows[0]);
   })

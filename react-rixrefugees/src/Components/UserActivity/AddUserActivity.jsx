@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 import DataList from '../utils/DataList';
 import UserActivityForm from "../Forms/UserActivity/UserActivityForm";
@@ -12,6 +13,7 @@ import {sessionsTasksInfoDataListKeys} from '../../utils/DataListKeys/sessionsTa
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import check from "../../utils/FormValidations/validators"
 
 function AddUserActivity() {
 
@@ -73,6 +75,15 @@ function AddUserActivity() {
 
     async function handleSubmit() {
         setLoading(true);
+        let values = check.checkForm([
+            check.name(formValues.tasks.name),
+            check.dates(formValues.sessions.start_date,formValues.sessions.end_date),
+            check.users(formValues.sessions.users_id),
+            check.places_avail(formValues.sessions.places_availabilities_id),
+            check.amountOfPeople(formValues.sessions_tasks.amountofpeople),
+            check.tasks(formValues.sessions_tasks.tasks_id),
+            check.sessions(formValues.sessions_tasks.sessions_id)
+        ])
         if (!formValues.availabilities.sessions_tasks_id) {
             await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
             .then(res => {

@@ -21,7 +21,6 @@ function addAccomodations(req, res, next) {
   req.body.equipments.forEach(val => {
     query.push([val,req.body.places])
   })
-  console.log(query);
   pool.query(format('insert into accomodations (equipments_id,places_id) values %L',query),(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});

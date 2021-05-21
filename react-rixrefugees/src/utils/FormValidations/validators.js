@@ -134,6 +134,18 @@ let check = {
         key : "Lieu d'hébergement disponible",
         value : validFk(val)
     }},
+    amountOfPeople : function (val) { return {
+        key : "Nombre de bénévole à assigner",
+        value : noNegativeInt(val)
+    }},
+    tasks : function (val) { return {
+        key : "Tâche",
+        value : validFk(val)
+    }},
+    sessions : function (val) { return {
+        key : "Session",
+        value : validFk(val)
+    }},
 
 
     //===================CHECK====================

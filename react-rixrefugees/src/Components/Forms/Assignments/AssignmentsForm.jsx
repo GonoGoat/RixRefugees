@@ -40,13 +40,24 @@ function AssignmentsForm(props) {
     }
 
     async function handleDelete(del) {
-      await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/friends`, {data : del})
+      if ("users" in del) {
+        await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/users`, {data : del.users})
         .then(res => {
-            console.log('del ok');
+            console.log('del users ok');
         })
         .catch(err => {
             console.log(err);
         });
+      }
+      if ("friends" in del) {
+        await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/friends`, {data : del.friends})
+          .then(res => {
+              console.log('del friends ok');
+          })
+          .catch(err => {
+              console.log(err);
+          });
+        }
     }
 
     async function handleAdmins(admin) {

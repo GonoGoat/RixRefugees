@@ -1,4 +1,5 @@
 var pool = require('../db.js')
+const format = require('pg-format')
 
 // add query functions
 function getAllEquipments(req, res, next) {
@@ -16,13 +17,10 @@ function addEquipments(req, res, next) {
 }
 
 function deleteEquipments(req, res, next) {
-  let e = req.body;
-  e.map((obj) => {
-    pool.query('delete from equipments where id = ($1)',[obj],(err,rows) =>  {
-      if (err) throw err;
-    })
-  });
-  return res.send({data : true});
+  pool.query(format('delete from equipments where id in (%L)',req.body),(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
 }
 
 function updateEquipments(req, res, next) {

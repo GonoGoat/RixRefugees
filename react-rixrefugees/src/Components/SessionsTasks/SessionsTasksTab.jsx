@@ -40,12 +40,14 @@ function getState (params) {
                 </strong>
             )
         }
-        return (
-            <strong>
-                <CustomHourglassIcon/>
-                En cours
-            </strong>
-        )
+        else {
+            return (
+                <strong>
+                    <CustomHourglassIcon/>
+                    En cours
+                </strong>
+            )
+        }
     }
     else {
         return (

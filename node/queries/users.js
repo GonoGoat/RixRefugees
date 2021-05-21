@@ -1,8 +1,7 @@
 var pool = require('../db.js');
 
 function getAllAdminUsers(req, res, next) {
-    pool.query
-    ('select id, concat(lname, \' \', fname) as username from users where isAdmin = true'
+    pool.query('select id, concat(lname, \' \', fname) as username from users where isAdmin = true'
     ,(err,rows) =>  {
       if (err) throw err;
       return res.send(rows.rows);
@@ -18,7 +17,7 @@ function getUnavailableAdminUsersPerSessionsTasks(req, res, next) {
   })
 }
 
-async function addUsers(req, res, next) {
+function addUsers(req, res, next) {
   pool.query ('insert into users (password,fname,lname,mail,isadmin,isactive,lastActivity,contact) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id',
   [req.body.password,req.body.fname,req.body.lname,req.body.mail.toLowerCase(),req.body.isadmin,true, new Date(),req.body.contact], (err,rows) =>  {
     if (err) {
@@ -38,7 +37,7 @@ async function addUsers(req, res, next) {
   })
 }
 
-async function login(req, res, next) {
+function login(req, res, next) {
   pool.query ('select * from users where mail = $1 and password = $2',
   [req.body.mail.toLowerCase(),req.body.password], (err,rows) =>  {
     if (err) {

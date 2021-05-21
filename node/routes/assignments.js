@@ -8,6 +8,7 @@ router.get('/user/:id', db.getAssignmentsPerUser);
 router.post('/add/admins', db.addAdminAssignments);
 router.post('/add/users',db.addUsersAssignments);
 router.delete('/delete/friends',db.deleteAssignmentsPerFriends)
+router.delete('/delete/users',db.deleteAssignmentsPerUsers)
 
 
 module.exports = router;

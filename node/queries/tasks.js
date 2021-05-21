@@ -1,4 +1,5 @@
 var pool = require('../db.js')
+const format = require("pg-format");
 
 // add query functions
 function getAllTasks(req, res, next) {
@@ -16,13 +17,10 @@ function addTasks(req, res, next) {
 }
 
 function deleteTasks(req, res, next) {
-  let e = req.body;
-  e.map((obj) => {
-    pool.query('delete from tasks where id = ($1)',[obj],(err,rows) =>  {
-      if (err) throw err;
-    })
-  });
-  return res.send({data : true});
+  pool.query(format('delete from tasks where id in (%L)',req.body),(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
 }
 
 function updateTasks(req, res, next) {

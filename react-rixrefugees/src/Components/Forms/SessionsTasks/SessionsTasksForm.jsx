@@ -1,5 +1,6 @@
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,6 +11,8 @@ import LoadingIndicator from "../../utils/LoadingIndicator";
 import Sessions from '../Places/Sessions';
 import Tasks from './Tasks';
 import SessionsTasks from './SessionsTasks';
+
+import check from "../../../utils/FormValidations/validators"
 
 const classes = makeStyles({
     window : {
@@ -25,6 +28,7 @@ function SessionsTasksForm(props) {
     const date = moment().format("YYYY-MM-DD");
     const dateTime = moment().format("YYYY-MM-DDTHH:mm");
 
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const styles=useStyles();
     const [loading, setLoading] = React.useState(false);
     const [formValues,setFormValues] = React.useState({
@@ -75,24 +79,57 @@ function SessionsTasksForm(props) {
 
     //Submit button for Accomodations and the others
     async function handleSubmit() {
-        setLoading(true);
-        if (props.edit) {
-            await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        let values;
+        switch (props.api) {
+            case 'tasks':
+                values = check.checkForm([
+                    check.name(formValues.tasks.name)
+                ]);
+                break;
+            case 'sessions' :
+                values = check.checkForm([
+                    check.dates(formValues.sessions.start_date,formValues.sessions.end_date),
+                    check.users(formValues.sessions.users_id),
+                    check.places_avail(formValues.sessions.places_availabilities_id)
+                ]);
+                break;
+            case 'sessions_tasks' :
+                values = check.checkForm([
+                    check.amountOfPeople(formValues.sessions_tasks.amountofpeople),
+                    check.tasks(formValues.sessions_tasks.tasks_id),
+                    check.sessions(formValues.sessions_tasks.sessions_id)
+                ]);
+                break;
+            default:
+                values = ["Formulaire invalide."]
+                break;
+        }
+        if (values === true) {
+            setLoading(true);
+            if (props.edit) {
+                await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
         }
         else {
-            await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
-            .then(res => {
-                setLoading(false);
+            closeSnackbar();
+            values.filter(val => val !== true).forEach(obj => {
+                enqueueSnackbar(obj, {variant : "error"});
             })
-            .catch(err => {
-                console.log(err);
-            });
         }
     }
 

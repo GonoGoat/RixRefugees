@@ -33,7 +33,7 @@ create table Places (
     name varchar(20) NOT NULL, /*OK*/
     address varchar(60) NOT NULL, /*OK*/
     description text, /*OK*/
-	unique (address,name) /*OK*/
+	unique (address,name), /*OK*/
 );
 
 create table Equipments (
@@ -80,12 +80,12 @@ create table Web (
 create table Accomodations (
 	id  SERIAL PRIMARY KEY, /*OK*/
 
-	places_id int,
+	places_id int not null,
 	constraint fk__places__id /*OK*/
 		foreign key (places_id)
 			references Places(id)
 			on Delete Cascade,
-	equipments_id int,
+	equipments_id int not null,
 	constraint fk__equipments__id /*OK*/
 		foreign key (equipments_id)
 			references Equipments(id)
@@ -96,7 +96,7 @@ create table Registrations (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	motivation text, /*OK*/
 
-	users_id int,
+	users_id int not null,
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id)
@@ -134,7 +134,7 @@ create table Appointments (
 		foreign key (status_id)
 			references Status(id)
 			on Delete set null,
-	friends_id int,
+	friends_id int not null,
 	constraint fk__friends__id /*OK*/
 		foreign key (friends_id)
 			references Friends(id)
@@ -180,10 +180,10 @@ create table Sessions_tasks (
 	isFromAdmin boolean NOT NULL default false, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
-	start_date timestamp(0) without time zone default current_date,
-	end_date timestamp(0) without time zone,
+	start_date timestamp(0) without time zone default current_date not null,
+	end_date timestamp(0) without time zone not null,
 
-	tasks_id int,
+	tasks_id int not null,
 	constraint fk__tasks__id /*OK*/
 		foreign key (tasks_id)
 			references Tasks(id)
@@ -201,14 +201,14 @@ create table Availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	description text, /*OK*/
 	isCanceled boolean NOT NULL default false,
-	updateDate timestamp(0) without time zone default now(),
+	updateDate timestamp(0) without time zone not null default now(),
 
-	users_id int,
+	users_id int not null,
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id)
 			on Delete cascade,
-	sessions_tasks_id int,
+	sessions_tasks_id int not null,
 	constraint fk__session_tasks__id /*OK*/
 		foreign key (sessions_tasks_id)
 			references Sessions_tasks(id)
@@ -221,16 +221,17 @@ create table Assignments (
 	id SERIAL PRIMARY KEY, /*OK*/
 	feedback text,
 
-	friends_id int,
+	friends_id int not null,
 	constraint fk__friends__id /*OK*/
 		foreign key (friends_id)
 			references Friends(id)
 			on Delete cascade,
-	availabilities_id int,
+	availabilities_id int not null,
 	constraint fk__availabilities__id /*OK*/
 		foreign key (availabilities_id)
 			references Availabilities(id)
 			on Delete cascade
+	unique (friends_id,availabilities_id)
 );
 
 /******************PROCEDURES************/
