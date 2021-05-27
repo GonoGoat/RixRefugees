@@ -9,9 +9,9 @@ create table Accounting (
 
 create table Donations (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	fname varchar(20), /*OK*/
-	lname varchar(20), /*OK*/
-	description text, /*OK*/
+	fname varchar(20) not null, /*OK*/
+	lname varchar(20) not null, /*OK*/
+	description text not null, /*OK*/
 	contact text, /*OK*/
 	isResolved boolean NOT NULL default false /*OK*/
 );
@@ -43,14 +43,16 @@ create table Equipments (
 
 create table Users (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	password varchar(30) NOT NULL, /*OK*/
+	password varchar(500) NOT NULL, /*OK*/
 	fname varchar(20) NOT NULL, /*OK*/
 	lname varchar(20) NOT NULL, /*OK*/
 	mail varchar(40) NOT NULL unique, /*OK*/
 	isAdmin boolean NOT NULL default false, /*OK*/
 	isActive boolean NOT NULL default false,  /*OK*/
 	lastActivity date NOT NULL default current_date, /*OK*/
-	contact text /*OK*/
+	contact text, /*OK*/
+	token varchar(500),
+	expireToken timestamp(0)timestamp(0) without time zone NOT NULL default current_date
 );
 
 create table Tasks (
@@ -221,7 +223,7 @@ create table Assignments (
 	id SERIAL PRIMARY KEY, /*OK*/
 	feedback text,
 
-	friends_id int not null,
+	friends_id int,
 	constraint fk__friends__id /*OK*/
 		foreign key (friends_id)
 			references Friends(id)

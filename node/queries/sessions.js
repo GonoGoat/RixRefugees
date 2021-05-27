@@ -34,10 +34,10 @@ function addSessions(req, res, next) {
 }
 
 function deleteSessions(req, res, next) {
-    pool.query(format('delete from sessions where id = (%L)',req.body),(err,rows) =>  {
-      if (err) throw err;
-      return res.send({data : true});
-    })
+  pool.query(format('delete from sessions where id = (%L)',req.body),(err,rows) =>  {
+    if (err) throw err;
+    return res.send({data : true});
+  })
 }
 
 function updateSessions(req, res, next) {

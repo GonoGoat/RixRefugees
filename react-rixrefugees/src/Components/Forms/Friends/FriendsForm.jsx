@@ -18,7 +18,7 @@ const classes = makeStyles({
     window : {
         height : 500,
     },
-  });
+});
 const useStyles = classes;
 
 function FriendsForm(props) {

@@ -19,7 +19,7 @@ function getAvailabilitiesPerUser(req, res, next) {
 
 function getAvailabilitiesInfo(req, res, next) {
   pool.query
-  ('select id,description,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate,sessions_tasks_id case when iscanceled = true then \'Annulée\' when iscanceled = false then \'En cours\' else \'Inconnu\' end as iscanceled from availabilities where id = $1',[req.params.id],(err,rows) =>  {
+  ('select id,description,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate,sessions_tasks_id, case when iscanceled = true then \'Annulée\' when iscanceled = false then \'En cours\' else \'Inconnu\' end as iscanceled from availabilities where id = $1',[req.params.id],(err,rows) =>  {
     if (err) throw err;
     return res.send(rows.rows[0]);
   })
