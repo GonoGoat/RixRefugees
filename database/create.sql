@@ -33,7 +33,7 @@ create table Places (
     name varchar(20) NOT NULL, /*OK*/
     address varchar(60) NOT NULL, /*OK*/
     description text, /*OK*/
-	unique (address,name), /*OK*/
+	unique (address,name) /*OK*/
 );
 
 create table Equipments (
@@ -44,15 +44,15 @@ create table Equipments (
 create table Users (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	password varchar(500) NOT NULL, /*OK*/
-	fname varchar(20) NOT NULL, /*OK*/
-	lname varchar(20) NOT NULL, /*OK*/
-	mail varchar(40) NOT NULL unique, /*OK*/
+	fname varchar(500) NOT NULL, /*OK*/
+	lname varchar(500) NOT NULL, /*OK*/
+	mail varchar(500) NOT NULL unique, /*OK*/
 	isAdmin boolean NOT NULL default false, /*OK*/
 	isActive boolean NOT NULL default false,  /*OK*/
 	lastActivity date NOT NULL default current_date, /*OK*/
 	contact text, /*OK*/
-	token varchar(500),
-	expireToken timestamp(0)timestamp(0) without time zone NOT NULL default current_date
+	token varchar(500) not null,
+	expireToken timestamp(0) without time zone NOT NULL default current_date
 );
 
 create table Tasks (
@@ -62,7 +62,7 @@ create table Tasks (
 
 create table Status (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	name varchar(40) NOT NULL unique /*OK*/
+	name varchar(500) NOT NULL unique /*OK*/
 );
 
 /******************RANGEE N°2************/
@@ -107,14 +107,14 @@ create table Registrations (
 
 create table Friends (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	fname varchar(20), /*OK*/
-	lname varchar(20), /*OK*/
-	nationality varchar(3), /*OK*/
+	fname varchar(500), /*OK*/
+	lname varchar(500), /*OK*/
+	nationality varchar(500), /*OK*/
 	notes text, /*OK*/
 	birth_date date, /*OK*/
 	in_date date NOT NULL default current_date, /*OK*/
 	out_date date, /*OK*/
-	phone char(12), /*OK*/
+	phone varchar(500), /*OK*/
 
 	status_id int,
 	constraint fk__status__id /*OK*/
@@ -232,7 +232,7 @@ create table Assignments (
 	constraint fk__availabilities__id /*OK*/
 		foreign key (availabilities_id)
 			references Availabilities(id)
-			on Delete cascade
+			on Delete cascade,
 	unique (friends_id,availabilities_id)
 );
 

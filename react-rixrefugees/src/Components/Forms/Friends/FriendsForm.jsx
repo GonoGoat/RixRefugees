@@ -39,7 +39,7 @@ function FriendsForm(props) {
             lname : '',
             nationality : '',
             notes : '',
-            birth_date : '',
+            birth_date : null,
             in_date : date,
             phone : '',
             status_id : 0
@@ -102,7 +102,6 @@ function FriendsForm(props) {
                     check.status(formValues.friends.status_id),
                     check.n_lname(formValues.friends.lname),
                     check.n_fname(formValues.friends.fname),
-                    check.nationality(formValues.friends.nationality)
                 ])
                 break;
             case 'status' :

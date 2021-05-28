@@ -26,7 +26,6 @@ function Register () {
       confirm : '',
       lname : '',
       fname : '',
-      isadmin : false,
       motivation : '',
       contact : '',
     });
@@ -45,7 +44,11 @@ function Register () {
       }
       else {
         let values = check.checkForm([
-          check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+          check.mail(register.mail),
+          check.password(register.password),
+          check.lname(register.lname),
+          check.fname(register.fname),
+          check.motivation(register.motivation)
         ])
         if (values === true) {
           await axios.post(`${process.env.REACT_APP_API}/users/add`, register)

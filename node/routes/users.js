@@ -3,6 +3,7 @@ var router = express.Router();
 
 var db = require('../queries/users');
 
+router.get('/:id',db.getUserWithID);
 router.get('/admin',db.getAllAdminUsers);
 router.get('/admin/unavailable/:id',db.getUnavailableAdminUsersPerSessionsTasks)
 //router.get('/', db.getAllSessions);

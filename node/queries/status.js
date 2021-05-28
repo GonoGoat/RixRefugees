@@ -1,16 +1,22 @@
 var pool = require('../db.js')
 var format = require('pg-format');
+const cypher = require('../cypher');
 
 // add query functions
 function getAllStatus(req, res, next) {
   pool.query('select * from status',(err,rows) =>  {
     if (err) throw err;
-    return res.send(rows.rows);
+    return res.send(rows.rows.map((obj) => {
+      return {
+        id : obj.id,
+        name : cypher.decodeString(obj.name)
+      }
+    }));
   })
 }
 
 function addStatus(req, res, next) {
-  pool.query('insert into status (name) values ($1)',[req.body.name],(err,rows) =>  {
+  pool.query('insert into status (name) values ($1)',[cypher.encodeString(req.body.name)],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })
@@ -24,7 +30,7 @@ function deleteStatus(req, res, next) {
 }
 
 function updateStatus(req, res, next) {
-  pool.query('update status set name = $1 where id = $2',[req.body.name,req.body.id],(err,rows) =>  {
+  pool.query('update status set name = $1 where id = $2',[cypher.encodeString(req.body.name),req.body.id],(err,rows) =>  {
     if (err) throw err;
     return res.send({data : true});
   })

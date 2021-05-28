@@ -72,7 +72,7 @@ let check = {
     }},
     lname : function (val) { return {
         key : "Nom",
-        value : limitedString(val,20)
+        value : limitedString(val,true,20)
     }},
     fname : function (val) { return {
         key : "Prénom",
@@ -89,10 +89,6 @@ let check = {
     name : function (val) { return {
         key : "Nom",
         value : limitedText(val,40)
-    }},
-    nationality : function (val) { return {
-        key : "Nationalité",
-        value : notNull(val)
     }},
     phoneNumber: function (val) { return {
         key : "Numéro de téléphone",
@@ -145,6 +141,10 @@ let check = {
     sessions : function (val) { return {
         key : "Session",
         value : validFk(val)
+    }},
+    motivation : function (val) { return {
+        key : "Motivations",
+        value : notNull(val)
     }},
 
 
