@@ -24,6 +24,11 @@ function getAllAppointments(req, res, next) {
 }
 
 function getAppointmentsDesc(req, res, next) {
+  let verif = check.checkForm(res,[check.validFk(req.params.id)])
+  if (verif !== true) {
+    return verif;
+  }
+
   pool.query('select id, description, case when iscanceled = true then \'Oui\' when iscanceled = false then \'Non\' else \'Inconnu\' end as iscanceled from appointments id where id = $1'
   ,[parseInt(req.params.id)],(err,rows) =>  {
     if (err) return errors(res,err)
@@ -37,9 +42,15 @@ function getAppointmentsDesc(req, res, next) {
 }
 
 function addAppointments(req, res, next) {
-  if (check.checkForm([
-    toString(req.body.description),
-  ]))
+  let body = check.checkForm(res,[check.hasProperties(["appointment","description","iscanceled","status_id","friends_id"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
+  let verif = check.checkForm(res,[check.validFk(req.body.places),check.arrayOfValidFk(req.body.equipments)])
+  if (verif !== true) {
+    return verif;
+  }
   pool.query('insert into appointments (appointment,description,iscanceled, status_id, friends_id) values ($1,$2,$3,$4,$5)'
   ,[req.body.appointment,cypher.encodeString(req.body.description),req.body.iscanceled,req.body.status_id,req.body.friends_id],(err,rows) =>  {
     if (err) return errors(res,err)
