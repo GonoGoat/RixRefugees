@@ -30,10 +30,8 @@ function AddUserActivity() {
             description : '',
             users_id : 1,
             sessions_tasks_id : useParams().id,
-            iscanceled : false
         },
         sessions_tasks : {
-            isfromadmin : false,
             description : '',
             amountofpeople : 0,
             start_date : dateTime,
@@ -42,6 +40,7 @@ function AddUserActivity() {
         }
     });
     const [loading, setLoading] = React.useState(false);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const handleTasksChange = (e) => {
         const { name, value } = e.target;
@@ -74,33 +73,41 @@ function AddUserActivity() {
     };
 
     async function handleSubmit() {
-        setLoading(true);
         let values = check.checkForm([
             check.name(formValues.tasks.name),
-            check.dates(formValues.sessions.start_date,formValues.sessions.end_date),
-            check.users(formValues.sessions.users_id),
-            check.places_avail(formValues.sessions.places_availabilities_id),
+            check.dates(formValues.sessions_tasks.start_date,formValues.sessions_tasks.end_date),
+            check.users(formValues.sessions_tasks.users_id),
+            check.places_avail(formValues.sessions_tasks.places_availabilities_id),
             check.amountOfPeople(formValues.sessions_tasks.amountofpeople),
             check.tasks(formValues.sessions_tasks.tasks_id),
             check.sessions(formValues.sessions_tasks.sessions_id)
         ])
-        if (!formValues.availabilities.sessions_tasks_id) {
-            await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        if (values === true) {
+            setLoading(true);
+            if (!formValues.availabilities.sessions_tasks_id) {
+                await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
+                .then(res => {
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
         }
         else {
-            await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
-            .then(res => {
-                setLoading(false);
+            closeSnackbar();
+            values.filter(val => val !== true).forEach(obj => {
+                enqueueSnackbar(obj, {variant : "error"});
             })
-            .catch(err => {
-                console.log(err);
-            });
         }
     }
 

@@ -1,5 +1,7 @@
 var pool = require('../db.js')
 const format = require('pg-format')
+const errors = require('../errors.js');
+const check = require('../validators.js');
 
 // add query functions
 function getAllEquipments(req, res, next) {

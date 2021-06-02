@@ -47,10 +47,14 @@ function addAppointments(req, res, next) {
     return body;
   }
 
-  let verif = check.checkForm(res,[check.validFk(req.body.places),check.arrayOfValidFk(req.body.equipments)])
+  let verif = check.checkForm(res,[
+    check.validFk(req.body.friends_id),
+    check.validFk(req.body.status_id),
+  ])
   if (verif !== true) {
     return verif;
   }
+
   pool.query('insert into appointments (appointment,description,iscanceled, status_id, friends_id) values ($1,$2,$3,$4,$5)'
   ,[req.body.appointment,cypher.encodeString(req.body.description),req.body.iscanceled,req.body.status_id,req.body.friends_id],(err,rows) =>  {
     if (err) return errors(res,err)
@@ -59,6 +63,13 @@ function addAppointments(req, res, next) {
 }
 
 function deleteAppointments(req, res, next) {
+  let verif = check.checkForm(res,[
+    check.arrayOfValidFk(req.body),
+  ])
+  if (verif !== true) {
+    return verif;
+  }
+
   pool.query(format('delete from appointments where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err)
     return res.send({data : true});
@@ -66,6 +77,20 @@ function deleteAppointments(req, res, next) {
 }
 
 function updateAppointments(req, res, next) {
+  let body = check.checkForm(res,[check.hasProperties(["id","appointment","description","iscanceled","status_id","friends_id"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
+  let verif = check.checkForm(res,[
+    check.validFk(req.body.friends_id),
+    check.validFk(req.body.status_id),
+    check.validFk(req.body.id),
+  ])
+  if (verif !== true) {
+    return verif;
+  }
+
   pool.query('update appointments set appointment = $1, description = $2, iscanceled = $3, status_id = $4, friends_id = $5 where id = $6'
   ,[req.body.appointment,cypher.encodeString(req.body.description),Boolean(req.body.iscanceled),req.body.status_id,req.body.friends_id, req.body.id],(err,rows) =>  {
     if (err) return errors(res,err)

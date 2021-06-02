@@ -9,6 +9,7 @@ function getAccomodationsPerPlaces(req, res, next) {
   if (verif !== true) {
     return verif;
   }
+  
   pool.query('select equipments_id as id from accomodations where places_id = $1',[parseInt(req.params.id)],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
