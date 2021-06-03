@@ -71,7 +71,7 @@ function addNewAvailabilities(req, res, next) {
     return verif;
   }
 
-  pool.query('select id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') from sessions where id = $1',[req.body.sessions_tasks.sessions_id]
+  pool.query('select id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') as end_date from sessions where id = $1',[req.body.sessions_tasks.sessions_id]
   ,(err,rows) =>  {
     if (err) return errors(res,err);
     if ((new Date(rows.rows[0].start_date) > new Date(req.body.sessions_tasks.start_date)) || (new Date(rows.rows[0].end_date) < new Date(req.body.sessions_tasks.end_date))) return res.status(405).send("Veuillez sélectionner des dates à l'intérieur de la session concernée.")

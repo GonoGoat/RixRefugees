@@ -29,7 +29,10 @@ function addAccomodations(req, res, next) {
     return body;
   }
 
-  let verif = check.checkForm(res,[check.validFk(req.body.places),check.arrayOfValidFk(req.body.equipments)])
+  let verif = check.checkForm(res,[
+    check.validFk(req.body.places),
+    check.arrayOfValidFk(req.body.equipments)
+  ])
   if (verif !== true) {
     return verif;
   }
@@ -50,7 +53,10 @@ function deleteAccomodations(req, res, next) {
     return body;
   }
 
-  let verif = check.checkForm(res,[check.validFk(req.body.places),check.arrayOfValidFk(req.body.equipments)])
+  let verif = check.checkForm(res,[
+    check.validFk(req.body.places),
+    check.arrayOfValidFk(req.body.equipments)
+  ])
   if (verif !== true) {
     return verif;
   }

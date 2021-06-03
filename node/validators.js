@@ -56,6 +56,7 @@ let check = {
     },
 
     arrayOfValidFk : function (arr) {
+        if (Array.isArray(arr) === false) return false;
         let compare = arr.map(v => true)
         arr.forEach((val,index) => {
             if (check.validFk(val) === false) {

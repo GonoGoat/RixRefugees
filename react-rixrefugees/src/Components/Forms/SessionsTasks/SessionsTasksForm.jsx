@@ -42,7 +42,6 @@ function SessionsTasksForm(props) {
             places_availabilities_id : 0
         },
         sessions_tasks : {
-            isfromadmin : true,
             description : '',
             amountofpeople : 0,
             start_date : dateTime,
