@@ -9,9 +9,9 @@ create table Accounting (
 
 create table Donations (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	fname varchar(20), /*OK*/
-	lname varchar(20), /*OK*/
-	description text, /*OK*/
+	fname varchar(20) not null, /*OK*/
+	lname varchar(20) not null, /*OK*/
+	description text not null, /*OK*/
 	contact text, /*OK*/
 	isResolved boolean NOT NULL default false /*OK*/
 );
@@ -43,14 +43,16 @@ create table Equipments (
 
 create table Users (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	password varchar(30) NOT NULL, /*OK*/
-	fname varchar(20) NOT NULL, /*OK*/
-	lname varchar(20) NOT NULL, /*OK*/
-	mail varchar(40) NOT NULL unique, /*OK*/
+	password varchar(500) NOT NULL, /*OK*/
+	fname varchar(500) NOT NULL, /*OK*/
+	lname varchar(500) NOT NULL, /*OK*/
+	mail varchar(500) NOT NULL unique, /*OK*/
 	isAdmin boolean NOT NULL default false, /*OK*/
 	isActive boolean NOT NULL default false,  /*OK*/
 	lastActivity date NOT NULL default current_date, /*OK*/
-	contact text /*OK*/
+	contact text, /*OK*/
+	token varchar(500) not null,
+	expireToken timestamp(0) without time zone NOT NULL default current_date
 );
 
 create table Tasks (
@@ -60,7 +62,7 @@ create table Tasks (
 
 create table Status (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	name varchar(40) NOT NULL unique /*OK*/
+	name varchar(500) NOT NULL unique /*OK*/
 );
 
 /******************RANGEE N°2************/
@@ -80,12 +82,12 @@ create table Web (
 create table Accomodations (
 	id  SERIAL PRIMARY KEY, /*OK*/
 
-	places_id int,
+	places_id int not null,
 	constraint fk__places__id /*OK*/
 		foreign key (places_id)
 			references Places(id)
 			on Delete Cascade,
-	equipments_id int,
+	equipments_id int not null,
 	constraint fk__equipments__id /*OK*/
 		foreign key (equipments_id)
 			references Equipments(id)
@@ -96,7 +98,7 @@ create table Registrations (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	motivation text, /*OK*/
 
-	users_id int,
+	users_id int not null,
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id)
@@ -105,14 +107,14 @@ create table Registrations (
 
 create table Friends (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	fname varchar(20), /*OK*/
-	lname varchar(20), /*OK*/
-	nationality varchar(3), /*OK*/
+	fname varchar(500), /*OK*/
+	lname varchar(500), /*OK*/
+	nationality varchar(500), /*OK*/
 	notes text, /*OK*/
 	birth_date date, /*OK*/
 	in_date date NOT NULL default current_date, /*OK*/
 	out_date date, /*OK*/
-	phone char(12), /*OK*/
+	phone varchar(500), /*OK*/
 
 	status_id int,
 	constraint fk__status__id /*OK*/
@@ -134,7 +136,7 @@ create table Appointments (
 		foreign key (status_id)
 			references Status(id)
 			on Delete set null,
-	friends_id int,
+	friends_id int not null,
 	constraint fk__friends__id /*OK*/
 		foreign key (friends_id)
 			references Friends(id)
@@ -177,13 +179,13 @@ create table Sessions (
 
 create table Sessions_tasks (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	isFromAdmin boolean NOT NULL default true, /*OK*/
+	isFromAdmin boolean NOT NULL default false, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
-	start_date timestamp(0) without time zone default current_date,
-	end_date timestamp(0) without time zone,
+	start_date timestamp(0) without time zone default current_date not null,
+	end_date timestamp(0) without time zone not null,
 
-	tasks_id int,
+	tasks_id int not null,
 	constraint fk__tasks__id /*OK*/
 		foreign key (tasks_id)
 			references Tasks(id)
@@ -201,14 +203,14 @@ create table Availabilities (
 	id  SERIAL PRIMARY KEY, /*OK*/
 	description text, /*OK*/
 	isCanceled boolean NOT NULL default false,
-	updateDate timestamp(0) without time zone default now(),
+	updateDate timestamp(0) without time zone not null default now(),
 
-	users_id int,
+	users_id int not null,
 	constraint fk__users__id /*OK*/
 		foreign key (users_id)
 			references Users(id)
 			on Delete cascade,
-	sessions_tasks_id int,
+	sessions_tasks_id int not null,
 	constraint fk__session_tasks__id /*OK*/
 		foreign key (sessions_tasks_id)
 			references Sessions_tasks(id)
@@ -226,11 +228,12 @@ create table Assignments (
 		foreign key (friends_id)
 			references Friends(id)
 			on Delete cascade,
-	availabilities_id int,
+	availabilities_id int not null,
 	constraint fk__availabilities__id /*OK*/
 		foreign key (availabilities_id)
 			references Availabilities(id)
-			on Delete cascade
+			on Delete cascade,
+	unique (friends_id,availabilities_id)
 );
 
 /******************PROCEDURES************/
