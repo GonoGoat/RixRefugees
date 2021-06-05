@@ -1,6 +1,7 @@
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
+import axios from "../../../utils/axios";
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -22,7 +23,6 @@ const classes = makeStyles({
 const useStyles = classes;
 
 function SessionsTasksForm(props) {
-    const axios = require('axios');
     const moment = require('moment');
 
     const date = moment().format("YYYY-MM-DD");
@@ -59,7 +59,16 @@ function SessionsTasksForm(props) {
                 sess.description = res.data.description
             })
             .catch(err => {
-                console.log(err);
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
             });
             setFormValues({
                 ...formValues,
@@ -108,19 +117,43 @@ function SessionsTasksForm(props) {
             if (props.edit) {
                 await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
                 .then(res => {
-                    setLoading(false);
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    localStorage.setItem("rixrefugees-url",props.api);
+                    window.location.reload();
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
             else {
                 await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
                 .then(res => {
-                    setLoading(false);
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    localStorage.setItem("rixrefugees-url",props.api);
+                    window.location.reload();
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
         }

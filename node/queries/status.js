@@ -32,7 +32,7 @@ function addStatus(req, res, next) {
 
   pool.query('insert into status (name) values ($1)',[cypher.encodeString(req.body.name)],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Le statut a bien été ajouté.`);
   })
 }
 
@@ -46,7 +46,7 @@ function deleteStatus(req, res, next) {
 
   pool.query(format('delete from status where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} statut${req.body.length > 1 ? "s ont bien été supprimés" : " a bien été supprimé"}.`);
   }) 
 }
 
@@ -66,7 +66,7 @@ function updateStatus(req, res, next) {
 
   pool.query('update status set name = $1 where id = $2',[cypher.encodeString(req.body.name),req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Le statut a bien été modifié.`);
   })
 }
 

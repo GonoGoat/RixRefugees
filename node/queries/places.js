@@ -39,7 +39,7 @@ function addPlaces(req, res, next) {
 
   pool.query('insert into places (name,address,description) values ($1,$2,$3)',[req.body.name,req.body.address,req.body.description],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Le lieu d'hébergement a bien été ajouté.`);
   })
 }
 
@@ -53,7 +53,7 @@ function deletePlaces(req, res, next) {
 
   pool.query(format('delete from places where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} lieu${req.body.length > 1 ? "x ont bien été supprimés" : " a bien été supprimé"}.`);
   })
 }
 
@@ -74,7 +74,7 @@ function updatePlaces(req, res, next) {
 
   pool.query('update places set name=$1, address = $2, description = $3 where id = $4',[req.body.name,req.body.address,req.body.description,req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Le lieu d'hébergement a bien modifié.`);
   })
 }
 

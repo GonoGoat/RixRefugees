@@ -24,7 +24,7 @@ function addEquipments(req, res, next) {
 
   pool.query('insert into equipments (name) values ($1)',[req.body.name],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`L'équipement a bien été ajouté.`);
   })
 }
 
@@ -36,7 +36,7 @@ function deleteEquipments(req, res, next) {
 
   pool.query(format('delete from equipments where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} équipement${req.body.length > 1 ? "s ont bien été supprimés" : " a bien été supprimé"}.`);
   })
 }
 
@@ -54,7 +54,7 @@ function updateEquipments(req, res, next) {
 
   pool.query('update equipments set name = $1 where id = $2',[req.body.name,req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`L'équipement a bien été modifié.`);
   })
 }
 

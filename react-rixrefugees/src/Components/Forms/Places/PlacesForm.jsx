@@ -1,6 +1,7 @@
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
+import axios from "../../../utils/axios";
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -24,8 +25,6 @@ const classes = makeStyles({
 const useStyles = classes;
 
 function PlacesForm(props) {
-
-    const axios = require('axios');
     const moment = require('moment');
 
     const dateTime = moment().format("YYYY-MM-DDTHH:mm");
@@ -124,17 +123,25 @@ function PlacesForm(props) {
                 values = ["Formulaire invalide."]
                 break;
         }
-        console.log(values)
         if (values === true) {
             setLoading(true);
             if (props.form === '/accomodations') {
                 let existing;
                 await axios.get(`${process.env.REACT_APP_API}/accomodations/places/${formValues.accomodations.places_id}`)
-                    .then(res => {
-                        existing = res.data.map(obj => obj.id)
-                    })
-                    .catch(err => {
-                        console.log(err);
+                .then(res => {
+                    existing = res.data.map(obj => obj.id)
+                })
+                .catch(err => {
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
                 });
     
                 let head = props.header.slice(1);
@@ -160,19 +167,37 @@ function PlacesForm(props) {
                 if (toAdd.length > 0) {
                     await axios.post(`${process.env.REACT_APP_API}/accomodations/add`, {places : formValues.accomodations.places_id,equipments : toAdd})
                     .then(res => {
-                        console.log("add ok")
+                        enqueueSnackbar(res.data, {variant : "info"});
                     })
                     .catch(err => {
-                        console.log(err);
+                        closeSnackbar();
+                        if (err.response) {
+                            enqueueSnackbar(err.response.data, {variant : "error"});
+                        }
+                        else if (err.request) {
+                            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                        } 
+                        else {
+                            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                        }
                     });
                 }
                 if (toRemove.length > 0) {
                     await axios.delete(`${process.env.REACT_APP_API}/accomodations/delete`, {data : {places : formValues.accomodations.places_id,equipments : toRemove}})
                     .then(res => {
-                        console.log("remove ok")
+                        enqueueSnackbar(res.data, {variant : "info"});
                     })
                     .catch(err => {
-                        console.log(err);
+                        closeSnackbar();
+                        if (err.response) {
+                            enqueueSnackbar(err.response.data, {variant : "error"});
+                        }
+                        else if (err.request) {
+                            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                        } 
+                        else {
+                            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                        }
                     });
                 }
                 setLoading(false);
@@ -182,19 +207,42 @@ function PlacesForm(props) {
                 if (props.edit) {
                     await axios.put(`${process.env.REACT_APP_API}${props.form}/update`, formValues[key])
                     .then(res => {
-                        setLoading(false);
+                        localStorage.setItem("rixrefugees-message",res.data);
+                        localStorage.setItem("rixrefugees-url",props.form);
+                        window.location.reload();
                     })
                     .catch(err => {
-                        console.log(err);
+                        closeSnackbar();
+                        if (err.response) {
+                            enqueueSnackbar(err.response.data, {variant : "error"});
+                        }
+                        else if (err.request) {
+                            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                        } 
+                        else {
+                            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                        }
                     });
                 }
                 else {
                     await axios.post(`${process.env.REACT_APP_API}${props.form}/add`, formValues[key])
                     .then(res => {
-                        setLoading(false);
+                        localStorage.setItem("rixrefugees-message",res.data);
+                        localStorage.setItem("rixrefugees-url",props.api);
+                        window.location.reload();
                     })
                     .catch(err => {
-                        console.log(err);
+                        closeSnackbar();
+                        if (err.response) {
+                            enqueueSnackbar(err.response.data, {variant : "error"});
+                        }
+                        else if (err.request) {
+                            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                        } 
+                        else {
+                            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                        }
+                        setLoading(false);
                     });
                 }
             }

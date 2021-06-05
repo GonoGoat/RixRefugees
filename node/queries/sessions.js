@@ -55,7 +55,7 @@ function addSessions(req, res, next) {
     
     pool.query('insert into sessions (start_date,end_date,users_id,places_availabilities_id) values ($1,$2,$3,$4)',[req.body.start_date,req.body.end_date,req.body.users_id, req.body.places_availabilities_id],(err,rows) =>  {
       if (err) return errors(res,err);
-      return res.send({data : true});
+      return res.send(`La session a bien été ajoutée.`);
     })
   })
 }
@@ -70,7 +70,7 @@ function deleteSessions(req, res, next) {
 
   pool.query(format('delete from sessions where id = (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} session${req.body.length > 1 ? "s ont bien été supprimées" : " a bien été supprimée"}.`);
   })
 }
 
@@ -96,7 +96,7 @@ function updateSessions(req, res, next) {
     
     pool.query('update sessions set start_date=$1, end_date = $2, users_id = $3, places_availabilities_id = $4 where id = $5',[req.body.start_date,req.body.end_date,req.body.users_id, req.body.places_availabilities_id, req.body.id],(err,rows) =>  {
       if (err) return errors(res,err);
-      return res.send({data : true});
+      return res.send(`La tâche de session a bien été modifiée.`);
     })
   })
 }

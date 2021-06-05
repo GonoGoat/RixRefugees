@@ -26,7 +26,7 @@ function addTasks(req, res, next) {
 
   pool.query('insert into tasks (name) values ($1)',[req.body.name],(err,rows) =>  {
     if (err) throw err;
-    return res.send({data : true});
+    return res.send(`La tâche a bien été ajoutée.`);
   })
 }
 
@@ -40,7 +40,7 @@ function deleteTasks(req, res, next) {
 
   pool.query(format('delete from tasks where id in (%L)',req.body),(err,rows) =>  {
     if (err) throw err;
-    return res.send({data : true});
+    return res.send(`${req.body.length} tâche${req.body.length > 1 ? "s ont bien été supprimées" : " a bien été supprimée"}.`);
   })
 }
 
@@ -60,7 +60,7 @@ function updateTasks(req, res, next) {
 
   pool.query('update tasks set name = $1 where id = $2',[req.body.name,req.body.id],(err,rows) =>  {
     if (err) throw err;
-    return res.send({data : true});
+    return res.send(`La tâche a bien été modifiée.`);
   })
 }
 

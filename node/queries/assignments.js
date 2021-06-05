@@ -52,7 +52,7 @@ function addAdminAssignments(req, res, next) {
     });
     pool.query(format('insert into assignments (availabilities_id,friends_id) values %L',queryTwo),(err,rows) =>  {
       if (err) return errors(res,err);
-      return res.send({data : true});
+      return res.send(`${req.body.admin.length} coordinateur${req.body.admin.length > 1 ? "s ont bien été assignés" : " a bien été assigné"} à la tâche demandée.`);
     })
   })
 }
@@ -74,7 +74,7 @@ function addUsersAssignments(req, res, next) {
   });
   pool.query(format('insert into assignments (availabilities_id,friends_id) values %L',query),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.admin.length} bénévole${req.body.admin.length > 1 ? "s ont bien été assignés" : " a bien été assigné"} à la tâche demandée.`);
   });
 }
 
@@ -94,7 +94,7 @@ function deleteAssignmentsPerFriends(req, res, next) {
 
   pool.query(format('delete from assignments where availabilities_id in (%L) and friends_id in (%L)',req.body.users, req.body.friends),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`L'ami demandé n'est plus assigné à la tâche souhaitée.`);
   })
 }
 
@@ -108,7 +108,7 @@ function deleteAssignmentsPerUsers(req, res, next) {
 
   pool.query(format('delete from assignments where availabilities_id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Le bénévole demandé n'est plus assigné à la tâche souhaitée.`);
   });
 }
 

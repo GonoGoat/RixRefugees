@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -21,7 +23,7 @@ function SessionsTasksDesc(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const axios = require('axios')
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   async function fetchData() {
     setLoading(true);
@@ -31,7 +33,17 @@ function SessionsTasksDesc(props) {
         setLoading(false);
     })
     .catch(err => {
-        console.log(err);
+      closeSnackbar();
+      if (err.response) {
+          enqueueSnackbar(err.response.data, {variant : "error"});
+      }
+      else if (err.request) {
+          enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+      } 
+      else {
+          enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+      }
+      setLoading(false);
     });
 }
 

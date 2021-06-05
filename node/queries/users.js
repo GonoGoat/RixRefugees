@@ -1,8 +1,10 @@
 var pool = require('../db.js');
 var argon = require('argon2');
+const crypto = require('crypto');
 const cypher = require('../cypher');
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const transporter = require('../mail.js');
 
 function getAllAdminUsers(req, res, next) {
   pool.query('select id, concat(lname, \' \', fname) as username from users where isAdmin = true'
@@ -23,6 +25,15 @@ function getUnavailableAdminUsersPerSessionsTasks(req, res, next) {
     if (err) return errors(res,err);
     return res.send(rows.rows);
   })
+}
+
+async function getCurrentUser(req, res, next) {
+  if (req.session.user) {
+    return res.send({loggedIn : true, isadmin : req.session.user.isadmin})
+  }
+  else {
+    return res.send({loggedIn : false})
+  }
 }
 
 async function addUsers(req, res, next) {
@@ -50,15 +61,15 @@ async function addUsers(req, res, next) {
     }
     else {
       let hash = await argon.hash(req.body.password, {type: argon.argon2id});
-      pool.query ('insert into users (password,fname,lname,mail,isadmin,isactive,lastActivity,contact) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id',
-      [hash,cypher.encodeString(req.body.fname),cypher.encodeString(req.body.lname),cypher.encodeString(req.body.mail.toLowerCase()),false,true, new Date(),cypher.encodeString(req.body.contact)], (err,rows) =>  {
+      pool.query ('insert into users (password,fname,lname,mail,isadmin,isactive,lastActivity,contact,token) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning id',
+      [hash,cypher.encodeString(req.body.fname),cypher.encodeString(req.body.lname),cypher.encodeString(req.body.mail.toLowerCase()),false,true, new Date(),cypher.encodeString(req.body.contact),"Account created"], (err,rows) =>  {
         if (err) return errors(res,err);
         id = rows.rows[0].id
 
         pool.query ('insert into registrations (motivation,users_id) values ($1,$2)',
         [req.body.motivation,id], (err,rows) =>  {
           if (err) return errors(res,err);
-          return res.send(true)
+          return res.send("Votre candidature a bien été enregistrée par le système et sera traitée très prochainement par les coordinateurs de l'association.\nNous vous contacterons par email pour vous informer de notre décision.")
         })
       })
     }
@@ -79,12 +90,14 @@ function login(req, res, next) {
     return verif;
   }
 
-  pool.query ('select * from users where mail = $1',
+  pool.query ('select id,password,isadmin from users where mail = $1 and isactive = true',
   [cypher.encodeString(req.body.mail.toLowerCase())], async (err,rows) => {
     if (err) return errors(res,err);
     if (rows.rows.length > 0) {
       if (await argon.verify(rows.rows[0].password, req.body.password)) {
-        return res.send(rows.rows[0].isadmin)
+        let user = {id : rows.rows[0].id, isadmin : rows.rows[0].isadmin}
+        req.session.user = user
+        return res.send(user.isadmin)
       }
       else {
         return res.status(404).send("Mot de passe invalide. Veuillez réessayer.")
@@ -94,6 +107,95 @@ function login(req, res, next) {
       return res.status(404).send("Utilisateur introuvable. Veuillez rentrer l'adresse email avec laquelle vous avez créé votre compte.")
     }
   })
+}
+
+/**
+ * @author https://www.youtube.com/watch?v=NOuiitBbAcU&list=PLB97yPrFwo5g0FQr4rqImKa55F_aPiQWk&index=48
+ */
+function resetPassword(req, res, next) {
+  let body = check.checkForm(res,[check.hasProperties(["mail"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
+  let verif = check.checkForm(res,[
+    check.mail(req.body.mail),
+  ])
+
+  crypto.randomBytes(32,(err,buffer) => {
+    if (err) return res.status(500).send("Erreur lors de la procédure de réinitialisation de mot de passe. Veuillez réessayer.")
+    const token = buffer.toString('hex');
+    pool.query("select id from users where mail = $1",[cypher.encodeString(req.body.mail.toLowerCase())], (err,rows) => {
+      if (err) return errors(res,err);
+      if (rows.rows.length > 0) {
+        // Code from https://attacomsian.com/blog/javascript-date-add-days
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        //--------------
+        pool.query("update users set token = $1, expireToken = $2 where id = $3",[token,date, rows.rows[0].id,], (err,rows) => {
+          if (err) return errors(res,err);
+          transporter.sendMail({
+            to : req.body.mail,
+            from : process.env.MAIL_USER,
+            subject : "RixRefugees : Réinitialisation de mot de passe",
+            html :  `<p>Vous avez émis une demande de réinitialisation de mot de passe</p>
+              <h5>Cliquer sur <a href="${process.env.WEBSITE}/reset/${token}"> ce lien</a> pour changer de mot de passe.`
+          },(err,info) => {
+            if (err) return res.status(500).send("Une erreur s'est produite lors de l'envoi du mail. Veuillez réessayer.")
+            return res.send("La procédure de réinitialisation de mot de passe a bien été lancée.\nVérifiez votre boîte mail pour continuer (regardez aussi dans le courrier indésirable !)");
+          })
+        })
+      }
+      else {
+        return res.status(404).send("Utilisateur introuvable. Veuillez rentrer l'adresse email avec laquelle vous avez créé votre compte.")
+      }
+    })
+  })
+}
+
+async function newPassword(req, res, next) {
+  let body = check.checkForm(res,[check.hasProperties(["password","token"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
+  let verif = check.checkForm(res,[
+    check.password(req.body.password),
+  ])
+  if (verif !== true) {
+    return verif;
+  }
+
+  pool.query ('select id from users where token = $1 and expiretoken >= now()',
+  [req.body.token], async (err,rows) => {
+    if (err) return errors(res,err);
+    if (rows.rows.length > 0) {
+      let hash = await argon.hash(req.body.password, {type: argon.argon2id});
+      // Code from https://attacomsian.com/blog/javascript-date-add-days
+      const date = new Date();
+      date.setDate(date.getDate() - 1);
+      //--------------
+      pool.query ('update users set password = $1, expireToken = $2  where id = $3',
+      [hash,date,rows.rows[0].id], (err,rows) =>  {
+        if (err) return errors(res,err);
+        return res.send("Votre mot de passe a bien été réinitialisé !");
+      })
+    }
+    else {
+      return res.status(400).send("Jeton invalide ou expiré. Veuillez réessayer.")
+    }
+  })
+}
+
+
+function logout(req, res, next) {
+  if (req.session.user) {
+    res.clearCookie("userId");
+    return res.send("Vous avez bien été déconnecté !");
+  }
+  else {
+    return res.status(500).send("Vous n'avez pas pu être déconnecté.")
+  }
 }
 
 function getUserWithID(req, res, next) {
@@ -126,5 +228,9 @@ module.exports = {
     getUnavailableAdminUsersPerSessionsTasks : getUnavailableAdminUsersPerSessionsTasks,
     addUsers : addUsers,
     getUserWithID: getUserWithID,
-    login : login
+    login : login,
+    logout : logout,
+    getCurrentUser : getCurrentUser,
+    resetPassword : resetPassword,
+    newPassword : newPassword
   };

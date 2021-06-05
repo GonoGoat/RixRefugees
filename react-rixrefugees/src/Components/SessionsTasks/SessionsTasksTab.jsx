@@ -1,4 +1,5 @@
-import React from "react";
+import React from "react";import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import LoadingIndicator from "../utils/LoadingIndicator";
 import ListingGrid from '../utils/ListingGrid';
@@ -148,7 +149,7 @@ function SessionsTasksTab() {
     const styles = useStyles();
 
     const api = '/sessions_tasks'
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const moment = require('moment');
 
     React.useEffect(() => {
@@ -159,7 +160,17 @@ function SessionsTasksTab() {
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }, [])
 
@@ -171,10 +182,22 @@ function SessionsTasksTab() {
         setLoading(true);
         await axios.delete(`${process.env.REACT_APP_API}${api}/delete`, {data : selected})
         .then(res => {
-            setLoading(false);
+            localStorage.setItem("rixrefugees-message",res.data);
+            localStorage.setItem("rixrefugees-url",api);
+            window.location.reload();
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 
@@ -195,7 +218,17 @@ function SessionsTasksTab() {
                 setSessionsTasks(res.data);
             })
             .catch(err => {
-                console.log(err);
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+                setLoading(false);
             });
         }
         setPanel(id);

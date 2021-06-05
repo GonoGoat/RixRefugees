@@ -1,8 +1,9 @@
 import React from "react";
 import {useHistory } from "react-router";
+import { useSnackbar } from 'notistack';
+import axios from "../utils/axios";
 
 import LoadingIndicator from "./utils/LoadingIndicator";
-import CancelButton from "./utils/Buttons/CancelButton";
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -13,18 +14,28 @@ function UserAssignments() {
     const [assignments,setAssignments] = React.useState();
     const [loading,setLoading] = React.useState(false);
 
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const history = useHistory();
 
     React.useEffect(() => {
         setLoading(true);
         axios.get(`${process.env.REACT_APP_API}/assignments/user/${user}`)
         .then(res => {
-            setLoading(false);
             setAssignments(res.data.sort((a, b) => b.start_date - a.start_date));
+            setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     },[])
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import DataList from '../utils/DataList';
 import UserActivityForm from "../Forms/UserActivity/UserActivityForm";
@@ -16,8 +17,6 @@ import Button from '@material-ui/core/Button';
 import check from "../../utils/FormValidations/validators"
 
 function AddUserActivity() {
-
-    const axios = require('axios');
     const moment = require('moment');
 
     const dateTime = moment().format("YYYY-MM-DDTHH:mm");
@@ -87,19 +86,41 @@ function AddUserActivity() {
             if (!formValues.availabilities.sessions_tasks_id) {
                 await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
                 .then(res => {
-                    setLoading(false);
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    window.location.reload();
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
             else {
                 await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
                 .then(res => {
-                    setLoading(false);
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    window.location.reload();
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
         }

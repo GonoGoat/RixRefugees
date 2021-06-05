@@ -43,7 +43,7 @@ function addAccomodations(req, res, next) {
   })
   pool.query(format('insert into accomodations (equipments_id,places_id) values %L',query),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.equipments.length} équipement${req.body.equipments.length > 1 ? "s ont bien été ajoutés" : " a bien été ajouté"} du lieu d'hébergement demandé.`);
   })
 }
 
@@ -63,7 +63,7 @@ function deleteAccomodations(req, res, next) {
 
   pool.query(format(`delete from accomodations where places_id = ${req.body.places} and equipments_id in (%L)`,req.body.equipments),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.equipments.length} équipement${req.body.equipments.length > 1 ? "s ont bien été retirés" : " a bien été retiré"} du lieu d'hébergement demandé.`);
   })
 }
 

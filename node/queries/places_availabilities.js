@@ -29,7 +29,7 @@ function addPlacesAvail(req, res, next) {
   pool.query('insert into places_availabilities (start_avail,end_avail,bed_quantity,places_id) values ($1,$2,$3,$4)',
   [req.body.start_avail,req.body.end_avail,req.body.bed_quantity,req.body.places_id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Les disponibilités du lieu d'hébergement ont bien été ajoutées.`);
   })
 }
 
@@ -41,7 +41,7 @@ function deletePlacesAvail(req, res, next) {
 
   pool.query(format('delete from places_availabilities where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} disponibilité${req.body.length > 1 ? "s ont bien été supprimées" : " a bien été supprimée"}.`);
   });
 }
 
@@ -64,7 +64,7 @@ function updatePlacesAvail(req, res, next) {
   pool.query('update places_availabilities set start_avail = $1,end_avail = $2,bed_quantity = $3,places_id = $4 where id = $5',
   [req.body.start_avail,req.body.end_avail,req.body.bed_quantity,req.body.places_id,req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Les disponibilités du lieu d'hébergement ont bien été modifiées.`);
   })
 }
 

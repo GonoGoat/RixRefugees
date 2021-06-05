@@ -58,7 +58,7 @@ function addAppointments(req, res, next) {
   pool.query('insert into appointments (appointment,description,iscanceled, status_id, friends_id) values ($1,$2,$3,$4,$5)'
   ,[req.body.appointment,cypher.encodeString(req.body.description),req.body.iscanceled,req.body.status_id,req.body.friends_id],(err,rows) =>  {
     if (err) return errors(res,err)
-    return res.send({data : true});
+    return res.send(`Le rendez-vous a bien été créé.`);
   })
 }
 
@@ -72,7 +72,7 @@ function deleteAppointments(req, res, next) {
 
   pool.query(format('delete from appointments where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err)
-    return res.send({data : true});
+    return res.send(`${req.body.length} rendez-vous${req.body.length > 1 ? " ont bien été supprimés" : " a bien été supprimé"}.`);
   }) 
 }
 
@@ -94,7 +94,7 @@ function updateAppointments(req, res, next) {
   pool.query('update appointments set appointment = $1, description = $2, iscanceled = $3, status_id = $4, friends_id = $5 where id = $6'
   ,[req.body.appointment,cypher.encodeString(req.body.description),Boolean(req.body.iscanceled),req.body.status_id,req.body.friends_id, req.body.id],(err,rows) =>  {
     if (err) return errors(res,err)
-    return res.send({data : true});
+    return res.send(`Le rendez-vous a bien été modifié.`);
   })
 }
 

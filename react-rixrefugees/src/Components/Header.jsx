@@ -32,7 +32,7 @@ function Header() {
                     Comment rejoindre ?
                 </Link>
             </div>
-            {userId === 0 ? <Connection/> : <React.Fragment/>}
+            <Connection/>
             <hr/>
         </div>
     )

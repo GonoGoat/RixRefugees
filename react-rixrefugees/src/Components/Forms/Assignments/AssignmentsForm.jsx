@@ -45,19 +45,35 @@ function AssignmentsForm(props) {
       if ("users" in del) {
         await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/users`, {data : del.users})
         .then(res => {
-            console.log('del users ok');
+          enqueueSnackbar(res.data, {variant : "info"});
         })
         .catch(err => {
-            console.log(err);
+          if (err.response) {
+            enqueueSnackbar(err.response.data, {variant : "error"});
+          }
+          else if (err.request) {
+            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+          } 
+          else {
+            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+          }
         });
       }
       if ("friends" in del) {
         await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/friends`, {data : del.friends})
           .then(res => {
-              console.log('del friends ok');
+            enqueueSnackbar(res.data, {variant : "info"});
           })
           .catch(err => {
-              console.log(err);
+            if (err.response) {
+              enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+              enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+              enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
           });
       }
     }
@@ -67,22 +83,38 @@ function AssignmentsForm(props) {
           admin : admin,
           sessions_tasks : props.id
         })
-        .then(res => {
-            console.log('admin ok');
-        })
-        .catch(err => {
-            console.log(err);
-        });
+      .then(res => {
+        enqueueSnackbar(res.data, {variant : "info"});
+      })
+      .catch(err => {
+        if (err.response) {
+          enqueueSnackbar(err.response.data, {variant : "error"});
+        }
+        else if (err.request) {
+          enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+        } 
+        else {
+          enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+        }
+      });
     }
 
     async function handleAdd(add) {
       await axios.post(`${process.env.REACT_APP_API}/assignments/add/users`, add)
-        .then(res => {
-          console.log('users ok');
-        })
-        .catch(err => {
-            console.log(err);
-        });
+      .then(res => {
+        enqueueSnackbar(res.data, {variant : "info"});
+      })
+      .catch(err => {
+        if (err.response) {
+          enqueueSnackbar(err.response.data, {variant : "error"});
+        }
+        else if (err.request) {
+          enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+        } 
+        else {
+          enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+        }
+      });
     }
 
     function handleSubmit() {
@@ -167,7 +199,7 @@ function AssignmentsForm(props) {
           handleAdd(add);
         }
       }
-      
+      enqueueSnackbar("Le processus d'assignation est terminé !", {variant : "success"});
       setLoading(false);
     }
   

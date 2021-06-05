@@ -81,7 +81,7 @@ function addSessionsTasks(req, res, next) {
     pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7)'
     ,[true,req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id],(err,rows) =>  {
       if (err) return errors(res,err);
-      return res.send({date : true});
+      return res.send(`La tâche de session a bien été ajoutée.`);
     })
   })
 }
@@ -96,7 +96,7 @@ function deleteSessionsTasks(req, res, next) {
 
   pool.query(format('delete from sessions_tasks where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} tâche${req.body.length > 1 ? "s ont bien été supprimées" : " a bien été supprimée"} dans la session demandée.`);
   })
 }
 
@@ -124,7 +124,7 @@ function updateSessionsTasks(req, res, next) {
     pool.query('update sessions_tasks set isfromadmin = $1, description = $2, amountofpeople = $3, start_date = $4, end_date = $5, tasks_id = $6, sessions_id = $7 where id = $8'
     ,[Boolean(req.body.isfromadmin),req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id, req.body.id],(err,rows) =>  {
       if (err) return errors(res,err);
-      return res.send({data : true});
+      return res.send(`La tâche de session a bien été modifiée.`);
     })
   })
 }

@@ -102,7 +102,7 @@ function addFriends(req, res, next) {
   let query = [cypher.encodeString(req.body.lname),cypher.encodeString(req.body.fname),req.body.in_date,req.body.birth_date,cypher.encodeString(req.body.phone),req.body.status_id,cypher.encodeString(req.body.nationality),cypher.encodeString(req.body.notes)]
   pool.query(format('insert into friends (lname,fname,in_date,birth_date,phone,status_id,nationality,notes) values (%L)',query),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`L'ami a bien été ajouté.`);
   })
 }
 
@@ -114,7 +114,7 @@ function deleteFriends(req, res, next) {
 
   pool.query(format('delete from friends where id in (%L)',req.body),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`${req.body.length} ami${req.body.length > 1 ? "s ont bien été supprimés" : " a bien été supprimé"}.`);
   }) 
 }
 
@@ -142,7 +142,7 @@ function updateFriends(req, res, next) {
   [cypher.encodeString(req.body.fname),cypher.encodeString(req.body.lname),cypher.encodeString(req.body.nationality),cypher.encodeString(req.body.notes),cypher.encodeString(req.body.phones),req.body.status_id,req.body.birth_date,req.body.in_date,req.body.out_date,req.body.id],
   (err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`L'ami a bien été modifié.`);
   })
 }
 

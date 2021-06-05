@@ -87,7 +87,7 @@ function addNewAvailabilities(req, res, next) {
         pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',
         [req.body.availabilities.description,false,req.body.availabilities.users_id, sessions_tasks_id],(err,rows) =>  {
           if (err) return errors(res,err);
-          return res.send({data : true});
+          return res.send(`Nous vous remercions d'avoir proposé une nouvelle tâche et de vous être rendu disponible pour celle-ci !\nVous serez prévenu par email de l'acceptation ou non de votre proposition.`);
         });
       })
     });
@@ -110,7 +110,7 @@ function addAvailabilities(req, res, next) {
 
   pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',[req.body.description,false,req.body.users_id, req.body.sessions_tasks_id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Nous vous remercions de vous être rendu disponible pour cette tâche !\nVous serez prévenu par email de l'acceptation ou non de votre proposition.`);
   });
 }
 
@@ -122,7 +122,7 @@ function cancelAvailabilities(req, res, next) {
 
   pool.query('update availabilities set iscanceled=true, updatedate = now() where id = ($1)',[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Votre proposition a bien été annulée. Nous vous remercions de votre attention et espérons vous revoir bientôt !`);
   })
 }
 
@@ -134,7 +134,7 @@ function updateAvailabilities(req, res, next) {
   
   pool.query('update availabilities set description=$1, updatedate = now() where id = ($2)',[req.body.description,req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send({data : true});
+    return res.send(`Votre proposition a bien été modifiée.`);
   })
 }
 
