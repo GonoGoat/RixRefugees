@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('../react-rixrefugees/build'));
 
 app.use(cors({
-  origin : ["http://localhost:3000","http://localhost:8000"],
+  origin : [`${process.env.WEBSITE}:80`],
   methods : ["GET","POST","PUT","DELETE","OPTIONS","PATCH"],
   credentials : true
 }));
