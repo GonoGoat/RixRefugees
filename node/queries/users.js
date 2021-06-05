@@ -198,14 +198,9 @@ function logout(req, res, next) {
   }
 }
 
-function getUserWithID(req, res, next) {
-  let verif = check.checkForm(res,[check.validFk(req.params.id)])
-  if (verif !== true) {
-    return verif;
-  }
-
+function getUserInformation(req, res, next) {
   pool.query('select fname, lname, mail, isadmin, contact from users where id = $1',
-  [parseInt(req.params.id)], (err, rows) => {
+  [req.session.user.id], (err, rows) => {
     if (err) return errors(res,err);
     if (rows.rows.length > 0) {
       let user = rows.rows[0];
@@ -213,24 +208,82 @@ function getUserWithID(req, res, next) {
       user.lname = cypher.decodeString(user.lname);
       user.mail = cypher.decodeString(user.mail);
       user.contact = cypher.decodeString(user.contact);
+      user.isadmin = user.isadmin ? "Coordinateur" : "Bénévole";
       return res.send(user);
     }
     else {
-      return res.status(403).send("Invalid user id")
+      return res.status(403).send("Utilisateur invalide. Veuillez vous déconnecter.")
     }
   })
 }
 
+function getUserInformationToChange(req, res, next) {
+  pool.query('select fname, lname, contact from users where id = $1',
+  [req.session.user.id], (err, rows) => {
+    if (err) return errors(res,err);
+    if (rows.rows.length > 0) {
+      let user = rows.rows[0];
+      user.fname = cypher.decodeString(user.fname);
+      user.lname = cypher.decodeString(user.lname);
+      user.contact = cypher.decodeString(user.contact);
+      return res.send(user);
+    }
+    else {
+      return res.status(403).send("Utilisateur invalide. Veuillez vous déconnecter.")
+    }
+  })
+}
 
+async function updateUser(req, res, next) {
+  let body = check.checkForm(res,[check.hasProperties(["user,password"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
+  body = check.checkForm(res,[check.hasProperties(["fname","lname","contact"],req.body.user)])
+  if (body !== true) {
+    return body;
+  }
+
+  let verif = check.checkForm(res,[
+    check.password(req.body.password),
+    check.limitedString(req.body.user.fname,true,20),
+    check.limitedString(req.body.user.lname,true,20),
+  ])
+  if (verif !== true) {
+    return verif;
+  }
+
+  pool.query ('select password from users where id = $1',
+  [req.session.user.id], async (err,rows) => {
+    if (err) return errors(res,err);
+    if (rows.rows.length > 0) {
+      if (await argon.verify(rows.rows[0].password, req.body.password)) {
+        pool.query ('update users set fname = $1, lname = $2, contact = $3 where id = $4',[cypher.encodeString(req.body.user.fname),cypher.encodeString(req.body.user.lname),cypher.encodeString(req.body.user.contact),req.session.user.id], (err,rows) =>  {
+          if (err) return errors(res,err);
+          return res.send("Vos données personnelles ont bien été modifiées.")
+        })
+      }
+      else {
+        return res.status(404).send("Mot de passe invalide. Veuillez réessayer.")
+      }
+    }
+    else {
+      return res.status(403).send("Utilisateur invalide. Veuillez vous déconnecter.")
+    }
+  });
+}
 
 module.exports = {
     getAllAdminUsers: getAllAdminUsers,
     getUnavailableAdminUsersPerSessionsTasks : getUnavailableAdminUsersPerSessionsTasks,
     addUsers : addUsers,
-    getUserWithID: getUserWithID,
+    getUserInformation: getUserInformation,
     login : login,
     logout : logout,
     getCurrentUser : getCurrentUser,
     resetPassword : resetPassword,
-    newPassword : newPassword
+    newPassword : newPassword,
+    getUserInformationToChange : getUserInformationToChange,
+    updateUser : updateUser
   };

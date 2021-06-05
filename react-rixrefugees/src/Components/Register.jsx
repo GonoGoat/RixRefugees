@@ -30,11 +30,11 @@ function Register () {
     });
 
     const handleInputChange = (e) => {
-        const {name, value } = e.target;
-        setRegister({
-        ...register,
-        [name]: value
-        });
+      const {name, value } = e.target;
+      setRegister({
+      ...register,
+      [name]: value
+      });
     };
 
     async function handleSubmit() {

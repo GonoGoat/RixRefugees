@@ -10,7 +10,6 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button"
 
 function UserAssignments() {
-    const [user,setUser] = React.useState(1);
     const [assignments,setAssignments] = React.useState();
     const [loading,setLoading] = React.useState(false);
 
@@ -19,7 +18,7 @@ function UserAssignments() {
 
     React.useEffect(() => {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_API}/assignments/user/${user}`)
+        axios.get(`${process.env.REACT_APP_API}/assignments/me`)
         .then(res => {
             setAssignments(res.data.sort((a, b) => b.start_date - a.start_date));
             setLoading(false);

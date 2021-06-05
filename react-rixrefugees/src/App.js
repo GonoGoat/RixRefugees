@@ -1,10 +1,13 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword} from "./Components";
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
+import DeleteUser from "./Components/UserProfile/DeleteUser";
+import EditUser from  "./Components/UserProfile/EditUser";
+import PasswordChange from  "./Components/UserProfile/PasswordChange";
 
 import {useSelector,useDispatch} from "react-redux";
 import {switchUser} from "./redux/Actions/index";
@@ -57,6 +60,10 @@ function App() {
           <Route path="/register" exact component={() => <Register />} />
           <Route path="/reset" exact component={() => <PasswordReset />} />
           <Route path="/reset/:token" exact component={() => <NewPassword />} />
+          <Route path="/user/profile" exact component={() => <UserProfile />} />
+          <Route path="/user/profile/edit" exact component={() => <EditUser />} />
+          <Route path="/user/profile/delete" exact component={() => <DeleteUser />} />
+          <Route path="/user/profile/password" exact component={() => <PasswordChange />} />
           <Route path="/user/assignments" exact component={() => <UserAssignments />} />
           <Route path="/user/activity" exact component={() => <GetUserActivity />} />
           <Route path="/user/activity/add" exact component={() => <AddUserActivity />} />
