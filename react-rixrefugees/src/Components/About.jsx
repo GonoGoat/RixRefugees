@@ -32,7 +32,7 @@ function About() {
         axios.get(`${process.env.REACT_APP_API}/sessions`)
         .then(res => {
             setSessions(res.data);
-            setSelected(res.data[0].id)
+            setSelected(res.data.length > 0 ? res.data[0].id : 0)
         })
         .catch(err => {
             closeSnackbar();
@@ -45,26 +45,27 @@ function About() {
             else {
                 enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
             }
-            setLoading(false);
         });
-        axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
-        .then(res => {
-            setSessionsTasks(res.data);
-            setLoading(false);
-        })
-        .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-            setLoading(false);
-        });
+        if (selected !== 0) {
+            axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
+            .then(res => {
+                setSessionsTasks(res.data);
+            })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+                setLoading(false);
+            });
+        }
+        setLoading(false);
     }, [])
 
     function getCards(obj,index) {
