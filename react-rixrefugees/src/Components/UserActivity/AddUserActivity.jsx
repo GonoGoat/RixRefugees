@@ -1,5 +1,7 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import DataList from '../utils/DataList';
 import UserActivityForm from "../Forms/UserActivity/UserActivityForm";
@@ -12,10 +14,9 @@ import {sessionsTasksInfoDataListKeys} from '../../utils/DataListKeys/sessionsTa
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import check from "../../utils/FormValidations/validators"
 
 function AddUserActivity() {
-
-    const axios = require('axios');
     const moment = require('moment');
 
     const dateTime = moment().format("YYYY-MM-DDTHH:mm");
@@ -28,10 +29,8 @@ function AddUserActivity() {
             description : '',
             users_id : 1,
             sessions_tasks_id : useParams().id,
-            iscanceled : false
         },
         sessions_tasks : {
-            isfromadmin : false,
             description : '',
             amountofpeople : 0,
             start_date : dateTime,
@@ -40,6 +39,7 @@ function AddUserActivity() {
         }
     });
     const [loading, setLoading] = React.useState(false);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const handleTasksChange = (e) => {
         const { name, value } = e.target;
@@ -72,24 +72,63 @@ function AddUserActivity() {
     };
 
     async function handleSubmit() {
-        setLoading(true);
-        if (!formValues.availabilities.sessions_tasks_id) {
-            await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
-            .then(res => {
-                setLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        let values = check.checkForm([
+            check.name(formValues.tasks.name),
+            check.dates(formValues.sessions_tasks.start_date,formValues.sessions_tasks.end_date),
+            check.users(formValues.sessions_tasks.users_id),
+            check.places_avail(formValues.sessions_tasks.places_availabilities_id),
+            check.amountOfPeople(formValues.sessions_tasks.amountofpeople),
+            check.tasks(formValues.sessions_tasks.tasks_id),
+            check.sessions(formValues.sessions_tasks.sessions_id)
+        ])
+        if (values === true) {
+            setLoading(true);
+            if (!formValues.availabilities.sessions_tasks_id) {
+                await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
+                .then(res => {
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    window.location.reload();
+                })
+                .catch(err => {
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
+                });
+            }
+            else {
+                await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
+                .then(res => {
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    window.location.reload();
+                })
+                .catch(err => {
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
+                });
+            }
         }
         else {
-            await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
-            .then(res => {
-                setLoading(false);
+            closeSnackbar();
+            values.filter(val => val !== true).forEach(obj => {
+                enqueueSnackbar(obj, {variant : "error"});
             })
-            .catch(err => {
-                console.log(err);
-            });
         }
     }
 

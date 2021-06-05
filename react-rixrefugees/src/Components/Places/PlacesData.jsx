@@ -1,4 +1,6 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import ListingGrid from "../utils/ListingGrid";
 import ListingTab from "../utils/ListingTab";
@@ -24,8 +26,7 @@ function PlacesData(props) {
         form : '',
         edit : false
     });
-
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useEffect(() => {
         setTab(false);
@@ -55,7 +56,17 @@ function PlacesData(props) {
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 
@@ -71,7 +82,16 @@ function PlacesData(props) {
             header = header.concat(res.data);// Add a column per equipment
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         });
 
         await axios.get(`${process.env.REACT_APP_API}/places`)
@@ -84,7 +104,16 @@ function PlacesData(props) {
             });
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         });
 
         await axios.get(`${process.env.REACT_APP_API}/accomodations`)
@@ -102,7 +131,7 @@ function PlacesData(props) {
             compare.map((obj) => {
                 // Write that the place contain equipments
                 k = header.findIndex((elem) => elem.id === obj.equipments_id); 
-                if (k != -1) {
+                if (k !== -1) {
                     tab = rows.find((elem) => elem.id === obj.places_id);
                     tab.check[k-1] = true;
                 }
@@ -118,10 +147,22 @@ function PlacesData(props) {
         setLoading(true);
         await axios.delete(`${process.env.REACT_APP_API}${props.api}/delete`, {data : selected})
         .then(res => {
-            setLoading(false);
+            localStorage.setItem("rixrefugees-message",res.data);
+            localStorage.setItem("rixrefugees-url",props.api);
+            window.location.reload();
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 
@@ -152,7 +193,7 @@ function PlacesData(props) {
             <div>
                 <AddButton disabled={props.api === "/accomodations"} add={()=>setForm({form : true,edit : false})}/>
                 <DeleteButton disabled={props.api === "/accomodations" || selected.length === 0} delete={()=>deleteRows()}/>
-                <EditButton disabled={selected.length != 1 && props.api != "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
+                <EditButton disabled={selected.length !== 1 && props.api !== "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
             {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} form={props.api}/> :
              getDataList()) : <React.Fragment/>

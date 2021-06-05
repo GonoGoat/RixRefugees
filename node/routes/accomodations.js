@@ -1,5 +1,4 @@
 var express = require('express');
-const { getAccomodationsPerPlaces } = require('../queries/accomodations');
 var router = express.Router();
 
 var db = require('../queries/accomodations');

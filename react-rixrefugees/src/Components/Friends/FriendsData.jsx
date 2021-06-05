@@ -1,4 +1,6 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import AddButton from "../utils/Buttons/AddButton";
 import DeleteButton from "../utils/Buttons/DeleteButton";
@@ -23,8 +25,7 @@ function FriendsData(props) {
         form : '',
         edit : false
     });
-
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useEffect(() => {
         setSelected([]);
@@ -46,7 +47,17 @@ function FriendsData(props) {
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 
@@ -54,10 +65,22 @@ function FriendsData(props) {
         setLoading(true);
         await axios.delete(`${process.env.REACT_APP_API}/${props.api}/delete`, {data : selected})
         .then(res => {
-            setLoading(false);
+            localStorage.setItem("rixrefugees-message",res.data);
+            localStorage.setItem("rixrefugees-url",props.api);
+            window.location.reload();
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
+import axios from "../../../utils/axios";
 
 import Grid from "@material-ui/core/Grid";
 import FormControl from '@material-ui/core/FormControl';
@@ -13,8 +15,7 @@ import "date-fns";
 function SessionsTasks (props) {
     const [country,setCountry] = React.useState();
     const [status,setStatus] = React.useState();
-
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useEffect(async () => {
         await axios.get(`https://restcountries.eu/rest/v2/all?fields=alpha3Code;translations`)
@@ -32,7 +33,16 @@ function SessionsTasks (props) {
             }));
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         });
 
         await axios.get(`${process.env.REACT_APP_API}/status`)
@@ -40,7 +50,16 @@ function SessionsTasks (props) {
             setStatus(res.data);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         }); 
     }, [])
 

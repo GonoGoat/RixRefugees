@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
 import check from "../utils/FormValidations/validators"
+import axios from "../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -16,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Register () {
-    const axios = require('axios');
-
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const classes = useStyles();
     const [register,setRegister] = React.useState({
@@ -26,7 +25,6 @@ function Register () {
       confirm : '',
       lname : '',
       fname : '',
-      isadmin : false,
       motivation : '',
       contact : '',
     });
@@ -45,18 +43,33 @@ function Register () {
       }
       else {
         let values = check.checkForm([
-          check.mail(register.mail),check.password(register.password),check.lname(register.lname),check.fname(register.fname)
+          check.mail(register.mail),
+          check.password(register.password),
+          check.lname(register.lname),
+          check.fname(register.fname),
+          check.motivation(register.motivation)
         ])
         if (values === true) {
           await axios.post(`${process.env.REACT_APP_API}/users/add`, register)
           .then(res => {
-              console.log("ok")
+            localStorage.setItem("rixrefugees-message",res.data);
+            window.location.href = "/";
           })
           .catch(err => {
-              console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
           });
         }
         else {
+          closeSnackbar();
           values.filter(val => val !== true).forEach(obj => {
             enqueueSnackbar(obj, {variant : "error"});
           })

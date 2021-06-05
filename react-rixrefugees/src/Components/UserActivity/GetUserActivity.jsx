@@ -1,30 +1,42 @@
 import React from "react";
 import {useHistory } from "react-router";
+import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import LoadingIndicator from "../utils/LoadingIndicator";
 import CancelButton from "../utils/Buttons/CancelButton";
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button"
+import Button from "@material-ui/core/Button";
 
 function GetUserActivity() {
     const [user,setUser] = React.useState(1);
     const [availabilities,setAvailabilities] = React.useState();
     const [loading,setLoading] = React.useState(false);
 
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const history = useHistory();
 
     React.useEffect(() => {
         setLoading(true);
         axios.get(`${process.env.REACT_APP_API}/availabilities/user/${user}`)
         .then(res => {
-            setLoading(false);
             setAvailabilities(res.data);
+            setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     },[])
 
@@ -32,10 +44,21 @@ function GetUserActivity() {
         setLoading(true);
         await axios.put(`${process.env.REACT_APP_API}/availabilities/cancel`, availabilities.id)
         .then(res => {
-            setLoading(false);
+            localStorage.setItem("rixrefugees-message",res.data);
+            window.location.reload();
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
     

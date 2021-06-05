@@ -1,4 +1,5 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
 
 import Grid from "@material-ui/core/Grid";
 import FormControl from '@material-ui/core/FormControl';
@@ -10,14 +11,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from "@material-ui/core/FormLabel";
 import Switch from '@material-ui/core/Switch';
 
+import axios from "../../../utils/axios";
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import "date-fns";
 
 function SessionsTasks (props) {
     const [friends,setFriends] = React.useState();
     const [status,setStatus] = React.useState();
-
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useEffect(async () => {
         await axios.get(`${process.env.REACT_APP_API}/friends`)
@@ -25,7 +26,15 @@ function SessionsTasks (props) {
             setFriends(res.data);
         })
         .catch(err => {
-            console.log(err);
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         });
 
         await axios.get(`${process.env.REACT_APP_API}/status`)
@@ -33,7 +42,15 @@ function SessionsTasks (props) {
             setStatus(res.data);
         })
         .catch(err => {
-            console.log(err);
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         }); 
     }, [])
 

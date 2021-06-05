@@ -9,3 +9,6 @@ export { default as UserAssignments } from './UserAssignments';
 export { default as Friends } from './Friends';
 export { default as Register } from './Register';
 export { default as Login } from './Login';
+export { default as PasswordReset } from './PasswordReset';
+export { default as NewPassword } from './NewPassword';
+

@@ -1,14 +1,10 @@
 import React from 'react';
-import {useDispatch} from "react-redux";
-import {switchUser} from "../redux/Actions/index";
 import { useSnackbar } from 'notistack';
-import {Link} from "react-router-dom";
 // MUI Core
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Typography from "@material-ui/core/Typography"
 import { makeStyles } from '@material-ui/core/styles';
 
 import check from "../utils/FormValidations/validators";
@@ -20,34 +16,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login () {
+function PasswordReset () {
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
   const classes = useStyles();
-  const [login,setLogin] = React.useState({
-    mail : '',
-    password : '',
-  });
+  const [mail,setMail] = React.useState('')
 
   const handleInputChange = (e) => {
-      const {name, value } = e.target;
-      setLogin({
-      ...login,
-      [name]: value
-      });
+      setMail(e.target.value);
   };
 
   async function handleSubmit() {
     let values = check.checkForm([
-      check.mail(login.mail),
-      check.password(login.password)
+      check.mail(mail),
     ])
-    if (values === true) {
-      await axios.post(`${process.env.REACT_APP_API}/users/login`, login)
+    if (values === true) {;
+      await axios.post(`${process.env.REACT_APP_API}/users/password/reset`, {mail : mail})
       .then(res => {
-        dispatch(switchUser({user : (res.data ? 2 : 1)}))
-        window.location.href = "/";
+        enqueueSnackbar(res.data, {variant : "success"});
       })
       .catch(err => {
         closeSnackbar();
@@ -86,28 +72,12 @@ function Login () {
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Mot de passe"
-                  name="password"
-                  size="small"
-                  type="password"
-                  variant="outlined"
-                  onChange={handleInputChange}
-                />
-              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
             <Button color="secondary" fullWidth onClick={handleSubmit}  variant="contained">
-              Se connecter
+              Réinitialiser mon mot de passe
             </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography>
-              Mot de passe oublié ? <Link to={'/reset'}>Cliquez ici !</Link> 
-            </Typography>
           </Grid>
         </Grid>
       </form>
@@ -115,4 +85,4 @@ function Login () {
   );
 };
 
-export default Login;
+export default PasswordReset;

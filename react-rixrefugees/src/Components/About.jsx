@@ -1,5 +1,7 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
+import { useSnackbar } from 'notistack';
+import axios from "../utils/axios";
 
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
@@ -22,7 +24,7 @@ function About() {
     const [sessions,setSessions] = React.useState([]);
     const [selected, setSelected] = React.useState();
 
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const moment = require('moment');
     const history = useHistory();
 
@@ -31,17 +33,37 @@ function About() {
         .then(res => {
             setSessions(res.data);
             setSelected(res.data[0].id)
-            setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
         axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
         .then(res => {
             setSessionsTasks(res.data);
+            setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }, [])
 

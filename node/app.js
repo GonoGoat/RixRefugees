@@ -4,9 +4,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 
 var cors = require('cors');
-const bodyParser = require('body-parser');
 
 var reactRouter = require('./routes/react');
 var placesRouter = require('./routes/places');
@@ -35,11 +35,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('../react-rixrefugees/build'));
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
+app.use(cors({
+  origin : ["http://localhost:3000","http://localhost:8000"],
+  methods : ["GET","POST","PUT","DELETE","OPTIONS","PATCH"],
+  credentials : true
 }));
+
+app.use(session({
+  key : "userId",
+  secret : process.env.SESS_KEY, 
+  resave : false,
+  saveUninitialized : false,
+  cookie : {
+    maxAge : 1000 * 60 * 60 * 24
+  }
+}))
 
 app.use('/api/places_avail', placesAvailRouter)
 app.use('/api/accomodations',accomodationsRouter)
@@ -56,17 +66,5 @@ app.use('/api/status',statusRouter);
 app.use('/api/appointments',appointmentsRouter);
 
 app.use('*', reactRouter);
-
-app.all("/*", function(req, res, next){
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT,POST,PATCH,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-  next();
-});
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
 
 module.exports = app;

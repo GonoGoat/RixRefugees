@@ -12,17 +12,17 @@ import Friends from './Friends';
 import Status from './Status';
 import Appointments from './Appointments';
 
-import check from "../../../utils/FormValidations/validators"
+import check from "../../../utils/FormValidations/validators";
+import axios from "../../../utils/axios"
 
 const classes = makeStyles({
     window : {
         height : 500,
     },
-  });
+});
 const useStyles = classes;
 
 function FriendsForm(props) {
-    const axios = require('axios');
     const moment = require('moment');
 
     const date = moment().format("YYYY-MM-DD");
@@ -39,7 +39,7 @@ function FriendsForm(props) {
             lname : '',
             nationality : '',
             notes : '',
-            birth_date : '',
+            birth_date : null,
             in_date : date,
             phone : '',
             status_id : 0
@@ -66,7 +66,16 @@ function FriendsForm(props) {
                         });
                     })
                     .catch(err => {
-                        console.log(err);
+                        closeSnackbar();
+                        if (err.response) {
+                            enqueueSnackbar(err.response.data, {variant : "error"});
+                        }
+                        else if (err.request) {
+                            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                        } 
+                        else {
+                            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                        }
                     });
                     break;
                 case 'status' :
@@ -85,7 +94,16 @@ function FriendsForm(props) {
                         });
                     })
                     .catch(err => {
-                        console.log(err);
+                        closeSnackbar();
+                        if (err.response) {
+                            enqueueSnackbar(err.response.data, {variant : "error"});
+                        }
+                        else if (err.request) {
+                            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                        } 
+                        else {
+                            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                        }
                     });
                     break;
             }
@@ -102,7 +120,6 @@ function FriendsForm(props) {
                     check.status(formValues.friends.status_id),
                     check.n_lname(formValues.friends.lname),
                     check.n_fname(formValues.friends.fname),
-                    check.nationality(formValues.friends.nationality)
                 ])
                 break;
             case 'status' :
@@ -126,23 +143,46 @@ function FriendsForm(props) {
             if (props.edit) {
                 await axios.put(`${process.env.REACT_APP_API}/${props.api}/update`, formValues[props.api])
                 .then(res => {
-                    setLoading(false);
+                    localStorage.setItem("rixrefugees-message",res.data);
+                    localStorage.setItem("rixrefugees-url",props.api);
+                    window.location.reload();
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
             else {
                 await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
                 .then(res => {
-                    setLoading(false);
+                    localStorage.setItem("rixrefugees-message",res.data);
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
         }
         else {
+            closeSnackbar();
             values.filter(val => val !== true).forEach(obj => {
                 enqueueSnackbar(obj, {variant : "error"});
             })

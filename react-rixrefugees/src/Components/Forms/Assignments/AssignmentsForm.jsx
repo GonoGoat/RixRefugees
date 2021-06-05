@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSnackbar } from 'notistack';
 
 import Friends from "./Friends";
 import Users from "./Users";
@@ -17,6 +18,7 @@ function AssignmentsForm(props) {
     const [users,setUsers] = React.useState();
     const [friends,setFriends] = React.useState()
     const [loading,setLoading] = React.useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const stepsRef = React.useRef(null);
 
@@ -40,36 +42,79 @@ function AssignmentsForm(props) {
     }
 
     async function handleDelete(del) {
-      await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/friends`, {data : del})
+      if ("users" in del) {
+        await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/users`, {data : del.users})
         .then(res => {
-            console.log('del ok');
+          enqueueSnackbar(res.data, {variant : "info"});
         })
         .catch(err => {
-            console.log(err);
+          if (err.response) {
+            enqueueSnackbar(err.response.data, {variant : "error"});
+          }
+          else if (err.request) {
+            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+          } 
+          else {
+            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+          }
         });
+      }
+      if ("friends" in del) {
+        await axios.delete(`${process.env.REACT_APP_API}/assignments/delete/friends`, {data : del.friends})
+          .then(res => {
+            enqueueSnackbar(res.data, {variant : "info"});
+          })
+          .catch(err => {
+            if (err.response) {
+              enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+              enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+              enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+          });
+      }
     }
 
     async function handleAdmins(admin) {
       await axios.post(`${process.env.REACT_APP_API}/assignments/add/admins`, {
-        admin : admin,
-        sessions_tasks : props.id
+          admin : admin,
+          sessions_tasks : props.id
         })
-        .then(res => {
-            console.log('admin ok');
-        })
-        .catch(err => {
-            console.log(err);
-        });
+      .then(res => {
+        enqueueSnackbar(res.data, {variant : "info"});
+      })
+      .catch(err => {
+        if (err.response) {
+          enqueueSnackbar(err.response.data, {variant : "error"});
+        }
+        else if (err.request) {
+          enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+        } 
+        else {
+          enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+        }
+      });
     }
 
     async function handleAdd(add) {
       await axios.post(`${process.env.REACT_APP_API}/assignments/add/users`, add)
-        .then(res => {
-          console.log('users ok');
-        })
-        .catch(err => {
-            console.log(err);
-        });
+      .then(res => {
+        enqueueSnackbar(res.data, {variant : "info"});
+      })
+      .catch(err => {
+        if (err.response) {
+          enqueueSnackbar(err.response.data, {variant : "error"});
+        }
+        else if (err.request) {
+          enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+        } 
+        else {
+          enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+        }
+      });
     }
 
     function handleSubmit() {
@@ -105,7 +150,6 @@ function AssignmentsForm(props) {
         users.filter(obj => obj.state === "set").forEach((value) => {
           add.push({
             id : value.id,
-            isAdmin : false,
             friends : friends.filter(obj => obj.state === "add").map(f => f.id)
           });
         });
@@ -128,17 +172,34 @@ function AssignmentsForm(props) {
           });
         })
       }
-
+      let problem = false;
       if (admin.length > 0) {
-        handleAdmins(admin);
+        admin.forEach(obj => {
+          if (obj.friends.length <= 0) {
+            enqueueSnackbar("Administrateurs : Veuillez sélectionner au moins un ami à assigner", {variant : "error"});
+            problem = true
+          }
+        })
+        if (!problem) {
+          handleAdmins(admin);
+        }
       }
       if (Object.keys(del).length > 0) {
         handleDelete(del);
       }
+      problem = false;
       if (add.length > 0) {
-        handleAdd(add);
+        add.forEach(obj => {
+          if (obj.friends.length <= 0) {
+            enqueueSnackbar("Bénévole : Veuillez sélectionner au moins un ami à assigner", {variant : "error"});
+            problem = true
+          }
+        })
+        if (!problem) {
+          handleAdd(add);
+        }
       }
-      
+      enqueueSnackbar("Le processus d'assignation est terminé !", {variant : "success"});
       setLoading(false);
     }
   

@@ -1,5 +1,7 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import axios from "../../utils/axios";
 
 import {sessionsTasksInfoDataListKeys} from '../../utils/DataListKeys/sessionsTasksInfo'
 import {availabilitiesDataListKeys} from '../../utils/DataListKeys/availabilities';
@@ -21,7 +23,7 @@ function RetrieveAndChangeUserActivity() {
     const [availabilities,setAvailabilities] = React.useState();
     const [edited,setEdited] = React.useState(false);
 
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const param = useParams().id
 
@@ -33,7 +35,17 @@ function RetrieveAndChangeUserActivity() {
             setLoading(false)
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         }); 
         setEdited(true)
     }
@@ -50,10 +62,21 @@ function RetrieveAndChangeUserActivity() {
         setLoading(true);
         await axios.put(`${process.env.REACT_APP_API}/availabilities/update`, availabilities)
         .then(res => {
-            setLoading(false);
+            localStorage.setItem("rixrefugees-message",res.data);
+            window.location.reload();
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 
@@ -61,10 +84,21 @@ function RetrieveAndChangeUserActivity() {
         setLoading(true);
         axios.put(`${process.env.REACT_APP_API}/availabilities/cancel`, {id : param})
         .then(res => {
-            setLoading(false);
+            localStorage.setItem("rixrefugees-message",res.data);
+            window.location.reload();
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
+import axios from "../../../utils/axios";
 
 import Grid from "@material-ui/core/Grid";
 import FormControl from '@material-ui/core/FormControl';
@@ -14,8 +16,8 @@ function Sessions (props) {
     const [users,setUsers] = React.useState();
     const [places_avail,setPlaces_avail] = React.useState();
 
-    const axios = require('axios');
     const moment = require('moment');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useEffect(() => {
         axios.get(`${process.env.REACT_APP_API}/places_avail`)
@@ -23,7 +25,16 @@ function Sessions (props) {
             setPlaces_avail(res.data);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         });
 
         axios.get(`${process.env.REACT_APP_API}/users/admin`)
@@ -31,7 +42,16 @@ function Sessions (props) {
             setUsers(res.data);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
         });
     }, [])
 

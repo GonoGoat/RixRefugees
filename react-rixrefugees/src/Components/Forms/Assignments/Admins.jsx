@@ -1,16 +1,18 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
 
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import TransferList from "../../utils/TransferList"
+
+import axios from "../../../utils/axios";
 
 const Admins = React.forwardRef((props, ref) => {
     
     const [loading,setLoading] = React.useState(false);
     const [right, setRight] = React.useState([]);
     const [left, setLeft] = React.useState([]);
-    const [selected,setSelected] = React.useState()
-
-    const axios = require('axios')
+    const [selected,setSelected] = React.useState();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useImperativeHandle(ref, () => ({
         setState() {
@@ -26,7 +28,17 @@ const Admins = React.forwardRef((props, ref) => {
             setLoading(false);
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     },[]);
 
