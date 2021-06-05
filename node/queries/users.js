@@ -29,7 +29,10 @@ function getUnavailableAdminUsersPerSessionsTasks(req, res, next) {
 
 async function getCurrentUser(req, res, next) {
   if (req.session.user) {
-    return res.send({loggedIn : true, isadmin : req.session.user.isadmin})
+    pool.query ("update users set lastactivity = current_date where id = $1",[req.session.user.id], (err,rows) =>  {
+      if (err) return errors(res,err);
+      return res.send({loggedIn : true, isadmin : req.session.user.isadmin})
+    })
   }
   else {
     return res.send({loggedIn : false})
