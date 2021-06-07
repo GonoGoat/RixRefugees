@@ -14,7 +14,7 @@ function mail (str) {
 };
 
 function password (str) {
-    return (str.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/) && str.length <= 30 ? true : "Veuillez entrer un mot de passe suffisament fort : entre 8 et 30 caractères avec au moins 1 lettre majuscule, 1 lettre minuscule et 1 caractère spécial." ) 
+    return (str.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/) && str.length <= 30 ? true : "Veuillez entrer un mot de passe suffisament fort : entre 8 et 30 caractères avec au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial (#?!@$ %^&*-)." ) 
 };
 
 function notNull(str) {
