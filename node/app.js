@@ -22,6 +22,8 @@ var friendsRouter = require('./routes/friends');
 var assignmentsRouter = require('./routes/assignments');
 var statusRouter = require('./routes/status');
 var appointmentsRouter = require('./routes/appointments');
+var registrationsRouter = require('./routes/registrations');
+var donationsRouter = require('./routes/donations');
 
 var app = express();
 
@@ -64,6 +66,8 @@ app.use('/api/friends',friendsRouter);
 app.use('/api/assignments',assignmentsRouter);
 app.use('/api/status',statusRouter);
 app.use('/api/appointments',appointmentsRouter);
+app.use('/api/registrations',registrationsRouter);
+app.use('/api/donations',donationsRouter);
 
 app.use('*', reactRouter);
 

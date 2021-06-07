@@ -27,7 +27,6 @@ function AddUserActivity() {
         },
         availabilities : {
             description : '',
-            users_id : 1,
             sessions_tasks_id : useParams().id,
         },
         sessions_tasks : {
@@ -72,22 +71,22 @@ function AddUserActivity() {
     };
 
     async function handleSubmit() {
-        let values = check.checkForm([
-            check.name(formValues.tasks.name),
-            check.dates(formValues.sessions_tasks.start_date,formValues.sessions_tasks.end_date),
-            check.users(formValues.sessions_tasks.users_id),
-            check.places_avail(formValues.sessions_tasks.places_availabilities_id),
-            check.amountOfPeople(formValues.sessions_tasks.amountofpeople),
-            check.tasks(formValues.sessions_tasks.tasks_id),
-            check.sessions(formValues.sessions_tasks.sessions_id)
-        ])
-        if (values === true) {
-            setLoading(true);
-            if (!formValues.availabilities.sessions_tasks_id) {
+        if (!formValues.availabilities.sessions_tasks_id) {
+            let values = check.checkForm([
+                check.name(formValues.tasks.name),
+                check.dates(formValues.sessions_tasks.start_date,formValues.sessions_tasks.end_date),
+                check.users(formValues.sessions_tasks.users_id),
+                check.places_avail(formValues.sessions_tasks.places_availabilities_id),
+                check.amountOfPeople(formValues.sessions_tasks.amountofpeople),
+                check.tasks(formValues.sessions_tasks.tasks_id),
+                check.sessions(formValues.sessions_tasks.sessions_id)
+            ])
+            if (values === true) {
+                setLoading(true);
                 await axios.post(`${process.env.REACT_APP_API}/availabilities/add/new`, formValues)
                 .then(res => {
                     localStorage.setItem("rixrefugees-message",res.data);
-                    window.location.reload();
+                    window.location.href = "/";
                 })
                 .catch(err => {
                     closeSnackbar();
@@ -104,31 +103,32 @@ function AddUserActivity() {
                 });
             }
             else {
-                await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
-                .then(res => {
-                    localStorage.setItem("rixrefugees-message",res.data);
-                    window.location.reload();
+                closeSnackbar();
+                values.filter(val => val !== true).forEach(obj => {
+                    enqueueSnackbar(obj, {variant : "error"});
                 })
-                .catch(err => {
-                    closeSnackbar();
-                    if (err.response) {
-                        enqueueSnackbar(err.response.data, {variant : "error"});
-                    }
-                    else if (err.request) {
-                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-                    } 
-                    else {
-                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-                    }
-                    setLoading(false);
-                });
             }
         }
         else {
-            closeSnackbar();
-            values.filter(val => val !== true).forEach(obj => {
-                enqueueSnackbar(obj, {variant : "error"});
+            setLoading(true);
+            await axios.post(`${process.env.REACT_APP_API}/availabilities/add`, formValues.availabilities)
+            .then(res => {
+                localStorage.setItem("rixrefugees-message",res.data);
+                window.location.href = "/";
             })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+                setLoading(false);
+            });
         }
     }
 

@@ -20,7 +20,7 @@ function GetUserActivity() {
 
     React.useEffect(() => {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_API}/availabilities/user/${user}`)
+        axios.get(`${process.env.REACT_APP_API}/availabilities/me`)
         .then(res => {
             setAvailabilities(res.data);
             setLoading(false);

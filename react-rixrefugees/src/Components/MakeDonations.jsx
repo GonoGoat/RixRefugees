@@ -16,41 +16,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Register () {
+function MakeDonations () {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const classes = useStyles();
-    const [register,setRegister] = React.useState({
-      mail : '',
-      password : '',
-      confirm : '',
+    const [donation,setDonation] = React.useState({
       lname : '',
       fname : '',
-      motivation : '',
+      description : '',
       contact : '',
     });
 
     const handleInputChange = (e) => {
       const {name, value } = e.target;
-      setRegister({
-      ...register,
+      setDonation({
+      ...donation,
       [name]: value
       });
     };
 
     async function handleSubmit() {
-      if (register.password !== register.confirm) {
-        enqueueSnackbar('Veillez à bien rentrer 2 mots de passe similaires.', {variant : "error"});
-      }
-      else {
         let values = check.checkForm([
-          check.mail(register.mail),
-          check.password(register.password),
-          check.lname(register.lname),
-          check.fname(register.fname),
-          check.motivation(register.motivation)
+          check.lname(donation.lname),
+          check.fname(donation.fname),
+          check.description(donation.description)
         ])
         if (values === true) {
-          await axios.post(`${process.env.REACT_APP_API}/users/add`, register)
+          await axios.post(`${process.env.REACT_APP_API}/donations/add`, donation)
           .then(res => {
             localStorage.setItem("rixrefugees-message",res.data);
             window.location.href = "/";
@@ -74,7 +65,6 @@ function Register () {
             enqueueSnackbar(obj, {variant : "error"});
           })
         }
-      }
     }
 
   return (
@@ -90,7 +80,7 @@ function Register () {
                     name="lname" 
                     size="small" 
                     variant="outlined"
-                    value={register.lname}
+                    value={donation.lname}
                     onChange={handleInputChange}
                 />
               </Grid>
@@ -101,68 +91,33 @@ function Register () {
                     name="fname" 
                     size="small" 
                     variant="outlined"
-                    value={register.fname}
-                    onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    label="Adresse email"
-                    name="mail" 
-                    size="small" 
-                    variant="outlined"
-                    value={register.email}
+                    value={donation.fname}
                     onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Mot de passe"
-                  name="password"
-                  size="small"
-                  type="password"
-                  variant="outlined"
-                  value={register.password}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Confirmer le mot de passe"
-                  name="confirm"
-                  size="small"
-                  type="password"
-                  variant="outlined"
-                  value={register.confirm}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Quelles sont vos motivations à rejoindre l'équipe RixRefugees ?"
-                  name="motivation"
+                  label="Que pourriez-vous nous donner ?"
+                  name="description"
                   size="small"
                   variant="outlined"
                   multiline
                   rows={5}
-                  value={register.motivation}
+                  value={donation.description}
                   onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Informations de contact"
+                  label="Comment pouvons-nous vous contacter ?"
                   name="contact"
                   size="small"
                   variant="outlined"
                   multiline
                   rows={5}
-                  value={register.contact}
+                  value={donation.contact}
                   onChange={handleInputChange}
                 />
               </Grid>
@@ -170,7 +125,7 @@ function Register () {
           </Grid>
           <Grid item xs={12}>
             <Button color="secondary" fullWidth onClick={handleSubmit} variant="contained">
-              S'inscrire
+              Faire un don
             </Button>
           </Grid>
         </Grid>
@@ -179,4 +134,4 @@ function Register () {
   );
 };
 
-export default Register;
+export default MakeDonations;
