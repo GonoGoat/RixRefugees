@@ -33,7 +33,8 @@ services :
         tty : true
         volumes:
         - /home/backup/pgadmin:/var/lib/pgadmin
-        - ./Node/ssl:/certs
+        - ./Node/server.cert:/certs/server.cert
+        - ./Node/server.key:/certs/server.key
         ports:
          - "4430:443/tcp"
         env_file: 
