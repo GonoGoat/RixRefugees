@@ -20,7 +20,6 @@ services :
         container_name: api
         tty: true
         ports:
-         - "80:80/tcp"
          - "443:443/tcp"
         depends_on :
          - postgresqldb
@@ -33,9 +32,10 @@ services :
         container_name: pgadmin
         tty : true
         volumes:
-        - /home/backup/pgadmin:/var/lib/pgadmin #sudo chown -R 5050:5050 <host_directory>
+        - /home/backup/pgadmin/data:/var/lib/pgadmin
+        - /home/backup/pgadmin/logs:/home/logs
+        - ./Node/ssl:/certs
         ports:
-         - "8000:80/tcp"
          - "4430:443/tcp"
         env_file: 
          - ./secrets/PGA/.env
