@@ -18,7 +18,7 @@ function Connection() {
         axios.post(`${process.env.REACT_APP_API}/users/logout`)
         .then(res => {
             localStorage.setItem("rixrefugees-message",res.data);
-            window.location.href = process.env.REACT_APP;
+            window.location.href = "/";
         })
         .catch(err => {
             closeSnackbar();

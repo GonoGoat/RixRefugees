@@ -1,7 +1,7 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile} from "./Components";
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile, Registrations, MakeDonations, ManageDonations} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
@@ -58,6 +58,7 @@ function App() {
           <Route path="/about" exact component={() => <About />} />
           <Route path="/login" exact component={() => <Login />} />
           <Route path="/register" exact component={() => <Register />} />
+          <Route path="/donations" exact component={() => <MakeDonations />} />
           <Route path="/reset" exact component={() => <PasswordReset />} />
           <Route path="/reset/:token" exact component={() => <NewPassword />} />
           <Route path="/user/profile" exact component={() => <UserProfile />} />
@@ -73,6 +74,8 @@ function App() {
           <Route path="/manage/sessions" exact component={() => <SessionsTasks />}/>
           <Route path="/manage/assignments" exact component={() => <Assignments />}/>
           <Route path="/manage/friends" exact component={() => <Friends />}/>
+          <Route path="/manage/users" exact component={() => <Registrations />}/>
+          <Route path="/manage/donations" exact component={() => <ManageDonations />}/>
         </Switch>
       </Router>
     </div>

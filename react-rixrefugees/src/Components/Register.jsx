@@ -146,7 +146,6 @@ function Register () {
                   label="Quelles sont vos motivations à rejoindre l'équipe RixRefugees ?"
                   name="motivation"
                   size="small"
-                  type="password"
                   variant="outlined"
                   multiline
                   rows={5}
@@ -160,7 +159,6 @@ function Register () {
                   label="Informations de contact"
                   name="contact"
                   size="small"
-                  type="password"
                   variant="outlined"
                   multiline
                   rows={5}

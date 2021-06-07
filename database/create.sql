@@ -9,11 +9,12 @@ create table Accounting (
 
 create table Donations (
 	id  SERIAL PRIMARY KEY, /*OK*/
-	fname varchar(20) not null, /*OK*/
-	lname varchar(20) not null, /*OK*/
+	fname varchar(500) not null, /*OK*/
+	lname varchar(500) not null, /*OK*/
 	description text not null, /*OK*/
 	contact text, /*OK*/
-	isResolved boolean NOT NULL default false /*OK*/
+	isResolved boolean NOT NULL default false, /*OK*/
+	date timestamp(0) without time zone NOT NULL default current_date
 );
 
 create table Relations (

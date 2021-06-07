@@ -11,9 +11,6 @@ function Pannel_admin(props) {
             <Divider/>
             <Button onClick={() =>props.handleClick("/manage")}>Panel d'administration</Button>
             <ListItem>
-                <ListItemText><Link onClick={() =>props.handleClick("/manage/calendar")}>Calendrier</Link></ListItemText>
-            </ListItem>
-            <ListItem>
                 <ListItemText><Link onClick={() =>props.handleClick("/manage/friends")}>Amis</Link></ListItemText>
             </ListItem>
             <ListItem>
@@ -29,13 +26,7 @@ function Pannel_admin(props) {
                 <ListItemText><Link onClick={() =>props.handleClick("/manage/users")}>Utilisateurs</Link></ListItemText>
             </ListItem>
             <ListItem>
-                <ListItemText><Link onClick={() =>props.handleClick("/manage/web")}>Site web</Link></ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText><Link onClick={() =>props.handleClick("/manage/relations")}>Relations</Link></ListItemText>
-            </ListItem>
-            <ListItem>
-                <ListItemText><Link onClick={() =>props.handleClick("/accounting")}>Compatiblité</Link></ListItemText>
+                <ListItemText><Link onClick={() =>props.handleClick("/manage/donations")}>Donations</Link></ListItemText>
             </ListItem>
         </List>
     )

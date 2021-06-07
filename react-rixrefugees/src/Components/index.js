@@ -12,4 +12,7 @@ export { default as Login } from './Login';
 export { default as PasswordReset } from './PasswordReset';
 export { default as NewPassword } from './NewPassword';
 export { default as UserProfile } from './UserProfile';
+export { default as Registrations } from './Registrations';
+export { default as MakeDonations } from './MakeDonations';
+export { default as ManageDonations } from './ManageDonations';
 

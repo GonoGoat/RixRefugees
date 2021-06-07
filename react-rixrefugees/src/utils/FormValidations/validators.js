@@ -146,6 +146,10 @@ let check = {
         key : "Motivations",
         value : notNull(val)
     }},
+    description : function (val) { return {
+        key : "Description",
+        value : notNull(val)
+    }},
 
 
     //===================CHECK====================

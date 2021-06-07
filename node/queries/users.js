@@ -65,12 +65,12 @@ async function addUsers(req, res, next) {
     else {
       let hash = await argon.hash(req.body.password, {type: argon.argon2id});
       pool.query ('insert into users (password,fname,lname,mail,isadmin,isactive,lastActivity,contact,token) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning id',
-      [hash,cypher.encodeString(req.body.fname),cypher.encodeString(req.body.lname),cypher.encodeString(req.body.mail.toLowerCase()),false,true, new Date(),cypher.encodeString(req.body.contact),"Account created"], (err,rows) =>  {
+      [hash,cypher.encodeString(req.body.fname),cypher.encodeString(req.body.lname),cypher.encodeString(req.body.mail.toLowerCase()),false,false, new Date(),cypher.encodeString(req.body.contact),"Account created"], (err,rows) =>  {
         if (err) return errors(res,err);
         id = rows.rows[0].id
 
         pool.query ('insert into registrations (motivation,users_id) values ($1,$2)',
-        [req.body.motivation,id], (err,rows) =>  {
+        [cypher.encodeString(req.body.motivation),id], (err,rows) =>  {
           if (err) return errors(res,err);
           return res.send("Votre candidature a bien été enregistrée par le système et sera traitée très prochainement par les coordinateurs de l'association.\nNous vous contacterons par email pour vous informer de notre décision.")
         })
@@ -277,6 +277,50 @@ async function updateUser(req, res, next) {
   });
 }
 
+async function changePassword(req, res, next) {
+  let body = check.checkForm(res,[check.hasProperties(["new","old"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
+  let verif = check.checkForm(res,[
+    check.password(req.body.new),
+    check.password(req.body.old),
+  ])
+  if (verif !== true) {
+    return verif;
+  }
+
+  pool.query ('select password from users where id = $1',
+  [req.session.user.id], async (err,rows) => {
+    if (err) return errors(res,err);
+    if (rows.rows.length > 0) {
+      if (await argon.verify(rows.rows[0].password, req.body.old)) {
+        let hash = await argon.hash(req.body.new, {type: argon.argon2id});
+        pool.query ('update users set password = $1 where id = $2',[hash,req.session.user.id], (err,rows) =>  {
+          if (err) return errors(res,err);
+          return res.send("Votre mot de passe a bien été modifié.");
+        })
+      }
+      else {
+        return res.status(404).send("Mot de passe invalide. Veuillez réessayer.")
+      }
+    }
+    else {
+      return res.status(403).send("Utilisateur invalide. Veuillez vous déconnecter.")
+    }
+  });
+}
+
+function deleteUser(req, res, next) {
+  let bad = cypher.encodeString(`Inconnu - ${(new Date()).toISOString()}`);
+  pool.query ('update users set isactive = false, isadmin = false, lastactivity = current_date, password=$1, fname = $2, lname = $3, mail = $4, contact = $5 where id = $6',[bad, bad, bad, bad, bad, req.session.user.id], async (err,rows) => {
+    if (err) return errors(res,err);
+    res.clearCookie("userId");
+    return res.send(`Votre compte a bien été désactivé. Vous n'êtes plus identifié par le système.`);
+  })
+}
+
 module.exports = {
     getAllAdminUsers: getAllAdminUsers,
     getUnavailableAdminUsersPerSessionsTasks : getUnavailableAdminUsersPerSessionsTasks,
@@ -288,5 +332,7 @@ module.exports = {
     resetPassword : resetPassword,
     newPassword : newPassword,
     getUserInformationToChange : getUserInformationToChange,
-    updateUser : updateUser
+    updateUser : updateUser,
+    changePassword : changePassword,
+    deleteUser : deleteUser
   };

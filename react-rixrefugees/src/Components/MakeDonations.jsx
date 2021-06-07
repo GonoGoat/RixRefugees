@@ -7,8 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 
-import check from "../../utils/FormValidations/validators"
-import axios from "../../utils/axios";
+import check from "../utils/FormValidations/validators"
+import axios from "../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -16,37 +16,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PasswordChange () {
+function MakeDonations () {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const classes = useStyles();
-    const [password,setPassword] = React.useState({
-        old : '',
-        new : '',
-        confirm : ''
+    const [donation,setDonation] = React.useState({
+      lname : '',
+      fname : '',
+      description : '',
+      contact : '',
     });
 
     const handleInputChange = (e) => {
       const {name, value } = e.target;
-      setPassword({
-      ...password,
+      setDonation({
+      ...donation,
       [name]: value
       });
     };
 
     async function handleSubmit() {
-      if (password.confirm !== password.new) {
-        enqueueSnackbar('Veillez à bien rentrer 2 mots de passe similaires.', {variant : "error"});
-      }
-      else {
         let values = check.checkForm([
-          check.password(password.new),
-          check.password(password.old),
+          check.lname(donation.lname),
+          check.fname(donation.fname),
+          check.description(donation.description)
         ])
         if (values === true) {
-          await axios.put(`${process.env.REACT_APP_API}/users/password/change`, {old : password.old, new : password.new})
+          await axios.post(`${process.env.REACT_APP_API}/donations/add`, donation)
           .then(res => {
             localStorage.setItem("rixrefugees-message",res.data);
-            window.location.href = "/user/profile";
+            window.location.href = "/";
           })
           .catch(err => {
             closeSnackbar();
@@ -67,7 +65,6 @@ function PasswordChange () {
             enqueueSnackbar(obj, {variant : "error"});
           })
         }
-      }
     }
 
   return (
@@ -75,40 +72,52 @@ function PasswordChange () {
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <TextField
-                fullWidth
-                label="Ancien mot de passe"
-                name="old"
-                size="small"
-                type="password"
-                variant="outlined"
-                value={password.old}
-                onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                    fullWidth
+                    label="Nom"
+                    name="lname" 
+                    size="small" 
+                    variant="outlined"
+                    value={donation.lname}
+                    onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                    fullWidth
+                    label="Prénom"
+                    name="fname" 
+                    size="small" 
+                    variant="outlined"
+                    value={donation.fname}
+                    onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
                   fullWidth
-                  label="Nouveau mot de passe"
-                  name="new"
+                  label="Que pourriez-vous nous donner ?"
+                  name="description"
                   size="small"
-                  type="password"
                   variant="outlined"
-                  value={password.new}
+                  multiline
+                  rows={5}
+                  value={donation.description}
                   onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Confirmer le mot de passe"
-                  name="confirm"
+                  label="Comment pouvons-nous vous contacter ?"
+                  name="contact"
                   size="small"
-                  type="password"
                   variant="outlined"
-                  value={password.confirm}
+                  multiline
+                  rows={5}
+                  value={donation.contact}
                   onChange={handleInputChange}
                 />
               </Grid>
@@ -116,7 +125,7 @@ function PasswordChange () {
           </Grid>
           <Grid item xs={12}>
             <Button color="secondary" fullWidth onClick={handleSubmit} variant="contained">
-              Changer de mot de passe
+              Faire un don
             </Button>
           </Grid>
         </Grid>
@@ -125,4 +134,4 @@ function PasswordChange () {
   );
 };
 
-export default PasswordChange;
+export default MakeDonations;

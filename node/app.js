@@ -22,6 +22,8 @@ var friendsRouter = require('./routes/friends');
 var assignmentsRouter = require('./routes/assignments');
 var statusRouter = require('./routes/status');
 var appointmentsRouter = require('./routes/appointments');
+var registrationsRouter = require('./routes/registrations');
+var donationsRouter = require('./routes/donations');
 
 var app = express();
 
@@ -36,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('../react-rixrefugees/build'));
 
 app.use(cors({
-  origin : ["http://localhost:3000","http://localhost:8000"],
+  origin : ["http://localhost:3000","https://localhost:8000"],
   methods : ["GET","POST","PUT","DELETE","OPTIONS","PATCH"],
   credentials : true
 }));
@@ -64,6 +66,8 @@ app.use('/api/friends',friendsRouter);
 app.use('/api/assignments',assignmentsRouter);
 app.use('/api/status',statusRouter);
 app.use('/api/appointments',appointmentsRouter);
+app.use('/api/registrations',registrationsRouter);
+app.use('/api/donations',donationsRouter);
 
 app.use('*', reactRouter);
 

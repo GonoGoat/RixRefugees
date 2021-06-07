@@ -13,7 +13,8 @@ router.post('/login',db.login);
 router.post('/logout',db.logout);
 router.post('/password/reset',db.resetPassword);
 router.post('/password/new',db.newPassword);
-//router.delete('/delete',db.deleteUser);
+router.delete('/delete',db.deleteUser);
+router.put('/password/change',db.changePassword);
 router.put('/update',db.updateUser);
 
 

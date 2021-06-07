@@ -32,6 +32,11 @@ function Header() {
                     Comment rejoindre ?
                 </Link>
             </div>
+            <div className={styles.links}>
+                <Link to={"/donations"}>
+                    Faire un don
+                </Link>
+            </div>
             <Connection/>
             <hr/>
         </div>
