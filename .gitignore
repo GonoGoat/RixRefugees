@@ -2,3 +2,5 @@
 node
 react-rixrefugees
 secrets
+*/*.cert
+*/*.key
