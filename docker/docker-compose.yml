@@ -32,8 +32,7 @@ services :
         container_name: pgadmin
         tty : true
         volumes:
-        - /home/backup/pgadmin/data:/var/lib/pgadmin #sudo chown -R 5050:5050 /home/backup/pgadmin/data
-        - /home/backup/pgadmin/logs:/home/logs #sudo chown -R 5050:5050 /home/backup/pgadmin/logs
+        - /home/backup/pgadmin:/var/lib/pgadmin
         - ./Node/server.cert:/certs/server.cert
         - ./Node/server.key:/certs/server.key
         ports:
