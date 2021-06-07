@@ -24,7 +24,7 @@ app.set('port', port);
  * @author https://www.youtube.com/watch?v=8ptiZlO7ROs
  */
 const httpsOptions = {
-  cert : fs.readFileSync(path.join(__dirname, '..',"server.cer")),
+  cert : fs.readFileSync(path.join(__dirname, '..',"server.cert")),
   key : fs.readFileSync(path.join(__dirname, "..","server.key")),
 }
 
