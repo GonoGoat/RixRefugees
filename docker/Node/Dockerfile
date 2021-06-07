@@ -12,8 +12,8 @@ RUN cd RixRefugees || rm docker database -rd
 
 COPY .env ./RixRefugees/node
 
-COPY ssl/server.key ./RixRefugees/node
+COPY ./ssl/server.key ./RixRefugees/node
 
-COPY ssl/server.cer ./RixRefugees/node
+COPY ./ssl/server.cer ./RixRefugees/node
 
 RUN npm install pm2 -g
