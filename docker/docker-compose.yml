@@ -16,7 +16,7 @@ services :
                 ipv4_address: 172.18.0.2
 
     node:
-        image : gonogoat/rixrefugees:api
+        build: ./Node
         container_name: api
         tty: true
         ports:
@@ -32,8 +32,7 @@ services :
         container_name: pgadmin
         tty : true
         volumes:
-        - /home/backup/pgadmin/data:/var/lib/pgadmin
-        - /home/backup/pgadmin/logs:/home/logs
+        - /home/backup/pgadmin:/var/lib/pgadmin
         - ./Node/ssl:/certs
         ports:
          - "4430:443/tcp"
