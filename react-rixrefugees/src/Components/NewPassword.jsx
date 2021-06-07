@@ -41,13 +41,13 @@ function NewPassword () {
       .catch(err => {
         closeSnackbar();
         if (err.response) {
-            enqueueSnackbar(err.response.data, {variant : "error"});
+          enqueueSnackbar(err.response.data, {variant : "error"});
         }
         else if (err.request) {
-            enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+          enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
         } 
         else {
-            enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+          enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
         }
       });
     }
