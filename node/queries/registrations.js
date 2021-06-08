@@ -48,9 +48,9 @@ function accept(req, res, next) {
     return verif;
   }
 
-  pool.query('delete from registrations where users_id = $1',[req.body.id],(err,rows) =>  {
+  pool.query('update users set isactive = true where id in (select users_id from registrations where id = $1)',[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    pool.query('update users set isactive = true where id = (select users_id from registrations where id = $1)',[req.body.id],(err,rows) =>  {
+    pool.query('delete from registrations where id = $1',[req.body.id],(err,rows) =>  {
       if (err) return errors(res,err);
       return res.send(`La candidature a bien été acceptée !`);
     })
@@ -70,7 +70,7 @@ function refuse(req, res, next) {
     return verif;
   }
 
-  pool.query("delete from users where id = (select users_id from registrations where id = $1)",[req.body.id],(err,rows) =>  {
+  pool.query("delete from users where id in (select users_id from registrations where id = $1)",[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send("La candidature a bien été refusée.");
   })
