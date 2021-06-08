@@ -9,7 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 import LoadingIndicator from "../utils/LoadingIndicator";
-import CustomDescriptionIcon from "../utils/Icons/CustomDescriptionIcon"
+import CustomDescriptionIcon from "../utils/Icons/CustomDescriptionIcon";
+
+import NewlineText from '../../utils/NewLineText';
 
 const useStyles = makeStyles((theme) => ({
   typography: {
@@ -81,7 +83,7 @@ function SessionsTasksDesc(props) {
           horizontal: 'center',
         }}
       > 
-        {loading || !desc ? <LoadingIndicator/> : <Typography className={classes.typography}>{desc.description}</Typography>}
+        {loading || !desc ? <LoadingIndicator/> : <Typography className={classes.typography}><NewlineText text={desc.description}/></Typography>}
       </Popover>
     </div>
   );

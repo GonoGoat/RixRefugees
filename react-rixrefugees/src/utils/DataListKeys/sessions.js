@@ -16,12 +16,12 @@ const sessionsDataListKeys = [
         key : 'address'
     },
     {
-        name : "Description du lieu",
-        key : 'description'
-    },
-    {
         name : 'Addresse email du coordinateur',
         key : 'mail'
+    },
+    {
+        name : "Description du lieu",
+        key : 'description'
     },
 ]
 

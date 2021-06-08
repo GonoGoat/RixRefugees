@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { useSnackbar } from 'notistack';
 import LoadingIndicator from "../utils/LoadingIndicator";
-import  {useHistory} from "react-router-dom";
 
 import axios from "../../utils/axios";
 import check from "../../utils/FormValidations/validators";
@@ -15,7 +14,6 @@ function EditUser() {
     const [loading,setLoading] = React.useState(true);
     const [user,setUser] = React.useState();
     const [password,setPassword] = React.useState('');
-    const history = useHistory();
 
     React.useEffect(() => {
         axios.get(`${process.env.REACT_APP_API}/users/edit`)
@@ -84,7 +82,7 @@ function EditUser() {
     }
 
 
-    if (loading) return <LoadingIndicator/>
+    if (loading && !user) return <LoadingIndicator/>
     return (
         <Container maxWidth="xs">
           <form>

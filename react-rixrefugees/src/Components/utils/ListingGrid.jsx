@@ -1,4 +1,5 @@
 import React from "react";
+import { useSnackbar } from 'notistack';
 
 import { DataGrid,useGridSlotComponentProps } from '@material-ui/data-grid';
 import Grid from "@material-ui/core/Grid";
@@ -9,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Pagination from '@material-ui/lab/Pagination';
 
+import axios from "../../utils/axios";
 import classes from '../../Style/ListingGrid';
 const useStyles = classes;
   
@@ -35,8 +37,7 @@ function ListingGrid (props) {
     const [filter,setFilter] = React.useState({state : false,selected : false,running : false});
     const [placesFilter, setPlaces] = React.useState([]);
     const styles= useStyles();
-
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     function getFilter() {
         let filtered = props.rows;
@@ -93,9 +94,19 @@ function ListingGrid (props) {
             .then(res => {
                 let values = [{id : 0,name : '--Choisissez un endroit--'}];
                 setPlaces(values.concat(res.data));
+                setFilter({...filter, selected : 0})
             })
             .catch(err => {
-                console.log(err);
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
             });
         }
     },[])

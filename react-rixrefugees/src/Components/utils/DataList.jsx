@@ -1,12 +1,18 @@
 import React from "react";
 import LoadingIndicator from "./LoadingIndicator";
+import { useSnackbar } from 'notistack';
+
+import axios from "../../utils/axios";
+
+import Typography from "@material-ui/core/Typography";
+import NewlineText from "../../utils/NewLineText";
 
 function DataList(props) {
 
     const [loading,setLoading] = React.useState(false);
     const [details,setDetails] = React.useState();
 
-    const axios = require('axios');
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     async function fetchData() {
         setLoading(true);
@@ -24,7 +30,17 @@ function DataList(props) {
                     setLoading(false);
                 })
                 .catch(err => {
-                    console.log(err);
+                    closeSnackbar();
+                    if (err.response) {
+                        enqueueSnackbar(err.response.data, {variant : "error"});
+                    }
+                    else if (err.request) {
+                        enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                    } 
+                    else {
+                        enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                    }
+                    setLoading(false);
                 });
             }
             else {
@@ -33,7 +49,17 @@ function DataList(props) {
             }
         })
         .catch(err => {
-            console.log(err);
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
         });
     }
 
@@ -52,7 +78,7 @@ function DataList(props) {
         return (
             <div>
                 {props.keys.map((arr) => {
-                return (<div> {arr.name} :  {details[arr.key]} </div>)
+                    return (<Typography> {arr.name} :  <NewlineText text={details[arr.key]}/> </Typography>)
                 })}
             </div>
         )

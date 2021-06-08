@@ -17,6 +17,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
 import LoadingIndicator from "./utils/LoadingIndicator";
+import NewLineText from "../utils/NewLineText";
 
 function About() {
     const [loading,setLoading] = React.useState(true);
@@ -82,7 +83,7 @@ function About() {
                     {obj.amountofpeople} personne{obj.amountofpeople > 1 ? "s" : ""}
                 </Typography>
                 <Typography variant="body2" component="p">
-                  {obj.description}
+                  <NewLineText text={obj.description}/>
                 </Typography>
               </CardContent>
               <CardActions>

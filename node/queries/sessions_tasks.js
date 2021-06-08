@@ -2,6 +2,7 @@ var pool = require('../db.js')
 const format = require('pg-format');
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const moment = require("moment");
 
 // add query functions
 function getAllSessionsTasks(req, res, next) {
@@ -76,7 +77,7 @@ function addSessionsTasks(req, res, next) {
   pool.query('select id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') from sessions where id = $1',[req.body.sessions_id]
   ,(err,rows) =>  {
     if (err) return errors(res,err);
-    if ((new Date(rows.rows[0].start_date) > new Date(req.body.start_date)) || (new Date(rows.rows[0].end_date) < new Date(req.body.end_date))) return res.status(405).send("Veuillez sélectionner des dates à l'intérieur de la session concernée.")
+    if ((moment(rows.rows[0].start_date).isAfter(moment(req.body.start_date),'day'))|| (moment(rows.rows[0].end_date).isBefore(moment(req.body.end_date),'day'))) return res.status(405).send("Veuillez sélectionner des dates à l'intérieur de la session concernée.")
 
     pool.query('insert into sessions_tasks (isfromadmin,description,amountofpeople,start_date,end_date,tasks_id,sessions_id) values ($1,$2,$3,$4,$5,$6,$7)'
     ,[true,req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id],(err,rows) =>  {
@@ -101,6 +102,7 @@ function deleteSessionsTasks(req, res, next) {
 }
 
 function updateSessionsTasks(req, res, next) {
+  console.log(req.body);
   let body = check.checkForm(res,[check.hasProperties(["description","amountofpeople","start_date","end_date","tasks_id","sessions_id","isfromadmin","id"],req.body)])
   if (body !== true) {
     return body;
@@ -110,7 +112,7 @@ function updateSessionsTasks(req, res, next) {
     check.validFk(req.body.sessions_id),
     check.validFk(req.body.tasks_id),
     check.validFk(req.body.id),
-    check.noNegativeInt(res.body.amountofpeople),
+    check.noNegativeInt(req.body.amountofpeople),
     check.validDates(req.body.start_date,req.body.end_date)
   ])
   if (verif !== true) {
@@ -119,7 +121,7 @@ function updateSessionsTasks(req, res, next) {
   pool.query('select id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') as end_date from sessions where id = $1',[req.body.sessions_id]
   ,(err,rows) =>  {
     if (err) return errors(res,err);
-    if ((new Date(rows.rows[0].start_date) > new Date(req.body.start_date)) || (new Date(rows.rows[0].end_date) < new Date(req.body.end_date))) return res.status(405).send("Veuillez sélectionner des dates à l'intérieur de la session concernée.")
+    if ((moment(rows.rows[0].start_date).isAfter(moment(req.body.start_date),'day'))|| (moment(rows.rows[0].end_date).isBefore(moment(req.body.end_date),'day'))) return res.status(405).send("Veuillez sélectionner des dates à l'intérieur de la session concernée.")
     
     pool.query('update sessions_tasks set isfromadmin = $1, description = $2, amountofpeople = $3, start_date = $4, end_date = $5, tasks_id = $6, sessions_id = $7 where id = $8'
     ,[Boolean(req.body.isfromadmin),req.body.description,req.body.amountofpeople,req.body.start_date,req.body.end_date,req.body.tasks_id, req.body.sessions_id, req.body.id],(err,rows) =>  {

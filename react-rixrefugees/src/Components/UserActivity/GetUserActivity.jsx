@@ -10,8 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 
+import NewlineText from "../../utils/NewLineText";
+
 function GetUserActivity() {
-    const [user,setUser] = React.useState(1);
     const [availabilities,setAvailabilities] = React.useState();
     const [loading,setLoading] = React.useState(false);
 
@@ -70,7 +71,7 @@ function GetUserActivity() {
                     Proposition n°{value.id}<br/>
                     Effectuée le {value.updatedate}<br/>
                     Etat : {value.iscanceled ? "Annulée" : "En cours"}<br/>
-                    Description : {value.description}
+                    Description : <NewlineText text={value.description}/>
                 </Typography>
                 <Button size="small" onClick={() => history.push(`/user/activity/${value.id}`)}>Plus d'informations</Button>
                 <CancelButton disabled={false} cancel={() => cancel()}/>

@@ -16,3 +16,5 @@ export { default as Registrations } from './Registrations';
 export { default as MakeDonations } from './MakeDonations';
 export { default as ManageDonations } from './ManageDonations';
 export { default as Error } from './Error';
+export { default as Legals } from './Legals';
+export { default as Privacy } from './Privacy';

@@ -19,6 +19,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import LoadingIndicator from "./utils/LoadingIndicator";
 import CustomCheckIcon from "./utils/Icons/CustomCheckIcon";
 import CustomCloseIcon from "./utils/Icons/CustomCloseIcon";
+import NewLineText from "../utils/NewLineText";
 
 import classes from "../Style/ManageDonations";
 const useStyles=classes;
@@ -154,11 +155,11 @@ function ManageDonations() {
                                 <Grid container>
                                     <Grid item xs={6}>
                                         <Typography variant='h6'>Contact</Typography>
-                                        <Typography>{details.contact}</Typography>
+                                        <Typography><NewLineText text={details.contact}/></Typography>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Typography variant='h6'>Description</Typography>
-                                        <Typography>{details.description}</Typography>
+                                        <Typography><NewLineText text={details.description}/></Typography>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <FormLabel component="legend">La donation a-t-elle été reçue ou non ?</FormLabel>

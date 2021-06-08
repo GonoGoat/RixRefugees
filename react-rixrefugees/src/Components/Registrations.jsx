@@ -1,8 +1,5 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
-import axios from "../utils/axios";
-
-import LoadingIndicator from "./utils/LoadingIndicator";
 
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -11,12 +8,17 @@ import Button from '@material-ui/core/Button';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+
 import CustomCheckIcon from "./utils/Icons/CustomCheckIcon";
 import CustomCloseIcon from "./utils/Icons/CustomCloseIcon";
-
 import classes from "../Style/Registrations";
-import { Typography } from "@material-ui/core";
+import axios from "../utils/axios";
+import LoadingIndicator from "./utils/LoadingIndicator";
+import NewLineText from "../utils/NewLineText";
+
 const useStyles=classes;
+
 
 function Registrations() {
     const [loading, setLoading] = React.useState(false);
@@ -147,11 +149,11 @@ function Registrations() {
                                 <Grid container>
                                     <Grid item xs={6}>
                                         <Typography variant='h6'>Contact</Typography>
-                                        <Typography>{details.contact}</Typography>
+                                        <Typography><NewLineText text={details.contact}/></Typography>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Typography variant='h6'>Motivations</Typography>
-                                        <Typography>{details.motivation}</Typography>
+                                        <Typography><NewLineText text={details.motivation}/></Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>

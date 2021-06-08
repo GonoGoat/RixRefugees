@@ -1,7 +1,7 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile, Registrations, MakeDonations, ManageDonations,Error} from "./Components";
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile, Registrations, MakeDonations, ManageDonations,Error,Legals,Privacy} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
@@ -70,6 +70,8 @@ function App() {
           <Route path="/" exact component={() => <Accueil />} />
           <Route path="/about" exact component={() => <About />} />
           <Route path="/donations" exact component={() => <MakeDonations />} />
+          <Route path="/legals" exact component={() => <Legals />} />
+          <Route path="/privacy" exact component={() => <Privacy />} />
 
           <Route path="/login" exact component={() => getPerm(0) ? <Login /> : <Error/>} />
           <Route path="/register" exact component={() => getPerm(0) ? <Register /> : <Error/>} />
