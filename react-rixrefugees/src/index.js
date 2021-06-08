@@ -12,7 +12,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={Store}>
       <SnackbarProvider maxSnack={7}>
-        <App />
+        <App/>
       </SnackbarProvider>
     </Provider>
   </React.StrictMode>,
