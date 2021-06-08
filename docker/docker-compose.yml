@@ -11,7 +11,7 @@ services :
         #----
         volumes:
          - /home/backup/postgresdata:/var/lib/postgresql/data
-         - 'home/backup/postgreslogs:/var/log/postgresql/'
+         - /home/backup/postgreslogs:/var/log/postgresql/
          - ./database:/docker-entrypoint-initdb.d
         env_file: 
          - ./secrets/PG/.env
