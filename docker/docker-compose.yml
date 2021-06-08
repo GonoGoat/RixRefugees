@@ -6,12 +6,8 @@ services :
         image : postgres
         container_name: pg
         tty : true
-        # Author : https://stackoverflow.com/questions/59527291/enable-logging-in-postgresql-using-docker-compose
-        command: "postgres", "-c", "logging_collector=on", "-c", "log_directory=/logs", "-c", "log_filename=postgresql.log", "-c", "log_statement=all" 
-        #----
         volumes:
          - /home/backup/postgresdata:/var/lib/postgresql/data
-         - /home/backup/postgreslogs:/var/log/postgresql/
          - ./database:/docker-entrypoint-initdb.d
         env_file: 
          - ./secrets/PG/.env
