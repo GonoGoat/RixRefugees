@@ -82,9 +82,6 @@ function About() {
                 <Typography color="textSecondary">
                     {obj.amountofpeople} personne{obj.amountofpeople > 1 ? "s" : ""}
                 </Typography>
-                <Typography variant="body2" component="p">
-                  <NewLineText text={obj.description}/>
-                </Typography>
               </CardContent>
               <CardActions>
                 <Button size="small" onClick={() => history.push(`/user/activity/add/${obj.id}`)}>Postuler maintenant</Button>

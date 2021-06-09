@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const instance = axios.create({
-    withCredentials : true
+    withCredentials : false
 })
 
 module.exports = instance;

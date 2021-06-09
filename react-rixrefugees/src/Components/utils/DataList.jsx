@@ -3,6 +3,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import { useSnackbar } from 'notistack';
 
 import axios from "../../utils/axios";
+import otherAxios from "../../utils/otherAxios";
 
 import Typography from "@material-ui/core/Typography";
 import NewlineText from "../../utils/NewLineText";
@@ -22,7 +23,7 @@ function DataList(props) {
                 props.setDetails(res.data.sessions_tasks_id)
             }
             if (res.data.nationality) {
-                axios.get(`https://restcountries.eu/rest/v2/alpha/${res.data.nationality}?fields=translations`)
+                otherAxios.get(`https://restcountries.eu/rest/v2/alpha/${res.data.nationality}?fields=translations`)
                 .then(country => {
                     let data = res.data
                     data.nationality = country.data.translations.fr

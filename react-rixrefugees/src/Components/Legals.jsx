@@ -61,6 +61,7 @@ function Legals() {
                             <td>Rigo</td>
                             <td>Stéphanie</td>
                             <td>Colline du Glain 19, 1332 Genval</td>
+                            <td>/</td>
                         </tr>
                         <tr>
                             <td>Streydio</td>
