@@ -117,7 +117,7 @@ function AssignmentsForm(props) {
       });
     }
 
-    function handleSubmit() {
+    async function handleSubmit() {
       
       setLoading(true);
 
@@ -181,11 +181,11 @@ function AssignmentsForm(props) {
           }
         })
         if (!problem) {
-          handleAdmins(admin);
+          await handleAdmins(admin);
         }
       }
       if (Object.keys(del).length > 0) {
-        handleDelete(del);
+        await handleDelete(del);
       }
       problem = false;
       if (add.length > 0) {
@@ -196,10 +196,10 @@ function AssignmentsForm(props) {
           }
         })
         if (!problem) {
-          handleAdd(add);
+          await handleAdd(add);
         }
       }
-      enqueueSnackbar("Le processus d'assignation est terminé !", {variant : "success"});
+      enqueueSnackbar("Si aucune message d'erreur n'apparaît, le processus d'assignation est bien terminé !", {variant : "success"});
       setLoading(false);
     }
   

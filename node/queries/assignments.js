@@ -69,7 +69,7 @@ function addUsersAssignments(req, res, next) {
   });
   pool.query(format('insert into assignments (availabilities_id,friends_id) values %L',query),(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send(`${req.body.admin.length} bénévole${req.body.admin.length > 1 ? "s ont bien été assignés" : " a bien été assigné"} à la tâche demandée.`);
+    return res.send(`${req.body.length} bénévole${req.body.length > 1 ? "s ont bien été assignés" : " a bien été assigné"} à la tâche demandée.`);
   });
 }
 

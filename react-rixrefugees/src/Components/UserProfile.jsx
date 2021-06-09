@@ -13,6 +13,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import EditIcon from '@material-ui/icons/Edit';
 
+import NewLineText from "../utils/NewLineText";
+
 function UserProfile() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [loading,setLoading] = React.useState(true);
@@ -69,7 +71,7 @@ function UserProfile() {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Typography variant='h6'>Moyen de contact</Typography>
-                                    <Typography>{user.contact}</Typography>
+                                    <Typography><NewLineText text={user.contact}/></Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
