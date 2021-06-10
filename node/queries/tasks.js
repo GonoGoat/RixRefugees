@@ -2,9 +2,15 @@ var pool = require('../db.js')
 const format = require("pg-format");
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const auth = require('../auth');
 
 // add query functions
 function getAllTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select * from tasks',(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
@@ -12,6 +18,11 @@ function getAllTasks(req, res, next) {
 }
 
 function addTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["name"],req.body)])
   if (body !== true) {
     return body;
@@ -31,6 +42,11 @@ function addTasks(req, res, next) {
 }
 
 function deleteTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[
     check.arrayOfValidFk(req.body)
   ])
@@ -45,6 +61,11 @@ function deleteTasks(req, res, next) {
 }
 
 function updateTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["name","id"],req.body)])
   if (body !== true) {
     return body;

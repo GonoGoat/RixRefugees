@@ -5,25 +5,46 @@ const cypher = require('../cypher');
 const errors = require('../errors.js');
 const check = require('../validators.js');
 const transporter = require('../mail.js');
+const auth = require('../auth')
 
 function getAllAdminUsers(req, res, next) {
-  pool.query('select id, concat(lname, \' \', fname) as username from users where isAdmin = true'
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
+  pool.query('select id,lname, fname from users where isAdmin = true'
   ,(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send(rows.rows);
+    return res.send(rows.rows.map(obj => {
+      obj.username = `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`;
+      delete obj.fname;
+      delete obj.lname
+      return obj;
+    }));
   })
 }
 
 function getUnavailableAdminUsersPerSessionsTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
   }
 
-  pool.query('select id, concat(lname, \' \', fname) as username from users where isAdmin = true and hasavailabilities($1,id) = false',
+  pool.query('select id, lname, fname from users where isAdmin = true and hasavailabilities($1,id) = false',
   [parseInt(req.params.id)],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send(rows.rows);
+    return res.send(rows.rows.map(obj => {
+      obj.username = `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`;
+      delete obj.fname;
+      delete obj.lname
+      return obj;
+    }));
   })
 }
 
@@ -202,7 +223,12 @@ function logout(req, res, next) {
 }
 
 function getUserInformation(req, res, next) {
-  pool.query('select fname, lname, mail, isadmin, contact from users where id = $1',
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
+  pool.query('select id,fname, lname, mail, isadmin, contact from users where id = $1',
   [req.session.user.id], (err, rows) => {
     if (err) return errors(res,err);
     if (rows.rows.length > 0) {
@@ -221,15 +247,22 @@ function getUserInformation(req, res, next) {
 }
 
 function getUserInformationToChange(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select fname, lname, contact from users where id = $1',
   [req.session.user.id], (err, rows) => {
     if (err) return errors(res,err);
     if (rows.rows.length > 0) {
       let user = rows.rows[0];
-      user.fname = cypher.decodeString(user.fname);
-      user.lname = cypher.decodeString(user.lname);
-      user.contact = cypher.decodeString(user.contact);
-      return res.send(user);
+      return res.send({
+        ...user,
+        fname : cypher.decodeString(user.fname),
+        lname : cypher.decodeString(user.lname),
+        contact : cypher.decodeString(user.contact)
+      });
     }
     else {
       return res.status(403).send("Utilisateur invalide. Veuillez vous déconnecter.")
@@ -238,6 +271,11 @@ function getUserInformationToChange(req, res, next) {
 }
 
 async function updateUser(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["user,password"],req.body)])
   if (body !== true) {
     return body;
@@ -278,6 +316,11 @@ async function updateUser(req, res, next) {
 }
 
 async function changePassword(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["new","old"],req.body)])
   if (body !== true) {
     return body;
@@ -313,6 +356,11 @@ async function changePassword(req, res, next) {
 }
 
 function deleteUser(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let bad = cypher.encodeString(`Inconnu - ${(new Date()).toISOString()}`);
   pool.query ('update users set isactive = false, isadmin = false, lastactivity = current_date, password=$1, fname = $2, lname = $3, mail = $4, contact = $5 where id = $6',[bad, bad, bad, bad, bad, req.session.user.id], async (err,rows) => {
     if (err) return errors(res,err);

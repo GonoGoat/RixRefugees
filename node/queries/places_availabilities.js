@@ -2,9 +2,15 @@ var pool = require('../db.js');
 const format = require('pg-format');
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const auth = require('../auth');
 
 // add query functions
 function getAllPlacesAvail(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select places_availabilities.id as id,places_id,name,bed_quantity,concat(to_char(start_avail,\'YYYY-MM-DD\'),\'T\',to_char(start_avail, \'HH24:MI\')) as start_avail,concat(to_char(end_avail,\'YYYY-MM-DD\'),\'T\',to_char(end_avail, \'HH24:MI\')) as end_avail from places_availabilities join places on places_availabilities.places_id = places.id',(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
@@ -12,6 +18,11 @@ function getAllPlacesAvail(req, res, next) {
 }
 
 function addPlacesAvail(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["start_avail","end_avail","bed_quantity","places_id"],req.body)])
   if (body !== true) {
     return body;
@@ -34,6 +45,11 @@ function addPlacesAvail(req, res, next) {
 }
 
 function deletePlacesAvail(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.arrayOfValidFk(req.body)])
   if (verif !== true) {
     return verif;
@@ -46,6 +62,11 @@ function deletePlacesAvail(req, res, next) {
 }
 
 function updatePlacesAvail(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["start_avail","end_avail","bed_quantity","places_id","id"],req.body)])
   if (body !== true) {
     return body;

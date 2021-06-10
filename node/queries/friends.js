@@ -3,24 +3,33 @@ var format = require('pg-format');
 const cypher = require('../cypher');
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const auth = require('../auth');
 
 // add query functions
 function getAllFriends(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select id, fname, lname, to_char(in_date,\'YYYY-MM-DD\') as in_date,to_char(out_date,\'YYYY-MM-DD\') as out_date from friends ',(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows.map(obj => {
       return {
-        id : obj.id,
+        ...obj,
         fname : cypher.decodeString(obj.fname),
         lname : cypher.decodeString(obj.lname),
-        in_date : obj.in_date,
-        out_date : obj.out_date
       }
     }));
   })
 }
 
 function getFriendsInfo(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
@@ -30,22 +39,22 @@ function getFriendsInfo(req, res, next) {
     if (err) return errors(res,err);
     let obj = rows.rows[0];
     return res.send({
-      id : obj.id,
+      ...obj,
       fname : cypher.decodeString(obj.fname),
       lname : cypher.decodeString(obj.lname),
       nationality : cypher.decodeString(obj.nationality),
       notes : cypher.decodeString(obj.notes),
       phone : cypher.decodeString(obj.phone),
-      status_id : obj.status_id,
-      in_date : obj.in_date,
-      out_date : obj.out_date,
-      birth_date : obj.birth_date,
-
     });
   })
 }
 
 function getValidFriendsAssignmentPerSessionsTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
@@ -55,15 +64,19 @@ function getValidFriendsAssignmentPerSessionsTasks(req, res, next) {
     if (err) return errors(res,err);
     return res.send(rows.rows.map(obj => {
       return {
-        id : obj.id,
+        ...obj,
         username : `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`,
-        isassigned : obj.isassigned
       }
     }));
   })
 }
 
 function getFriendsDisplayInfo(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
@@ -73,22 +86,23 @@ function getFriendsDisplayInfo(req, res, next) {
     if (err) return errors(res,err);
     let obj = rows.rows[0];
     return res.send({
-      id : obj.id,
+      ...obj,
       fname : cypher.decodeString(obj.fname),
       lname : cypher.decodeString(obj.lname),
       nationality : cypher.decodeString(obj.nationality),
       notes : cypher.decodeString(obj.notes),
       phone : cypher.decodeString(obj.phone),
-      status_id : obj.status_id,
-      in_date : obj.in_date,
-      out_date : obj.out_date,
-      age : obj.age,
       name : cypher.decodeString(obj.name),
     });
   });
 }
 
 function addFriends(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["lname","fname","in_date","birth_date","phone","status_id","nationality","notes"],req.body)])
   if (body !== true) {
     return body;
@@ -107,6 +121,11 @@ function addFriends(req, res, next) {
 }
 
 function deleteFriends(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.arrayOfValidFk(req.body)])
   if (verif !== true) {
     return verif;
@@ -119,6 +138,11 @@ function deleteFriends(req, res, next) {
 }
 
 function updateFriends(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["lname","fname","in_date","birth_date","phone","status_id","nationality","notes","id","out_date"],req.body)])
   if (body !== true) {
     return body;

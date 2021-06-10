@@ -34,7 +34,7 @@ const sessTasksFilter = ["Tout","A venir", "En cours", "Terminé"]
 
 
 function ListingGrid (props) {
-    const [filter,setFilter] = React.useState({state : false,selected : false,running : false});
+    const [filter,setFilter] = React.useState({state : false,selected : 0,running : false});
     const [placesFilter, setPlaces] = React.useState([]);
     const styles= useStyles();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -94,7 +94,6 @@ function ListingGrid (props) {
             .then(res => {
                 let values = [{id : 0,name : '--Choisissez un endroit--'}];
                 setPlaces(values.concat(res.data));
-                setFilter({...filter, selected : 0})
             })
             .catch(err => {
                 closeSnackbar();

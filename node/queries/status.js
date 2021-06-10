@@ -3,9 +3,15 @@ var format = require('pg-format');
 const cypher = require('../cypher');
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const auth = require('../auth');
 
 // add query functions
 function getAllStatus(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select * from status',(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows.map((obj) => {
@@ -18,6 +24,11 @@ function getAllStatus(req, res, next) {
 }
 
 function addStatus(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["name"],req.body)])
   if (body !== true) {
     return body;
@@ -37,6 +48,11 @@ function addStatus(req, res, next) {
 }
 
 function deleteStatus(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[
     check.arrayOfValidFk(req.body)
   ])
@@ -51,6 +67,11 @@ function deleteStatus(req, res, next) {
 }
 
 function updateStatus(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["name","id"],req.body)])
   if (body !== true) {
     return body;

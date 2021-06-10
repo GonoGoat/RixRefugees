@@ -88,7 +88,7 @@ function Sessions (props) {
                             name="places_availabilities_id"
                         >
                             {places_avail.map((obj) => {
-                                return <MenuItem value={obj.id}>{obj.name} : {moment(obj.start_avail).format('DD/MM/YYYY hh:mm')} - {moment(obj.end_avail).format('DD/MM/YYYY hh:mm')}</MenuItem>
+                                return <MenuItem value={obj.id}>{obj.name} : {moment(obj.start_avail).format('DD/MM/YYYY HH:mm')} - {moment(obj.end_avail).format('DD/MM/YYYY HH:mm')}</MenuItem>
                             })}
                         </Select>
                     </FormControl>

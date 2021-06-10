@@ -3,9 +3,15 @@ var format = require('pg-format');
 var moment = require("moment");
 const check = require('../validators.js');
 const errors = require('../errors.js');
+const auth = require('../auth')
 
 // add query functions
 function getAssignmentsPerUser(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query("select distinct on (sessions_tasks.id) sessions_tasks_id as sessions_tasks_id ,assignments.id as id, availabilities.id as availabilities_id, users.id as users_id, assignments.feedback, tasks.name, sessions_tasks.amountofpeople, to_char(sessions_tasks.start_date,'DD/MM/YYYY HH24:MI') as start_date, to_char(sessions_tasks.end_date,'DD/MM/YYYY HH24:MI') as end_date, (select count(*) from assignments as assign where availabilities_id = assignments.availabilities_id) as assignedFriends from assignments join availabilities on assignments.availabilities_id = availabilities.id join users on availabilities.users_id = users.id join sessions_tasks on availabilities.sessions_tasks_id = sessions_tasks.id join tasks on sessions_tasks.tasks_id = tasks.id where users_id = $1 and sessions_tasks.end_date > now()", [req.session.user.id],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
@@ -13,6 +19,11 @@ function getAssignmentsPerUser(req, res, next) {
 }
 
 function addAdminAssignments(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["admin","sessions_tasks"],req.body)])
   if (body !== true) {
     return body;
@@ -53,6 +64,11 @@ function addAdminAssignments(req, res, next) {
 }
 
 function addUsersAssignments(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[
     check.validFk(req.body[0].id),
     check.arrayOfValidFk(req.body[0].friends)
@@ -74,6 +90,11 @@ function addUsersAssignments(req, res, next) {
 }
 
 function deleteAssignmentsPerFriends(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["users","friends"],req.body)])
   if (body !== true) {
     return body;
@@ -94,6 +115,11 @@ function deleteAssignmentsPerFriends(req, res, next) {
 }
 
 function deleteAssignmentsPerUsers(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[
     check.arrayOfValidFk(req.body)
   ])

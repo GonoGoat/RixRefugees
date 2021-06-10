@@ -3,27 +3,34 @@ const format = require('pg-format');
 const errors = require('../errors.js');
 const check = require('../validators.js');
 const cypher = require('../cypher');
+const auth = require('../auth');
 
 // add query functions
 function getAllAppointments(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select appointments.id, appointments.status_id, friends_id, status.name as status_name, friends.lname, friends.fname, appointments.iscanceled, to_char(appointment,\'YYYY-MM-DD\') as appointment from appointments join status on appointments.status_id = status.id join friends on appointments.friends_id = friends.id' 
   ,(err,rows) =>  {
     if (err) return errors(res,err)
     return res.send(rows.rows.map(obj => {
       return {
-        id : obj.id,
-        friends_id : obj.friends_id,
-        status_id : obj.status_id,
+        ...obj,
         status_name : cypher.decodeString(obj.status_name),
         friends_name : `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`,
-        iscanceled : obj.iscanceled,
-        appointment : obj.appointment,
       }
     }));
   })
 }
 
 function getAppointmentsDesc(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
@@ -34,14 +41,18 @@ function getAppointmentsDesc(req, res, next) {
     if (err) return errors(res,err)
     let obj = rows.rows[0];
     return res.send({
-      id : obj.id,
-      iscanceled : obj.iscanceled,
+      ...obj,
       description : cypher.decodeString(obj.description)
     });
   })
 }
 
 function addAppointments(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["appointment","description","iscanceled","status_id","friends_id"],req.body)])
   if (body !== true) {
     return body;
@@ -63,6 +74,11 @@ function addAppointments(req, res, next) {
 }
 
 function deleteAppointments(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[
     check.arrayOfValidFk(req.body),
   ])
@@ -77,6 +93,11 @@ function deleteAppointments(req, res, next) {
 }
 
 function updateAppointments(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["id","appointment","description","iscanceled","status_id","friends_id"],req.body)])
   if (body !== true) {
     return body;

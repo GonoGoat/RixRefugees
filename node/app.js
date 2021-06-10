@@ -24,6 +24,7 @@ var statusRouter = require('./routes/status');
 var appointmentsRouter = require('./routes/appointments');
 var registrationsRouter = require('./routes/registrations');
 var donationsRouter = require('./routes/donations');
+var badRoute = require('./queries/badRoute');
 
 var app = express();
 
@@ -68,6 +69,8 @@ app.use('/api/status',statusRouter);
 app.use('/api/appointments',appointmentsRouter);
 app.use('/api/registrations',registrationsRouter);
 app.use('/api/donations',donationsRouter);
+
+app.use('/api/*',badRoute);
 
 app.use('*', reactRouter);
 

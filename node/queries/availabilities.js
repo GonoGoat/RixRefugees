@@ -2,21 +2,39 @@ var pool = require('../db.js');
 const check = require('../validators.js');
 const errors = require('../errors.js');
 const moment = require('moment');
+const auth = require('../auth');
+const cypher = require('../cypher');
 
 // add query functions
 function getValidAvailabilitiesPerSessionsTasks(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
   }
 
-  pool.query('select availabilities.id,users_id,sessions_tasks_id, concat(users.lname, \' \', users.fname) as username, isavailAssigned(availabilities.id) as isassigned from availabilities join users on users.id = availabilities.users_id where availabilities.sessions_tasks_id = $1 and availabilities.iscanceled = false',[req.params.id],(err,rows) =>  {
+  pool.query('select availabilities.id,users_id,sessions_tasks_id, users.lname, users.fname, isavailAssigned(availabilities.id) as isassigned from availabilities join users on users.id = availabilities.users_id where availabilities.sessions_tasks_id = $1 and availabilities.iscanceled = false',[req.params.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send(rows.rows);
+    let availabilities = rows.rows.map(obj => {
+      return {
+        ...obj,
+        username : `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`,
+      }
+    });
+    return res.send(availabilities);
   })
 }
 
 function getAvailabilitiesPerUser(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+  
   pool.query('select id,description,iscanceled,users_id,sessions_tasks_id,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate from availabilities where users_id = $1',[req.session.user.id],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
@@ -24,6 +42,11 @@ function getAvailabilitiesPerUser(req, res, next) {
 }
 
 function getAvailabilitiesInfo(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
@@ -36,6 +59,11 @@ function getAvailabilitiesInfo(req, res, next) {
 }
 
 function addNewAvailabilities(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["tasks","sessions_tasks","availabilities"],req.body)])
   if (body !== true) {
     return body;
@@ -90,6 +118,11 @@ function addNewAvailabilities(req, res, next) {
 }
 
 function addAvailabilities(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["description","sessions_tasks_id"],req.body)])
   if (body !== true) {
     return body;
@@ -105,7 +138,7 @@ function addAvailabilities(req, res, next) {
   pool.query('select id from availabilities where sessions_tasks_id = $1 and users_id = $2',[req.body.sessions_tasks_id,req.session.user.id],(err,rows) =>  {
     if (err) return errors(res,err);
     if (rows.rows.length > 0) {
-      return res.status(400).send("Vosu avez déjà postulé pour cette tâche. Veuillez attendre notre réponse.")
+      return res.status(400).send("Vous avez déjà postulé pour cette tâche. Veuillez attendre notre réponse.")
     }
     pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',[req.body.description,false,req.session.user.id, req.body.sessions_tasks_id],(err,rows) =>  {
       if (err) return errors(res,err);
@@ -115,6 +148,11 @@ function addAvailabilities(req, res, next) {
 }
 
 function cancelAvailabilities(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.body.id)])
   if (verif !== true) {
     return verif;
@@ -127,6 +165,16 @@ function cancelAvailabilities(req, res, next) {
 }
 
 function updateAvailabilities(req, res, next) {
+  let perm = auth(req,res,false)
+  if (perm !== true) {
+    return perm
+  }
+
+  let body = check.checkForm(res,[check.hasProperties(["id","description"],req.body)])
+  if (body !== true) {
+    return body;
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.body.id)])
   if (verif !== true) {
     return verif;
