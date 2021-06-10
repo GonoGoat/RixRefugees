@@ -2,9 +2,15 @@ var pool = require('../db.js')
 const format = require('pg-format');
 const errors = require('../errors.js');
 const check = require('../validators.js');
+const auth = require('../auth');
 
 // add query functions
 function getAccomodationsPerPlaces(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let verif = check.checkForm(res,[check.validFk(req.params.id)])
   if (verif !== true) {
     return verif;
@@ -17,6 +23,11 @@ function getAccomodationsPerPlaces(req, res, next) {
 }
 
 function getAllAccomodations(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   pool.query('select id, places_id, equipments_id from accomodations',(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
@@ -24,6 +35,11 @@ function getAllAccomodations(req, res, next) {
 }
 
 function addAccomodations(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["equipments","places"],req.body)])
   if (body !== true) {
     return body;
@@ -48,6 +64,11 @@ function addAccomodations(req, res, next) {
 }
 
 function deleteAccomodations(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["equipments","places"],req.body)])
   if (body !== true) {
     return body;

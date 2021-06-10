@@ -21,7 +21,7 @@ function Privacy() {
                     Lors de votre utilisation de notre site web, nous ne récupérons aucune de vos données personnelles. Des cookies sont utilisés par notre système afin de vous authentifier continuellement pendant une durée de 24 heures.
                 </p>
                 <p>
-                    Si un utilisateur de la plateforme souhaite s'inscrire afin d'intégrer l'association, il lui sera demandé d'entrer son nom, son prénom, son adresse email, deux mots de passe identiques, des informations permettant de la contacter ainsi que ses motvations à rejoindre l'association. Les données entrées ici permettront aux coordinateurs de l'association d'identifier chaque utilisateur et de les contacter directement dans le cadre d'activités liées à l'association.
+                    Si un utilisateur de la plateforme souhaite s'inscrire afin d'intégrer l'association, il lui sera demandé d'entrer son nom, son prénom, son adresse email, deux mots de passe identiques, des informations permettant de la contacter ainsi que ses motivations à rejoindre l'association. Les données entrées ici permettront aux coordinateurs de l'association d'identifier chaque utilisateur et de les contacter directement dans le cadre d'activités liées à l'association.
                 </p>
                 <p>
                     Si un utilisateur de la plateforme souhaite effectuer une donation, il lui sera demandé d'entrer son nom, son prénom, des informations permettant de le contacter ainsi que la description de la donation. Ces informations permettront aux coordinateur d'identifier la personne à l'origine de la donation et de la contacter dans l'optique de récupérer la donation.
@@ -36,7 +36,7 @@ function Privacy() {
             <div>
                 <h2>Méthodes de traitement et de transfert des données</h2>
                 <p>
-                    Toutes les données que nous utilisons sont enregistrées dans notre système. Nous assurons nous-mêmes le traitement de nos données. Ainsi, aucune de nos données n'est transmise à une entité tierse.
+                    Toutes les données que nous utilisons sont enregistrées dans notre système. Nous assurons nous-mêmes le traitement de nos données. Ainsi, aucune de nos données n'est transmise à une entité tierce.
                 </p>
             </div>
             <div>

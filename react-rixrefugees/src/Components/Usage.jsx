@@ -42,12 +42,12 @@ function Usage() {
                 </p>
             </div>
             <div>
-                <h2>Résponsabilité des utilisateurs</h2>
+                <h2>Responsabilités des utilisateurs</h2>
                 <p>
                     L'utilisateur est responsable des informations qu'il fournit à l'association. Ainsi, l'utilisateur veillera a être honnête dans les données transmises à l'association, tout en veillant à rester poli et courtois dans les champs textuels libres.
                 </p>
                 <p>
-                    Chaque utilisateur veillera également à n'effectuer que des actions auxquelles il peut accéder, et ce sans exploiter ou endommager un élément de l'infrastructure de RixRefugees. Si un erreur apparaît, l'utilisateur sera prié de la transmettre à l'éditeur du site. Toute exploitation de la plateforme peut mener à un banissement de l'association ainsi qu'à la suppression du compte de l'utilisateur sur la plateforme web.
+                    Chaque utilisateur veillera également à n'effectuer que des actions auxquelles il peut accéder, et ce sans exploiter ou endommager un élément de l'infrastructure de RixRefugees. Si un erreur apparaît, l'utilisateur sera prié de la transmettre à l'éditeur du site. Toute exploitation de la plateforme peut mener à un bannissement de l'association ainsi qu'à la suppression du compte de l'utilisateur sur la plateforme web.
                 </p>
             </div>
         </Container>

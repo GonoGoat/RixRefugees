@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
+import axios from "../../../utils/axios";
 
 import Friends from "./Friends";
 import Users from "./Users";
@@ -21,8 +22,6 @@ function AssignmentsForm(props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const stepsRef = React.useRef(null);
-
-    const axios = require('axios');
 
     const steps = ["Bénévoles à assigner","Administrateurs à assigner",'Amis à assigner',"Confirmation"];
 
@@ -206,6 +205,7 @@ function AssignmentsForm(props) {
     const handleNext = () => {
       if (activeStep === steps.length - 1) {
         handleSubmit();
+        setActiveStep(0)
       }
       else {
         stepsRef.current.setState()

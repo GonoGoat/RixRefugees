@@ -1,6 +1,7 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
 import axios from "../../../utils/axios";
+import otherAxios from "../../../utils/otherAxios";
 
 import Grid from "@material-ui/core/Grid";
 import FormControl from '@material-ui/core/FormControl';
@@ -18,7 +19,7 @@ function SessionsTasks (props) {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useEffect(async () => {
-        await axios.get(`https://restcountries.eu/rest/v2/all?fields=alpha3Code;translations`)
+        await otherAxios.get(`https://restcountries.eu/rest/v2/all?fields=alpha3Code;translations`)
         .then(res => {
             setCountry(res.data.filter(obj => obj.translations.hasOwnProperty('fr')).sort((a, b) => {
                 let fa = a.translations.fr.toLowerCase(),

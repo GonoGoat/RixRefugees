@@ -53,19 +53,23 @@ function UserProfile() {
                         </Grid>
                         <Grid item xs={12}>
                             <Grid container>
-                                <Grid item xs={3}>
+                                <Grid item xs={4}>
+                                    <Typography variant='h6'>Identifiant</Typography>
+                                    <Typography>{user.id}</Typography>
+                                </Grid>
+                                <Grid item xs={4}>
                                     <Typography variant='h6'>Nom</Typography>
                                     <Typography>{user.lname}</Typography>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={4}>
                                     <Typography variant='h6'>Prénom</Typography>
                                     <Typography>{user.fname}</Typography>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={6}>
                                     <Typography variant='h6'>Adresse email</Typography>
                                     <Typography>{user.mail}</Typography>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={6}>
                                     <Typography variant='h6'>Statut</Typography>
                                     <Typography>{user.isadmin}</Typography>
                                 </Grid>

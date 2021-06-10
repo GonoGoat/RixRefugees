@@ -23,17 +23,16 @@ function About() {
     const [loading,setLoading] = React.useState(true);
     const [sessionsTasks,setSessionsTasks] = React.useState([]);
     const [sessions,setSessions] = React.useState([]);
-    const [selected, setSelected] = React.useState();
+    const [selected, setSelected] = React.useState(0);
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const moment = require('moment');
     const history = useHistory();
 
-    React.useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API}/sessions`)
+    React.useEffect( async () => {
+        await axios.get(`${process.env.REACT_APP_API}/sessions`)
         .then(res => {
             setSessions(res.data);
-            setSelected(res.data.length > 0 ? res.data[0].id : 0)
         })
         .catch(err => {
             closeSnackbar();
@@ -47,25 +46,23 @@ function About() {
                 enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
             }
         });
-        if (selected !== 0) {
-            axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
-            .then(res => {
-                setSessionsTasks(res.data);
-            })
-            .catch(err => {
-                closeSnackbar();
-                if (err.response) {
-                    enqueueSnackbar(err.response.data, {variant : "error"});
-                }
-                else if (err.request) {
-                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-                } 
-                else {
-                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-                }
-                setLoading(false);
-            });
-        }
+        await axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
+        .then(res => {
+            setSessionsTasks(res.data);
+        })
+        .catch(err => {
+            closeSnackbar();
+            if (err.response) {
+                enqueueSnackbar(err.response.data, {variant : "error"});
+            }
+            else if (err.request) {
+                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+            } 
+            else {
+                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+            }
+            setLoading(false);
+        });
         setLoading(false);
     }, [])
 
@@ -115,14 +112,19 @@ function About() {
                             onChange={handleInputChange}
                         >
                             {sessions.map((obj) => {
-                                return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_avail).format('DD/MM/YYYY hh:mm')} - {moment(obj.end_avail).format('DD/MM/YYYY hh:mm')}</MenuItem>
+                                return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_date).format('DD/MM/YYYY')} - {moment(obj.end_date).format('DD/MM/YYYY')}</MenuItem>
                             })}
                         </Select>
                     </FormControl>
                 </Grid>
-                <Carousel arrows infinite>
-                    {sessionsTasks.filter(obj => obj.sessions_id === selected).map(getCards)}
-                </Carousel>
+                {sessionsTasks.length > 0 ?
+                    <Carousel arrows infinite>
+                        {sessionsTasks.filter(obj => selected === 0 ? true : obj.sessions_id === selected).map(getCards)}
+                    </Carousel>
+                :
+                    <Typography>Aucune tâche n'est encore prévue dans cette session.</Typography>
+                }
+
                 <br/>
                 <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push('/user/activity/add')}>Cliquez ici !</Button>
             </div>

@@ -14,7 +14,7 @@ create table Donations (
 	description text not null, /*OK*/
 	contact text, /*OK*/
 	isResolved boolean NOT NULL default false, /*OK*/
-	date timestamp(0) without time zone NOT NULL default current_date
+	date timestamp(0) without time zone NOT NULL default now()
 );
 
 create table Relations (
@@ -53,7 +53,7 @@ create table Users (
 	lastActivity date NOT NULL default current_date, /*OK*/
 	contact text, /*OK*/
 	token varchar(500) not null,
-	expireToken timestamp(0) without time zone NOT NULL default current_date
+	expireToken timestamp(0) without time zone NOT NULL default now()
 );
 
 create table Tasks (
@@ -71,7 +71,7 @@ create table Web (
 	slug varchar(60) PRIMARY KEY, /*OK*/
 	title varchar(60) NOT NULL, /*OK*/
 	content text, /*OK*/
-	last_change timestamp(0) without time zone NOT NULL default current_date,
+	last_change timestamp(0) without time zone NOT NULL default now(),
 
 	users_id int,
 	constraint fk__users__id /*OK*/
@@ -183,8 +183,8 @@ create table Sessions_tasks (
 	isFromAdmin boolean NOT NULL default false, /*OK*/
 	description text, /*OK*/
 	amountOfPeople int NOT NULL default 0, /*OK*/
-	start_date timestamp(0) without time zone default current_date not null,
-	end_date timestamp(0) without time zone not null,
+	start_date timestamp(0) without time zone default now() not null,
+	end_date timestamp(0) without time zone default now() not null,
 
 	tasks_id int not null,
 	constraint fk__tasks__id /*OK*/

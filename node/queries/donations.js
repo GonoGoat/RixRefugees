@@ -2,10 +2,16 @@ var pool = require('../db.js')
 const errors = require('../errors.js');
 const check = require('../validators.js');
 const cypher = require("../cypher");
+const auth = require('../auth');
 
 // add query functions
 function getAllDonations(req, res, next) {
-  pool.query('select id,fname,lname, to_char(date,\'DD/MM/YYYY HH:mm\') as date, isresolved from donations',(err,rows) =>  {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
+  pool.query('select id,fname,lname, to_char(date,\'DD/MM/YYYY HH24:MI\') as date, isresolved from donations',(err,rows) =>  {
     if (err) return errors(res,err);
     let donations = rows.rows.map(obj => {
         return {
@@ -21,20 +27,25 @@ function getAllDonations(req, res, next) {
 }
 
 function getDonations(req, res, next) {
-    let verif = check.checkForm(res,[
-        check.validFk(req.params.id)
-    ])
-    if (verif !== true) {
-        return verif;
-    }
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
 
-    pool.query('select id,contact,description,isresolved from donations where id = $1',[parseInt(req.params.id)],(err,rows) =>  {
-      if (err) return errors(res,err);
-      let donation = rows.rows[0]
-      donation.contact = cypher.decodeString(donation.contact)
-      donation.description = cypher.decodeString(donation.description)
-      return res.send(donation);
-    })
+  let verif = check.checkForm(res,[
+    check.validFk(req.params.id)
+  ])
+  if (verif !== true) {
+      return verif;
+  }
+
+  pool.query('select id,contact,description,isresolved from donations where id = $1',[parseInt(req.params.id)],(err,rows) =>  {
+    if (err) return errors(res,err);
+    let donation = rows.rows[0]
+    donation.contact = cypher.decodeString(donation.contact)
+    donation.description = cypher.decodeString(donation.description)
+    return res.send(donation);
+  })
   }
 
 function addDonations(req, res, next) {
@@ -59,6 +70,11 @@ function addDonations(req, res, next) {
 }
 
 function updateDonations(req, res, next) {
+  let perm = auth(req,res,true)
+  if (perm !== true) {
+    return perm
+  }
+
   let body = check.checkForm(res,[check.hasProperties(["isresolved","id"],req.body)])
   if (body !== true) {
     return body;
