@@ -35,7 +35,7 @@ function getAvailabilitiesPerUser(req, res, next) {
     return perm
   }
   
-  pool.query('select id,description,iscanceled,users_id,sessions_tasks_id,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate from availabilities where users_id = $1',[req.session.user.id],(err,rows) =>  {
+  pool.query('select id,description,iscanceled,users_id,sessions_tasks_id,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate from availabilities where users_id = $1 order by updatedate desc',[req.session.user.id],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
   })

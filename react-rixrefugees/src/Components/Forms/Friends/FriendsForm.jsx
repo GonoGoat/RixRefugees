@@ -165,6 +165,7 @@ function FriendsForm(props) {
                 await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
                 .then(res => {
                     localStorage.setItem("rixrefugees-message",res.data);
+                    window.location.reload();
                 })
                 .catch(err => {
                     closeSnackbar();

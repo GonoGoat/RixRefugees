@@ -121,23 +121,23 @@ function AssignmentsForm(props) {
       setLoading(true);
 
       let del = {};
-      if (users.filter(obj => obj.state === "del").length > 0) {
+      if (users.filter(obj => obj.state === "del").length > 0) { //S'il y a des bénévoles à supprimer
         del.users = [];
-        users.filter(obj => obj.state === "del").forEach(value => del.users.push(value.id))
+        users.filter(obj => obj.state === "del").forEach(value => del.users.push(value.id)) // Ajout des bénévoles à supprimer
       }
-      if (friends.filter(obj => obj.state === "del").length > 0) {
+      if (friends.filter(obj => obj.state === "del").length > 0) { // S'il y a des amis à supprimer
         del.friends = {
           friends : [],
           users : []
         }
-        friends.filter(obj => obj.state === "del").forEach(value => del.friends.friends.push(value.id))
-        users.filter(obj => obj.state === "set").forEach(value => del.friends.users.push(value.id))
+        friends.filter(obj => obj.state === "del").forEach(value => del.friends.friends.push(value.id)) // Ajout des amis à supprimer
+        users.filter(obj => obj.state === "set").forEach(value => del.friends.users.push(value.id)) // Ajout des bénévoles déjà assigné à qui il faut retirer les amis
       }
 
       let add = [];
       let uAdd = false;
-      if (users.filter(obj => obj.state === "add").length > 0) {
-        users.filter(obj => obj.state === "add").forEach((value) => {
+      if (users.filter(obj => obj.state === "add").length > 0) { // s'il y a des bénévoles à ajouter
+        users.filter(obj => obj.state === "add").forEach((value) => { // Ajout des nouveaux bénévoles avec la liste des amis déjà assignés
           add.push({
             id : value.id,
             friends : friends.filter(obj => obj.state === "set").map(f => f.id)
@@ -145,25 +145,25 @@ function AssignmentsForm(props) {
         });
         uAdd = true;
       }
-      if (friends.filter(obj => obj.state === "add").length > 0) {
-        users.filter(obj => obj.state === "set").forEach((value) => {
+      if (friends.filter(obj => obj.state === "add").length > 0) { // S'il y a des amis à ajouter
+        users.filter(obj => obj.state === "set").forEach((value) => { // Ajout des nouveaux amis avec la liste des bénévoles déjà assignés
           add.push({
             id : value.id,
             friends : friends.filter(obj => obj.state === "add").map(f => f.id)
           });
         });
-        if (uAdd) {
+        if (uAdd) { // Si ajout des nouveaux bénévoles avec la liste des amis déjà assignés
           let id;
-          let newUsers = users.filter(obj => obj.state === "add");
-          let newFriends = friends.filter(obj => obj.state === "add");
-          newUsers.forEach((value) => {
+          let newUsers = users.filter(obj => obj.state === "add"); // Liste des bénévoles à ajouter
+          let newFriends = friends.filter(obj => obj.state === "add"); // Liste des amis à ajouter
+          newUsers.forEach((value) => { // Ajout des nouveaux amis pour les nouveaux bénévoles
             id = add.findIndex(obj => obj.id === value.id)
             add[id].friends = add[id].friends.concat(newFriends.map(f => f.id))
           });
         }
       }
       let admin = [];
-      if (admins.length > 0) {
+      if (admins.length > 0) { // Si des coordinateurs ont été ajouté
         admins.forEach(value => {
           admin.push({
             id : value.id,
@@ -171,34 +171,38 @@ function AssignmentsForm(props) {
           });
         })
       }
+
       let problem = false;
-      if (admin.length > 0) {
+      if (admin.length > 0) { // Erreur s'il n'y a pas d'amis et qu'un coordinateur est ajouté
         admin.forEach(obj => {
           if (obj.friends.length <= 0) {
             enqueueSnackbar("Administrateurs : Veuillez sélectionner au moins un ami à assigner", {variant : "error"});
             problem = true
           }
         })
-        if (!problem) {
-          await handleAdmins(admin);
-        }
       }
-      if (Object.keys(del).length > 0) {
-        await handleDelete(del);
-      }
-      problem = false;
-      if (add.length > 0) {
+      if (add.length > 0) { // Erreur s'il n'y a pas d'amis avec des bénévoles
         add.forEach(obj => {
           if (obj.friends.length <= 0) {
             enqueueSnackbar("Bénévole : Veuillez sélectionner au moins un ami à assigner", {variant : "error"});
             problem = true
           }
         })
-        if (!problem) {
+      }
+
+      if (!problem) {
+        if (Object.keys(del).length > 0) { // Supprimer s'il y a des éléments à supprimer
+          await handleDelete(del);
+        }
+        if (admin.length > 0) {
+          await handleAdmins(admin);
+        }
+        if (add.length > 0) {
           await handleAdd(add);
         }
+  
+        enqueueSnackbar("Si aucun message d'erreur n'apparaît, le processus d'assignation est bien terminé !", {variant : "success"});
       }
-      enqueueSnackbar("Si aucune message d'erreur n'apparaît, le processus d'assignation est bien terminé !", {variant : "success"});
       setLoading(false);
     }
   

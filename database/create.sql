@@ -224,7 +224,7 @@ create table Assignments (
 	id SERIAL PRIMARY KEY, /*OK*/
 	feedback text,
 
-	friends_id int,
+	friends_id int not null,
 	constraint fk__friends__id /*OK*/
 		foreign key (friends_id)
 			references Friends(id)

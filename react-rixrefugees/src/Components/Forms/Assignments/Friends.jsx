@@ -5,8 +5,6 @@ import DataList from "../../utils/DataList";
 import LoadingIndicator from "../../utils/LoadingIndicator";
 import TransferList from "../../utils/TransferList"
 
-import Button from "@material-ui/core/Button";
-
 import {friendsDataListKeys} from "../../../utils/DataListKeys/friends";
 import axios from "../../../utils/axios";
 
@@ -16,7 +14,6 @@ const Friends = React.forwardRef((props, ref) => {
     const [right, setRight] = React.useState([]);
     const [left, setLeft] = React.useState([]);
     const [selected,setSelected] = React.useState()
-    const [noFriend, setNoFriend] = React.useState(false)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     React.useImperativeHandle(ref, () => ({
@@ -68,7 +65,6 @@ const Friends = React.forwardRef((props, ref) => {
                     left={left} setLeft={(l) => setLeft(l)}
                     setSelected={(id) => setSelected(id != selected ? id : false)}
                 />
-                <Button onClick={() => }>N'assigner aucun ami</Button>
                 {selected ? <DataList api={`/friends/display/${selected}`} keys={friendsDataListKeys}/> : <React.Fragment/>}
             </React.Fragment>
         )

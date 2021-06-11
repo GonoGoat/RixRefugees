@@ -18,19 +18,22 @@ import Button from '@material-ui/core/Button';
 
 import LoadingIndicator from "./utils/LoadingIndicator";
 import NewLineText from "../utils/NewLineText";
+import {useSelector,useDispatch} from "react-redux";
+import {switchUser} from "../redux/Actions/index";
 
 function About() {
     const [loading,setLoading] = React.useState(true);
     const [sessionsTasks,setSessionsTasks] = React.useState([]);
     const [sessions,setSessions] = React.useState([]);
     const [selected, setSelected] = React.useState(0);
+    const userId = useSelector(state => state.user);
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const moment = require('moment');
     const history = useHistory();
 
-    React.useEffect( async () => {
-        await axios.get(`${process.env.REACT_APP_API}/sessions`)
+    React.useEffect( () => {
+        axios.get(`${process.env.REACT_APP_API}/sessions/available`)
         .then(res => {
             setSessions(res.data);
         })
@@ -46,7 +49,7 @@ function About() {
                 enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
             }
         });
-        await axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
+        axios.get(`${process.env.REACT_APP_API}/sessions_tasks/available`)
         .then(res => {
             setSessionsTasks(res.data);
         })
@@ -81,7 +84,7 @@ function About() {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" onClick={() => history.push(`/user/activity/add/${obj.id}`)}>Postuler maintenant</Button>
+                <Button size="small" onClick={() => history.push(userId > 0 ? `/user/activity/add/${obj.id}` : '/login')}>Postuler maintenant</Button>
               </CardActions>
             </Card>
         );
@@ -122,11 +125,11 @@ function About() {
                         {sessionsTasks.filter(obj => selected === 0 ? true : obj.sessions_id === selected).map(getCards)}
                     </Carousel>
                 :
-                    <Typography>Aucune tâche n'est encore prévue dans cette session.</Typography>
+                    <Typography>Aucune tâche n'est encore disponible.</Typography>
                 }
 
                 <br/>
-                <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push('/user/activity/add')}>Cliquez ici !</Button>
+                <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push(userId > 0 ? '/user/activity/add' : '/login')}>Cliquez ici !</Button>
             </div>
 
         );
