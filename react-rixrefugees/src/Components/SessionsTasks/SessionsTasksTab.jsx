@@ -119,9 +119,10 @@ const sessionTasksList = [
     },
     {
         field : 'amountofpeople',
-        headerName : 'Nombre de bénévoles à assigner',
+        headerName : 'Nombre de bénévoles assigné et à assigner',
         flex : 1,
-        type : 'number'
+        valueFormatter : (params) => `${params.getValue("assigned")}/${params.value}`,
+        cellClassName : (params) => params.getValue("assigned") === params.value ? "finished" : "tostart"
     },
     {
         field : 'description',
@@ -183,7 +184,7 @@ function SessionsTasksTab() {
         await axios.delete(`${process.env.REACT_APP_API}${api}/delete`, {data : selected})
         .then(res => {
             localStorage.setItem("rixrefugees-message",res.data);
-            localStorage.setItem("rixrefugees-url",api);
+            localStorage.setItem("rixrefugees-url",api.substr(1));
             window.location.reload();
         })
         .catch(err => {
@@ -259,7 +260,9 @@ function SessionsTasksTab() {
                             <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)} delete={()=>deleteRows()}/>
                             <EditButton disabled={selected.length != 1 || new Date() > new Date(value.end_date)} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
-                        {(isForm.form || id) ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} sessions={panel} selected={selected} api={api.substr(1)}/> :
+                        {(isForm.form || id) ? 
+                            <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={sessionsTasks}  header={sessionTasksList} sessions={panel} selected={selected} api={api.substr(1)}/> 
+                        :
                             <React.Fragment/>
                         }
                     </AccordionDetails>

@@ -35,7 +35,7 @@ function getAvailabilitiesPerUser(req, res, next) {
     return perm
   }
   
-  pool.query('select id,description,iscanceled,users_id,sessions_tasks_id,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate from availabilities where users_id = $1 order by updatedate desc',[req.session.user.id],(err,rows) =>  {
+  pool.query("select availabilities.id,availabilities.description,iscanceled,users_id,sessions_tasks_id,to_char(updatedate,'DD/MM/YYYY HH24:MI') as updatedate, isAvailAssigned(availabilities.id) as avail from availabilities join sessions_tasks on sessions_tasks.id = availabilities.sessions_tasks_id where users_id = $1 order by updatedate desc",[req.session.user.id],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
   })
@@ -52,7 +52,7 @@ function getAvailabilitiesInfo(req, res, next) {
     return verif;
   }
 
-  pool.query('select id,description,to_char(updatedate,\'DD/MM/YYYY HH24:MI\') as updatedate,sessions_tasks_id, case when iscanceled = true then \'Annulée\' when iscanceled = false then \'En cours\' else \'Inconnu\' end as iscanceled from availabilities where id = $1',[req.params.id],(err,rows) =>  {
+  pool.query("select availabilities.id,availabilities.description,case when iscanceled = true then 'Oui' when iscanceled = false then 'Non' else 'Inconnu' end as iscanceled,users_id,sessions_tasks_id,to_char(updatedate,'DD/MM/YYYY HH24:MI') as updatedate, case when isAvailAssigned(availabilities.id) = true then 'Oui' when isAvailAssigned(availabilities.id) = false then 'Non' else 'Inconnu' end as avail from availabilities join sessions_tasks on sessions_tasks.id = availabilities.sessions_tasks_id where availabilities.id = $1",[parseInt(req.params.id)],(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows[0]);
   })
@@ -160,7 +160,12 @@ function cancelAvailabilities(req, res, next) {
 
   pool.query('update availabilities set iscanceled=true, updatedate = now() where id = ($1)',[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send(`Votre proposition a bien été annulée. Nous vous remercions de votre attention et espérons vous revoir bientôt !`);
+    pool.query('delete from assignments where availabilities_id = $1',[req.body.id],(err,rows) =>  {
+      if (err) return errors(res,err);
+      /*if rows.rowCount > 0 : mail
+       */
+      return res.send(`Votre proposition a bien été annulée. Nous vous remercions de votre attention et espérons vous revoir bientôt !`);
+    })
   })
 }
 

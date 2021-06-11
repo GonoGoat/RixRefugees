@@ -18,6 +18,7 @@ function GetUserActivity() {
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const history = useHistory();
+    const moment = require('moment');
 
     React.useEffect(() => {
         setLoading(true);
@@ -62,6 +63,13 @@ function GetUserActivity() {
             setLoading(false);
         });
     }
+
+    function getState(value) {
+        if (value.iscanceled) return "Annulée";
+        if (value.avail) return "Assignée";
+        if (moment(value.start_date).isBefore(moment())) return "En cours de traitement";
+        return 'Non sélectionné';
+    }
     
 
     function displayAvailabilities(value,index) {
@@ -70,7 +78,7 @@ function GetUserActivity() {
                 <Typography>
                     Proposition n°{value.id}<br/>
                     Effectuée le {value.updatedate}<br/>
-                    Etat : {value.iscanceled ? "Annulée" : "En cours"}<br/>
+                    Etat : {getState(value)}<br/>
                     Description : <NewlineText text={value.description}/>
                 </Typography>
                 <Button size="small" onClick={() => history.push(`/user/activity/${value.id}`)}>Plus d'informations</Button>

@@ -222,7 +222,6 @@ create table Availabilities (
 
 create table Assignments (
 	id SERIAL PRIMARY KEY, /*OK*/
-	feedback text,
 
 	friends_id int not null,
 	constraint fk__friends__id /*OK*/

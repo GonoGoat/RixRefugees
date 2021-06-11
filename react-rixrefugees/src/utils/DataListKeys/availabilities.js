@@ -4,8 +4,12 @@ const availabilitiesDataListKeys = [
         key : 'id'
     },
     {
-        name : 'Etat',
+        name : 'Annulée par le bénévole',
         key : 'iscanceled'
+    },
+    {
+        name : 'Assignée par un coordinateur',
+        key : 'avail'
     },
     {
         name : "Date de dernière modification",

@@ -18,6 +18,33 @@ function Places () {
         setOptions(tab);
     }
 
+    React.useEffect(() => {
+        let url = localStorage.getItem("rixrefugees-url")
+        console.log(url);
+        if (url) {
+            switch(url) {
+                case '/sessions' :
+                    setData('/sessions',sessionList);
+                    break;
+                case '/places' :
+                    setData('/places',placesList);
+                    break;
+                case '/equipments' :
+                    setData('/equipments',equipList);
+                    break;
+                case '/accomodations' :
+                    setData('/accomodations',0);
+                    break;
+                case '/places_avail' :
+                    setData('/places_avail',pavailList);
+                    break;
+                default :
+                    break;
+            }
+            localStorage.removeItem("rixrefugees-url")
+        }   
+    },[])
+
     return (
         <div>
             <div>

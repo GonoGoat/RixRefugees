@@ -228,7 +228,7 @@ function PlacesForm(props) {
                     await axios.post(`${process.env.REACT_APP_API}${props.form}/add`, formValues[key])
                     .then(res => {
                         localStorage.setItem("rixrefugees-message",res.data);
-                        localStorage.setItem("rixrefugees-url",props.api);
+                        localStorage.setItem("rixrefugees-url",props.form);
                         window.location.reload();
                     })
                     .catch(err => {

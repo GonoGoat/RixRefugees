@@ -5,6 +5,8 @@ import axios from "../utils/axios";
 
 import LoadingIndicator from "./utils/LoadingIndicator";
 
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button"
@@ -40,14 +42,20 @@ function UserAssignments() {
 
     function displayAssignments(value) {
         return (
-            <div>
-                <Typography>
-                    {value.name} : {value.start_date} - {value.end_date}<br/>
-                    {value.amountofpeople} bénévole(s) assigné(s) - {value.assignedfriends} amis(s) assigné(s)
-                </Typography>
-                <Button size="small" onClick={() => history.push(`/user/activity/${value.availabilities_id}`)}>Plus d'informations</Button>
+            <Grid item xs={12}>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Typography>
+                            {value.name} : {value.start_date} - {value.end_date}<br/>
+                            {value.amountofpeople} bénévole(s) assigné(s)
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button size="small" onClick={() => history.push(`/user/activity/${value.availabilities_id}`)}>Plus d'informations</Button>
+                    </Grid>
+                </Grid>
                 <Divider/>
-            </div>
+            </Grid>
         )
     }
 
@@ -56,9 +64,11 @@ function UserAssignments() {
     }
     else {
         return (
-            <div>
-                {assignments.map(displayAssignments)}
-            </div>
+            <Container>
+                <Grid container>
+                    {assignments.map(displayAssignments)}
+                </Grid>
+            </Container>
         )
     }
 }
