@@ -54,7 +54,8 @@ function getAvailabilitiesInfo(req, res, next) {
 
   pool.query("select availabilities.id,availabilities.description,case when iscanceled = true then 'Oui' when iscanceled = false then 'Non' else 'Inconnu' end as iscanceled,users_id,sessions_tasks_id,to_char(updatedate,'DD/MM/YYYY HH24:MI') as updatedate, case when isAvailAssigned(availabilities.id) = true then 'Oui' when isAvailAssigned(availabilities.id) = false then 'Non' else 'Inconnu' end as avail from availabilities join sessions_tasks on sessions_tasks.id = availabilities.sessions_tasks_id where availabilities.id = $1",[parseInt(req.params.id)],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send(rows.rows[0]);
+    if (rows.rows[0].users_id === req.session.user.id || req.session.user.isadmin === true) return res.send(rows.rows[0]);
+    return res.status(400).send("Vous n'avez pas les permissions nécessaires pour accéder à cette fonctionnalité");
   })
 }
 
@@ -157,15 +158,24 @@ function cancelAvailabilities(req, res, next) {
   if (verif !== true) {
     return verif;
   }
-
-  pool.query('update availabilities set iscanceled=true, updatedate = now() where id = ($1)',[req.body.id],(err,rows) =>  {
+  pool.query('select users_id from availabilities where id = $1',[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    pool.query('delete from assignments where availabilities_id = $1',[req.body.id],(err,rows) =>  {
-      if (err) return errors(res,err);
-      /*if rows.rowCount > 0 : mail
-       */
-      return res.send(`Votre proposition a bien été annulée. Nous vous remercions de votre attention et espérons vous revoir bientôt !`);
-    })
+    /*if rows.rowCount > 0 : mail
+     */
+    if (rows.rows[0].users_id === req.session.user.id) {
+      pool.query('update availabilities set iscanceled=true, updatedate = now() where id = ($1)',[req.body.id],(err,rows) =>  {
+        if (err) return errors(res,err);
+        pool.query('delete from assignments where availabilities_id = $1',[req.body.id],(err,rows) =>  {
+          if (err) return errors(res,err);
+          /*if rows.rowCount > 0 : mail
+           */
+          return res.send(`Votre proposition a bien été annulée. Nous vous remercions de votre attention et espérons vous revoir bientôt !`);
+        })
+      })
+    }
+    else {
+      return res.status(400).send("Vous n'avez pas les permissions nécessaires pour accéder à cette fonctionnalité");
+    }
   })
 }
 
@@ -185,10 +195,15 @@ function updateAvailabilities(req, res, next) {
     return verif;
   }
   
-  pool.query('update availabilities set description=$1, updatedate = now() where id = ($2)',[req.body.description,req.body.id],(err,rows) =>  {
-    if (err) return errors(res,err);
-    return res.send(`Votre proposition a bien été modifiée.`);
-  })
+  if (rows.rows[0].users_id === req.session.user.id) {
+    pool.query('update availabilities set description=$1, updatedate = now() where id = ($2)',[req.body.description,req.body.id],(err,rows) =>  {
+      if (err) return errors(res,err);
+      return res.send(`Votre proposition a bien été modifiée.`);
+    })
+  }
+  else {
+    return res.status(400).send("Vous n'avez pas les permissions nécessaires pour accéder à cette fonctionnalité");
+  }
 }
 
 module.exports = {

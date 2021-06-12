@@ -6,9 +6,15 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+
+import { Link } from 'react-router-dom';
 
 import check from "../utils/FormValidations/validators"
 import axios from "../utils/axios";
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -19,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 function Register () {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const classes = useStyles();
+    const [accept,setAccept] = React.useState(false);
     const [register,setRegister] = React.useState({
       mail : '',
       password : '',
@@ -38,7 +45,10 @@ function Register () {
     };
 
     async function handleSubmit() {
-      if (register.password !== register.confirm) {
+      if (!accept) {
+        enqueueSnackbar("Vous devez accepter notre politique de confidentialité et nos conditions générales d'utilisation.", {variant : "error"});
+      }
+      else if (register.password !== register.confirm) {
         enqueueSnackbar('Veillez à bien rentrer 2 mots de passe similaires.', {variant : "error"});
       }
       else {
@@ -164,6 +174,12 @@ function Register () {
                   rows={5}
                   value={register.contact}
                   onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={<Checkbox checked={accept} onChange={() => setAccept(!accept)}/>}
+                  label={<Typography variant='caption'>J'accepte la <Link to={'/privacy'}>politique de confidentialité</Link> et les <Link to={'/cgu'}>conditions générales d'utilisations</Link> de la plateforme</Typography>}
                 />
               </Grid>
             </Grid>

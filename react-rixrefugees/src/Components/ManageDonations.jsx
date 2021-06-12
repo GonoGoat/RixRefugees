@@ -121,6 +121,10 @@ function ManageDonations() {
         });
     }
 
+    function checkSubmit() {
+        if (window.confirm(`Vous êtes sur le point de modifier l'état de réception d'une donation. Êtes-vous certains de vouloir faire cette action ?`)) update();
+      }
+
     function filterDonations(don) {
         if (filter) return don.isresolved === false
         return don
@@ -171,7 +175,7 @@ function ManageDonations() {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>                                
-                                <EditButton disabled={false} edit={() => update()}/>
+                                <EditButton disabled={false} edit={() => checkSubmit()}/>
                             </Grid>
                         </Grid>
                     </div>                  

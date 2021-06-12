@@ -95,6 +95,10 @@ function Managment(props) {
         return <DataList keys={keys} api={api} />
     }
 
+    function checkSubmit() {
+        if (window.confirm(`Vous êtes sur le point de supprimer des données. Cette action est irréversible ! Êtes-vous certains de vouloir faire cette action ?`)) deleteRows();
+    }
+
     if (loading === true) {
         return <LoadingIndicator/>
     }
@@ -104,7 +108,7 @@ function Managment(props) {
                 {data.length === 0 ? <React.Fragment/> : <ListingGrid filter={props.api === 'sessions'} api={`/${props.api}`} setForm={() => setForm({form : false, edit : false})} rows={data} columns={columns} setId={(iden) => setId(iden)} setSelected={(ids) => setSelected(ids)}/>}
                 <div>
                     <AddButton disabled={false} add={()=>setForm({form : true,edit : false})}/>
-                    <DeleteButton disabled={selected.length === 0} delete={()=>deleteRows()}/>
+                    <DeleteButton disabled={selected.length === 0} delete={()=>checkSubmit()}/>
                     <EditButton disabled={selected.length != 1} edit={() =>setForm({form : true,edit : true})}/>
                 </div>
                 {(isForm.form || id) ? (isForm.form ? <SessionsTasksForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} api={props.api}/> :

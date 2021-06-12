@@ -59,47 +59,51 @@ function RetrieveAndChangeUserActivity() {
     };
 
     async function handleSubmit() {
-        setLoading(true);
-        await axios.put(`${process.env.REACT_APP_API}/availabilities/update`, availabilities)
-        .then(res => {
-            localStorage.setItem("rixrefugees-message",res.data);
-            window.location.reload();
-        })
-        .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-            setLoading(false);
-        });
+        if (window.confirm("Vous êtes sur le point de modifier les données de votre disponibilité. Êtes-vous certains de vouloir faire cette action ?")) {
+            setLoading(true);
+            await axios.put(`${process.env.REACT_APP_API}/availabilities/update`, availabilities)
+            .then(res => {
+                localStorage.setItem("rixrefugees-message",res.data);
+                window.location.reload();
+            })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+                setLoading(false);
+            });
+        }
     }
 
     function cancel() {
-        setLoading(true);
-        axios.put(`${process.env.REACT_APP_API}/availabilities/cancel`, {id : param})
-        .then(res => {
-            localStorage.setItem("rixrefugees-message",res.data);
-            window.location.reload();
-        })
-        .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-            setLoading(false);
-        });
+        if (window.confirm(("Vous êtes sur le point d'annuler la disponibilité que vous avez proposé. Si vous avez été assigné par un coordinateur, l'assignation sera annulée.\nCette action est irréversible ! Êtes-vous certains de vouloir faire cette action ?"))) {
+            setLoading(true);
+            axios.put(`${process.env.REACT_APP_API}/availabilities/cancel`, {id : param})
+            .then(res => {
+                localStorage.setItem("rixrefugees-message",res.data);
+                window.location.reload();
+            })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+                setLoading(false);
+            });
+        }
     }
 
     return (

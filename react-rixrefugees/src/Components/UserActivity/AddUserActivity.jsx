@@ -132,6 +132,10 @@ function AddUserActivity() {
         }
     }
 
+    function checkSubmit() {
+        if (window.confirm(`Vous êtes sur le point de vous rendre disponible pour une tâche de l'association. Êtes-vous certains de vouloir faire cette action ?`)) handleSubmit();
+    }
+
     if (loading) {
         return (
             <div>
@@ -155,7 +159,7 @@ function AddUserActivity() {
                 }
                 <Divider/>
                 <UserActivityForm value={formValues.availabilities} handleInputChange={handleAvailabilitiesChange}/>
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                <Button variant="contained" color="primary" onClick={checkSubmit}>
                     Envoyer
                 </Button>
             </div>

@@ -17,58 +17,62 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PasswordChange () {
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const classes = useStyles();
-    const [password,setPassword] = React.useState({
-        old : '',
-        new : '',
-        confirm : ''
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const classes = useStyles();
+  const [password,setPassword] = React.useState({
+      old : '',
+      new : '',
+      confirm : ''
+  });
+
+  const handleInputChange = (e) => {
+    const {name, value } = e.target;
+    setPassword({
+    ...password,
+    [name]: value
     });
+  };
 
-    const handleInputChange = (e) => {
-      const {name, value } = e.target;
-      setPassword({
-      ...password,
-      [name]: value
-      });
-    };
-
-    async function handleSubmit() {
-      if (password.confirm !== password.new) {
-        enqueueSnackbar('Veillez à bien rentrer 2 mots de passe similaires.', {variant : "error"});
+  async function handleSubmit() {
+    if (password.confirm !== password.new) {
+      enqueueSnackbar('Veillez à bien rentrer 2 mots de passe similaires.', {variant : "error"});
+    }
+    else {
+      let values = check.checkForm([
+        check.password(password.new),
+        check.password(password.old),
+      ])
+      if (values === true) {
+        await axios.put(`${process.env.REACT_APP_API}/users/password/change`, {old : password.old, new : password.new})
+        .then(res => {
+          localStorage.setItem("rixrefugees-message",res.data);
+          window.location.href = "/user/profile";
+        })
+        .catch(err => {
+          closeSnackbar();
+          if (err.response) {
+              enqueueSnackbar(err.response.data, {variant : "error"});
+          }
+          else if (err.request) {
+              enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+          } 
+          else {
+              enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+          }
+        });
       }
       else {
-        let values = check.checkForm([
-          check.password(password.new),
-          check.password(password.old),
-        ])
-        if (values === true) {
-          await axios.put(`${process.env.REACT_APP_API}/users/password/change`, {old : password.old, new : password.new})
-          .then(res => {
-            localStorage.setItem("rixrefugees-message",res.data);
-            window.location.href = "/user/profile";
-          })
-          .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-          });
-        }
-        else {
-          closeSnackbar();
-          values.filter(val => val !== true).forEach(obj => {
-            enqueueSnackbar(obj, {variant : "error"});
-          })
-        }
+        closeSnackbar();
+        values.filter(val => val !== true).forEach(obj => {
+          enqueueSnackbar(obj, {variant : "error"});
+        })
       }
     }
+  }
+  
+  function checkSubmit() {
+    if (window.confirm(`Vous êtes sur le point de modifier votre mot de passe. Êtes-vous certains de vouloir faire cette action ?`)) handleSubmit();
+  }
 
   return (
     <Container className={classes.container} maxWidth="xs">
@@ -115,7 +119,7 @@ function PasswordChange () {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Button color="secondary" fullWidth onClick={handleSubmit} variant="contained">
+            <Button color="secondary" fullWidth onClick={checkSubmit} variant="contained">
               Changer de mot de passe
             </Button>
           </Grid>

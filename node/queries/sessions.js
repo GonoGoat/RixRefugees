@@ -17,11 +17,10 @@ function getAllSessions(req, res, next) {
   ,(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows.map(obj => {
-        return {
-          ...obj,
-          lname : cypher.decodeString(obj.lname),
-          fname : cypher.decodeString(obj.fname),
-        }
+        obj.username = `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`
+        delete obj.fname;
+        delete obj.lname
+        return obj;
     }));
   })
 }

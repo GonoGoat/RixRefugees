@@ -1,7 +1,7 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
 import { useSnackbar } from 'notistack';
-import axios from "../utils/axios";
+import {useSelector,useDispatch} from "react-redux";
 
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
@@ -15,11 +15,10 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import Container from "@material-ui/core/Container";
 
 import LoadingIndicator from "./utils/LoadingIndicator";
-import NewLineText from "../utils/NewLineText";
-import {useSelector,useDispatch} from "react-redux";
-import {switchUser} from "../redux/Actions/index";
+import axios from "../utils/axios";
 
 function About() {
     const [loading,setLoading] = React.useState(true);
@@ -101,12 +100,14 @@ function About() {
     }
     else {
         return (
-            <div>
-                <p>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. In fermentum et sollicitudin ac orci phasellus egestas. Semper quis lectus nulla at volutpat diam ut. Quam viverra orci sagittis eu volutpat odio facilisis. Habitant morbi tristique senectus et netus et malesuada.
-                    </Typography>
-                </p>
+            <Container>
+                <Typography variant='h3'>Activités disponibles</Typography>
+                <Typography>
+                    Afin d'organiser ses activités, l'association définit un coordinateur responsable des activités d'une semaine (appelée alors "session"). Le coordinateur de la session peut alors définir une série de tâche à effectuer durant sa session. Vous, bénévoles, pouvez alors proposer votre disponibilité pour une tâche. Par après, le coordinateur choisira parmis les disponibilités quel bénévole sera chargé de la tâche.
+                </Typography>
+                <Typography>
+                    Vous retrouverez ci-dessous l'ensemble des tâches à venir auxquelles le nombre de bénévole à assigner n'a pas encore été rempli. Vous pouvez cliquer alors sur le bouton "Postuler maintenant" et remplir le formulaire pour soumettre votre disponibilité. En tant que bénévole, vous avez également la possibilité d'ajouter une tâche que le coordinateur n'aurais pas prévu en appuyant sur le bouton "Cliquez Ici". Il faudra attendre qu'un coordinateur accepte votre nouvelle proposition avant que d'autre bénévole puisse se porter volontaire pour cette tâche.
+                </Typography>
                 <Grid item>
                     <FormControl>
                         <InputLabel>Sessions</InputLabel>
@@ -130,7 +131,7 @@ function About() {
 
                 <br/>
                 <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push(userId > 0 ? '/user/activity/add' : '/login')}>Cliquez ici !</Button>
-            </div>
+            </Container>
 
         );
     }

@@ -235,6 +235,10 @@ function SessionsTasksTab() {
         setPanel(id);
     }
 
+    function checkSubmit() {
+        if (window.confirm(`Vous êtes sur le point de supprimer des données. Cette action est irréversible ! Êtes-vous certains de vouloir faire cette action ?`)) deleteRows();
+    }
+
     function getSessions(value) {
         return (
             <div className={styles.root}>
@@ -257,7 +261,7 @@ function SessionsTasksTab() {
                         }
                         <div>
                             <AddButton disabled={new Date() > new Date(value.end_date)} add={()=>setForm({form : true,edit : false})}/>
-                            <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)} delete={()=>deleteRows()}/>
+                            <DeleteButton disabled={selected.length <= 0 || new Date() > new Date(value.end_date)} delete={()=>checkSubmit()}/>
                             <EditButton disabled={selected.length != 1 || new Date() > new Date(value.end_date)} edit={() =>setForm({form : true,edit : true})}/>
                         </div>
                         {(isForm.form || id) ? 

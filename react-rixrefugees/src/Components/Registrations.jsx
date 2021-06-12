@@ -94,43 +94,47 @@ function Registrations() {
     }
 
     function accept() {
-        axios.post(`${process.env.REACT_APP_API}/registrations/add`, {id : selected})
-        .then(res => {
-            localStorage.setItem("rixrefugees-message",res.data);
-            window.location.reload();
-        })
-        .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-        });
+        if (window.confirm(`Vous êtes sur le point d'accepter la candidature d'une personne visant à obtenir le statut de bénévole sur la plateforme. Cette personne pourra alors accéder à son compte et se proposer aux tâches des sessions à venir. Êtes-vous certains de vouloir faire cette action ?`)) {
+            axios.post(`${process.env.REACT_APP_API}/registrations/add`, {id : selected})
+            .then(res => {
+                localStorage.setItem("rixrefugees-message",res.data);
+                window.location.reload();
+            })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+            });
+        }
     }
 
     function refuse() {
-        axios.delete(`${process.env.REACT_APP_API}/registrations/delete`, {data : {id : selected}})
-        .then(res => {
-            localStorage.setItem("rixrefugees-message",res.data);
-            window.location.reload();
-        })
-        .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-        });
+        if (window.confirm(`Vous êtes sur le point de supprimer la candidature d'une personne. Cette action est irréversible ! Êtes-vous certains de vouloir faire cette action ?`)) {
+            axios.delete(`${process.env.REACT_APP_API}/registrations/delete`, {data : {id : selected}})
+            .then(res => {
+                localStorage.setItem("rixrefugees-message",res.data);
+                window.location.reload();
+            })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+            });
+        }
     }
 
     if (loading || !registrations) {

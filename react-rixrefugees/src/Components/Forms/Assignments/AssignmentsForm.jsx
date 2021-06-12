@@ -208,8 +208,10 @@ function AssignmentsForm(props) {
   
     const handleNext = () => {
       if (activeStep === steps.length - 1) {
-        handleSubmit();
-        setActiveStep(0)
+        if (window.confirm("Vous êtes sur le point de lancer le processus d'assignation des bénévoles à la tâche. Êtes-vous certains de vouloir faire cette action ?")) {
+          handleSubmit();
+          setActiveStep(0)
+        }
       }
       else {
         stepsRef.current.setState()

@@ -11,7 +11,7 @@ function getAllTasks(req, res, next) {
     return perm
   }
 
-  pool.query('select * from tasks',(err,rows) =>  {
+  pool.query('select * from tasks order by name asc',(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
   })

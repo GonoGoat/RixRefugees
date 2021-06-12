@@ -12,23 +12,25 @@ function DeleteUser() {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     function deleteUser() {
-        axios.delete(`${process.env.REACT_APP_API}/users/delete`)
-        .then(res => {
-            localStorage.setItem("rixrefugees-message",res.data);
-            window.location.href = "/";
-        })
-        .catch(err => {
-            closeSnackbar();
-            if (err.response) {
-                enqueueSnackbar(err.response.data, {variant : "error"});
-            }
-            else if (err.request) {
-                enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
-            } 
-            else {
-                enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
-            }
-        });
+        if (window.confirm("Vous êtes sur le point de supprimer votre compte. Vous deviendrez alors complètement anonyme au sein de l'association, et votre accès en tant que bénévole à cette plateforme sera perdu.\nCette opération est irréversible ! Êtes-vous certains de vouloir effectuer cette action ?")) {
+            axios.delete(`${process.env.REACT_APP_API}/users/delete`)
+            .then(res => {
+                localStorage.setItem("rixrefugees-message",res.data);
+                window.location.href = "/";
+            })
+            .catch(err => {
+                closeSnackbar();
+                if (err.response) {
+                    enqueueSnackbar(err.response.data, {variant : "error"});
+                }
+                else if (err.request) {
+                    enqueueSnackbar("La requête n'a pas pû être lancée. Veuillez réessayer.", {variant : "error"});
+                } 
+                else {
+                    enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
+                }
+            });
+        }
     }
 
     return (
