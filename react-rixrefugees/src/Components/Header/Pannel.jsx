@@ -24,8 +24,8 @@ function Pannel() {
     }
 
     return (
-        <div className={`${styles.admin} ${styles.links}`}>
-            <Button onClick={() => setDrawerOpen(true)}>Fonctionnalités du compte</Button>
+        <div className={`${styles.admin}`}>
+            <Button variant='contained' color='common.white' onClick={() => setDrawerOpen(true)}>Fonctionnalités du compte</Button>
             <Drawer anchor='left' open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
                 {userId === 1 ? <Pannel_connected handleClick={(route) => handleClick(route)}/> : <Pannel_admin handleClick={(route) => handleClick(route)}/>}
             </Drawer>

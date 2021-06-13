@@ -35,13 +35,13 @@ function Connection() {
     }
 
     return (
-        <div className={`${styles.connection} ${styles.links}`}>
+        <div className={`${styles.connection}`}>
             {userId > 0 ?
-                <Button size="small" onClick={() => logout()}>Se déconnecter</Button>
+                <Button classes={{root : styles.connectionButton}} variant='outlined' size="small" onClick={() => logout()}>Se déconnecter</Button>
                 :
                 <React.Fragment>
-                    <Button size="small" onClick={() => history.push('/login')}>Se connecter</Button>
-                    <Button size="small" onClick={() => history.push("/register")}>S'inscrire</Button>
+                    <Button classes={{root : styles.connectionButton}}variant='outlined' size="small" onClick={() => history.push('/login')}>Se connecter</Button>
+                    <Button classes={{root : styles.connectionButton}} variant='outlined' size="small" onClick={() => history.push("/register")}>S'inscrire</Button>
                 </React.Fragment>
             }
         </div>

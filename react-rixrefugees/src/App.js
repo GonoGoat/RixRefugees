@@ -1,7 +1,9 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile, Registrations, MakeDonations, ManageDonations,Error,Legals,Privacy, Usage} from "./Components";
+import { StylesProvider, ThemeProvider } from "@material-ui/core";
+
+import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile, Registrations, MakeDonations, ManageDonations,Error,Legals,Privacy, Usage,Join} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
 import GetUserActivity from './Components/UserActivity/GetUserActivity'
 import RetrieveAndChangeUserActivity from './Components/UserActivity/RetrieveAndChangeUserActivity';
@@ -9,12 +11,18 @@ import DeleteUser from "./Components/UserProfile/DeleteUser";
 import EditUser from  "./Components/UserProfile/EditUser";
 import PasswordChange from  "./Components/UserProfile/PasswordChange";
 
+import Container from "@material-ui/core/Container";
+
 import {useSelector,useDispatch} from "react-redux";
 import {switchUser} from "./redux/Actions/index";
 import axios from "./utils/axios"
+import theme from "./theme.js";
+import classes from "./Style/App";
+const useStyles=classes;
 
 function App() {
 
+  const styles = useStyles();
   const dispatch = useDispatch();
   const userId = useSelector(state => state.user);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -63,42 +71,47 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
-        <Header/>
-          <Switch>
-            <Route path="/" exact component={() => <Accueil />} />
-            <Route path="/about" exact component={() => <About />} />
-            <Route path="/donations" exact component={() => <MakeDonations />} />
-            <Route path="/legals" exact component={() => <Legals />} />
-            <Route path="/privacy" exact component={() => <Privacy />} />
-            <Route path="/cgu" exact component={() => <Usage />} />
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Header/>
+            <Container classes={{root : styles.root}}>
+              <Switch>
+                <Route path="/" exact component={() => <Accueil />} />
+                <Route path="/about" exact component={() => <About />} />
+                <Route path="/donations" exact component={() => <MakeDonations />} />
+                <Route path="/legals" exact component={() => <Legals />} />
+                <Route path="/privacy" exact component={() => <Privacy />} />
+                <Route path="/cgu" exact component={() => <Usage />} />
+                <Route path="/join" exact component={() => <Join />} />
 
-            <Route path="/login" exact component={() => getPerm(0) ? <Login /> : <Error/>} />
-            <Route path="/register" exact component={() => getPerm(0) ? <Register /> : <Error/>} />
-            <Route path="/reset" exact component={() => getPerm(0) ? <PasswordReset /> : <Error/>} />
-            <Route path="/reset/:token" exact component={() => getPerm(0) ? <NewPassword /> : <Error/>} />
+                <Route path="/login" exact component={() => getPerm(0) ? <Login /> : <Error/>} />
+                <Route path="/register" exact component={() => getPerm(0) ? <Register /> : <Error/>} />
+                <Route path="/reset" exact component={() => getPerm(0) ? <PasswordReset /> : <Error/>} />
+                <Route path="/reset/:token" exact component={() => getPerm(0) ? <NewPassword /> : <Error/>} />
 
-            <Route path="/user/profile" exact component={() => getPerm(1) ? <UserProfile /> : <Error/>} />
-            <Route path="/user/profile/edit" exact component={() => getPerm(1) ? <EditUser /> : <Error/>} />
-            <Route path="/user/profile/delete" exact component={() => getPerm(1) ? <DeleteUser /> : <Error/>} />
-            <Route path="/user/profile/password" exact component={() => getPerm(1) ? <PasswordChange /> : <Error/>} />
-            <Route path="/user/assignments" exact component={() => getPerm(1) ? <UserAssignments /> : <Error/>} />
-            <Route path="/user/activity" exact component={() => getPerm(1) ? <GetUserActivity /> : <Error/>} />
-            <Route path="/user/activity/add" exact component={() => getPerm(1) ? <AddUserActivity /> : <Error/>} />
-            <Route path="/user/activity/add/:id" exact component={() => getPerm(1) ? <AddUserActivity /> : <Error/>} />
-            <Route path="/user/activity/:id" exact component={() => getPerm(1) ? <RetrieveAndChangeUserActivity /> : <Error/>} />
+                <Route path="/user/profile" exact component={() => getPerm(1) ? <UserProfile /> : <Error/>} />
+                <Route path="/user/profile/edit" exact component={() => getPerm(1) ? <EditUser /> : <Error/>} />
+                <Route path="/user/profile/delete" exact component={() => getPerm(1) ? <DeleteUser /> : <Error/>} />
+                <Route path="/user/profile/password" exact component={() => getPerm(1) ? <PasswordChange /> : <Error/>} />
+                <Route path="/user/assignments" exact component={() => getPerm(1) ? <UserAssignments /> : <Error/>} />
+                <Route path="/user/activity" exact component={() => getPerm(1) ? <GetUserActivity /> : <Error/>} />
+                <Route path="/user/activity/add" exact component={() => getPerm(1) ? <AddUserActivity /> : <Error/>} />
+                <Route path="/user/activity/add/:id" exact component={() => getPerm(1) ? <AddUserActivity /> : <Error/>} />
+                <Route path="/user/activity/:id" exact component={() => getPerm(1) ? <RetrieveAndChangeUserActivity /> : <Error/>} />
 
-            <Route path="/manage/places" exact component={() => getPerm(2) ? <Places /> : <Error/>} />
-            <Route path="/manage/sessions" exact component={() => getPerm(2) ? <SessionsTasks /> : <Error/>}/>
-            <Route path="/manage/assignments" exact component={() => getPerm(2) ? <Assignments /> : <Error/>}/>
-            <Route path="/manage/friends" exact component={() => getPerm(2) ? <Friends /> : <Error/>}/>
-            <Route path="/manage/users" exact component={() => getPerm(2) ? <Registrations /> : <Error/>}/>
-            <Route path="/manage/donations" exact component={() => getPerm(2) ? <ManageDonations /> : <Error/>}/>
+                <Route path="/manage/places" exact component={() => getPerm(2) ? <Places /> : <Error/>} />
+                <Route path="/manage/sessions" exact component={() => getPerm(2) ? <SessionsTasks /> : <Error/>}/>
+                <Route path="/manage/assignments" exact component={() => getPerm(2) ? <Assignments /> : <Error/>}/>
+                <Route path="/manage/friends" exact component={() => getPerm(2) ? <Friends /> : <Error/>}/>
+                <Route path="/manage/users" exact component={() => getPerm(2) ? <Registrations /> : <Error/>}/>
+                <Route path="/manage/donations" exact component={() => getPerm(2) ? <ManageDonations /> : <Error/>}/>
 
-            <Route component={() => <Error/>}/>
-          </Switch>
-        <Footer/>
-      </Router>
+                <Route component={() => <Error/>}/>
+              </Switch>
+            </Container>
+          <Footer/>
+        </Router>
+      </ThemeProvider>
     </div>
   );
 }
