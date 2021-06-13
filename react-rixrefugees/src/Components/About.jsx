@@ -1,10 +1,10 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
 import { useSnackbar } from 'notistack';
-import axios from "../utils/axios";
+import {useSelector} from "react-redux";
 
-import Carousel from "@brainhubeu/react-carousel";
-import "@brainhubeu/react-carousel/lib/style.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import FormControl from '@material-ui/core/FormControl';
@@ -12,25 +12,34 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
 
+import NextButton from "./utils/Carousel/NextButton";
+import PreviousButton from "./utils/Carousel/PreviousButton";
+import Indicator from "./utils/Carousel/Indicator";
 import LoadingIndicator from "./utils/LoadingIndicator";
-import NewLineText from "../utils/NewLineText";
+import axios from "../utils/axios";
+
+import classes from "../Style/About";
+const useStyles=classes;
 
 function About() {
     const [loading,setLoading] = React.useState(true);
     const [sessionsTasks,setSessionsTasks] = React.useState([]);
     const [sessions,setSessions] = React.useState([]);
     const [selected, setSelected] = React.useState(0);
+    const userId = useSelector(state => state.user);
+    const styles = useStyles();
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const moment = require('moment');
     const history = useHistory();
 
-    React.useEffect( async () => {
-        await axios.get(`${process.env.REACT_APP_API}/sessions`)
+    React.useEffect( () => {
+        axios.get(`${process.env.REACT_APP_API}/sessions/available`)
         .then(res => {
             setSessions(res.data);
         })
@@ -46,7 +55,7 @@ function About() {
                 enqueueSnackbar("La requête n'a pas pû être créée. Veuillez réessayer.", {variant : "error"});
             }
         });
-        await axios.get(`${process.env.REACT_APP_API}/sessions_tasks`)
+        axios.get(`${process.env.REACT_APP_API}/sessions_tasks/available`)
         .then(res => {
             setSessionsTasks(res.data);
         })
@@ -68,7 +77,7 @@ function About() {
 
     function getCards(obj,index) {
         return (
-            <Card>
+            <Card classes={{root : styles.card}}>
               <CardContent>
                 <Typography color="textSecondary" gutterBottom>
                     {moment(obj.start_date).format('DD/MM/YYYY HH:mm')} - {moment(obj.end_date).format('DD/MM/YYYY HH:mm')}
@@ -79,10 +88,8 @@ function About() {
                 <Typography color="textSecondary">
                     {obj.amountofpeople} personne{obj.amountofpeople > 1 ? "s" : ""}
                 </Typography>
+                <Button size="small" onClick={() => history.push(userId > 0 ? `/user/activity/add/${obj.id}` : '/login')}>Postuler maintenant</Button>
               </CardContent>
-              <CardActions>
-                <Button size="small" onClick={() => history.push(`/user/activity/add/${obj.id}`)}>Postuler maintenant</Button>
-              </CardActions>
             </Card>
         );
     }
@@ -98,36 +105,61 @@ function About() {
     }
     else {
         return (
-            <div>
-                <p>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. In fermentum et sollicitudin ac orci phasellus egestas. Semper quis lectus nulla at volutpat diam ut. Quam viverra orci sagittis eu volutpat odio facilisis. Habitant morbi tristique senectus et netus et malesuada.
-                    </Typography>
-                </p>
-                <Grid item>
-                    <FormControl>
-                        <InputLabel>Sessions</InputLabel>
-                        <Select
-                            value={selected}
-                            onChange={handleInputChange}
+            <Container>
+                <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                        <Typography variant='h3'>Activités disponibles</Typography>
+                        <Typography>
+                            Afin d'organiser ses activités, l'association définit un coordinateur responsable des activités d'une semaine (appelée alors "session"). Le coordinateur de la session peut alors définir une série de tâche à effectuer durant sa session. Vous, bénévoles, pouvez alors proposer votre disponibilité pour une tâche. Par après, le coordinateur choisira parmis les disponibilités quel bénévole sera chargé de la tâche.
+                        </Typography>
+                        <Typography>
+                            Vous retrouverez ci-dessous l'ensemble des tâches à venir auxquelles le nombre de bénévole à assigner n'a pas encore été rempli. Vous pouvez cliquer alors sur le bouton "Postuler maintenant" et remplir le formulaire pour soumettre votre disponibilité. En tant que bénévole, vous avez également la possibilité d'ajouter une tâche que le coordinateur n'aurais pas prévu en appuyant sur le bouton "Cliquez Ici". Il faudra attendre qu'un coordinateur accepte votre nouvelle proposition avant que d'autre bénévole puisse se porter volontaire pour cette tâche.
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6" color='error'>Vous devez être connecté au système afin de pouvoir proposer votre aide</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl>
+                            <InputLabel>Sessions</InputLabel>
+                            <Select
+                                value={selected}
+                                onChange={handleInputChange}
+                            >
+                                {sessions.map((obj) => {
+                                    return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_date).format('DD/MM/YYYY')} - {moment(obj.end_date).format('DD/MM/YYYY')}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box
+                            borderColor='primary.main'
+                            border={2}
+                            borderRadius={16}
+                            classes={{root : styles.box}}
                         >
-                            {sessions.map((obj) => {
-                                return <MenuItem value={obj.id}>{obj.username} à {obj.name} : {moment(obj.start_date).format('DD/MM/YYYY')} - {moment(obj.end_date).format('DD/MM/YYYY')}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
+                            {sessionsTasks.length > 0 ?
+                                    <Carousel
+                                        showThumbs={false}
+                                        showArrows
+                                        infiniteLoop
+                                        showStatus={false}
+                                        renderArrowNext={(onClickHandler, hasNext, label) => <NextButton onClickHandler={onClickHandler}/>}
+                                        renderArrowPrev={(onClickHandler, hasNext, label) => <PreviousButton onClickHandler={onClickHandler}/>}
+                                        renderIndicator={(onClickHandler, isSelected, index, label) => <Indicator onClickHandler={onClickHandler} isSelected={isSelected} index={index}/>}
+                                    >
+                                        {sessionsTasks.filter(obj => selected === 0 ? true : obj.sessions_id === selected).map(getCards)}
+                                    </Carousel>
+                            :
+                                <Typography>Aucune tâche n'est encore disponible.</Typography>
+                            }
+                            <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography>
+                            <Button variant='contained' color='secondary' onClick={() => history.push(userId > 0 ? '/user/activity/add' : '/login')}>Cliquez ici !</Button>
+                        </Box>
+                    </Grid>
                 </Grid>
-                {sessionsTasks.length > 0 ?
-                    <Carousel arrows infinite>
-                        {sessionsTasks.filter(obj => selected === 0 ? true : obj.sessions_id === selected).map(getCards)}
-                    </Carousel>
-                :
-                    <Typography>Aucune tâche n'est encore prévue dans cette session.</Typography>
-                }
-
-                <br/>
-                <Typography>Envie de proposer une tâche qui n'existe pas ?</Typography> <Button size="small" onClick={() => history.push('/user/activity/add')}>Cliquez ici !</Button>
-            </div>
+            </Container>
 
         );
     }

@@ -19,3 +19,4 @@ export { default as Error } from './Error';
 export { default as Legals } from './Legals';
 export { default as Privacy } from './Privacy';
 export { default as Usage } from './Usage';
+export { default as Join } from './Join';

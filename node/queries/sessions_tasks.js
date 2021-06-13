@@ -21,11 +21,6 @@ function getAllSessionsTasks(req, res, next) {
 }
 
 function getAvailableSessionsTasks(req, res, next) {
-  let perm = auth(req,res,false)
-  if (perm !== true) {
-    return perm
-  }
-
   pool.query(('select sessions_tasks.id,amountofpeople, tasks.id as tasks_id,tasks.name,sessions_tasks.description,sessions_id, concat(to_char(sessions_tasks.start_date,\'YYYY-MM-DD\'),\'T\',to_char(sessions_tasks.start_date, \'HH24:MI\')) as start_date, concat(to_char(sessions_tasks.end_date,\'YYYY-MM-DD\'),\'T\',to_char(sessions_tasks.end_date, \'HH24:MI\')) as end_date from sessions_tasks join tasks on tasks.id = sessions_tasks.tasks_id join sessions on sessions.id = sessions_tasks.sessions_id where sessions.end_date >= now() and isfromadmin is true and hasEnoughAssignments(sessions_tasks.id) != amountofpeople'),(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);
@@ -65,7 +60,7 @@ function getSessionsTasksPerSessions(req, res, next) {
     return verif;
   }
 
-  pool.query('select sessions_tasks.id, isfromadmin, amountofpeople, sessions_id, tasks.id as tasks_id,tasks.name, concat(to_char(start_date,\'YYYY-MM-DD\'),\'T\',to_char(start_date, \'HH24:MI\')) as start_date, concat(to_char(end_date,\'YYYY-MM-DD\'),\'T\',to_char(end_date, \'HH24:MI\')) as end_date from sessions_tasks join tasks on tasks.id = sessions_tasks.tasks_id where sessions_id = $1',[parseInt(req.params.id)]
+  pool.query('select sessions_tasks.id, isfromadmin, amountofpeople, sessions_id, tasks.id as tasks_id,tasks.name, concat(to_char(start_date,\'YYYY-MM-DD\'),\'T\',to_char(start_date, \'HH24:MI\')) as start_date, concat(to_char(end_date,\'YYYY-MM-DD\'),\'T\',to_char(end_date, \'HH24:MI\')) as end_date, hasEnoughAssignments(sessions_tasks.id) as assigned from sessions_tasks join tasks on tasks.id = sessions_tasks.tasks_id where sessions_id = $1',[parseInt(req.params.id)]
   ,(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows);

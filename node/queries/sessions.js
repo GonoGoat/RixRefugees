@@ -17,21 +17,15 @@ function getAllSessions(req, res, next) {
   ,(err,rows) =>  {
     if (err) return errors(res,err);
     return res.send(rows.rows.map(obj => {
-        return {
-          ...obj,
-          lname : cypher.decodeString(obj.lname),
-          fname : cypher.decodeString(obj.fname),
-        }
+        obj.username = `${cypher.decodeString(obj.lname)} ${cypher.decodeString(obj.fname)}`
+        delete obj.fname;
+        delete obj.lname
+        return obj;
     }));
   })
 }
 
 function getAvailableSessions(req, res, next) {
-  let perm = auth(req,res,false)
-  if (perm !== true) {
-    return perm
-  }
-
   pool.query('select sessions.id,to_char(start_date,\'YYYY-MM-DD\') as start_date,to_char(end_date,\'YYYY-MM-DD\') as end_date,users_id, users.lname, users.fname, places.id as placesId,places.name,places_availabilities_id from sessions join places_availabilities on places_availabilities.id = sessions.places_availabilities_id join users on sessions.users_id = users.id join places on places_availabilities.places_id = places.id where end_date >= now() order by sessions.id desc'
   ,(err,rows) =>  {
     if (err) return errors(res,err);

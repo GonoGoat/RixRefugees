@@ -165,6 +165,7 @@ function FriendsForm(props) {
                 await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
                 .then(res => {
                     localStorage.setItem("rixrefugees-message",res.data);
+                    window.location.reload();
                 })
                 .catch(err => {
                     closeSnackbar();
@@ -225,6 +226,10 @@ function FriendsForm(props) {
         }
     };
 
+    function checkSubmit() {
+        if (window.confirm(`Vous êtes sur le point ${props.edit ? "de modifier les" : "d'ajouter des"} données. Êtes-vous certains de vouloir faire cette action ?`)) handleSubmit();
+    }
+
     if (loading) {
         return (
             <div>
@@ -238,7 +243,7 @@ function FriendsForm(props) {
                 <form className={styles.window}>
                     <Grid container alignItems="center" justify="center" direction="column">
                         {displayForm()}
-                        <Button variant="contained" color="primary" onClick={handleSubmit}>
+                        <Button variant="contained" color="primary" onClick={checkSubmit}>
                             Envoyer
                         </Button>
                     </Grid>

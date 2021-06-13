@@ -81,6 +81,10 @@ function EditUser() {
         }
     }
 
+    function checkSubmit() {
+      if (window.confirm(`Vous êtes sur le point de modifier vos données personnelles. Êtes-vous certains de vouloir faire cette action ?`)) handleSubmit();
+    }
+
 
     if (loading && !user) return <LoadingIndicator/>
     return (
@@ -140,7 +144,7 @@ function EditUser() {
                     />
               </Grid>
               <Grid item xs={12}>
-                <Button color="secondary" fullWidth onClick={handleSubmit} variant="contained">
+                <Button color="secondary" fullWidth onClick={checkSubmit} variant="contained">
                   Modifier vos données personnelles
                 </Button>
               </Grid>

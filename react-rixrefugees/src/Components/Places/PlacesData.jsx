@@ -182,6 +182,10 @@ function PlacesData(props) {
         return <DataList keys={keys} api={api} />
     }
 
+    function checkSubmit() {
+        if (window.confirm(`Vous êtes sur le point de supprimer des données. Cette action est irréversible ! Êtes-vous certains de vouloir faire cette action ?`)) deleteRows();
+    }
+
     return (
         <div>
             {data.length === 0 ? <React.Fragment/> : 
@@ -192,7 +196,7 @@ function PlacesData(props) {
             }
             <div>
                 <AddButton disabled={props.api === "/accomodations"} add={()=>setForm({form : true,edit : false})}/>
-                <DeleteButton disabled={props.api === "/accomodations" || selected.length === 0} delete={()=>deleteRows()}/>
+                <DeleteButton disabled={props.api === "/accomodations" || selected.length === 0} delete={()=>checkSubmit()}/>
                 <EditButton disabled={selected.length !== 1 && props.api !== "/accomodations"} edit={() =>setForm({form : true,edit : true})}/>
             </div>
             {(isForm.form || id) ? (isForm.form ? <PlacesForm edit={isForm.edit} stopForm={() => setForm({form : '',edit : false})} data={data}  header={columns} selected={selected} form={props.api}/> :
