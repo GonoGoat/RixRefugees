@@ -78,8 +78,8 @@ function GetUserActivity() {
                 <Typography>
                     Proposition n°{value.id}<br/>
                     Effectuée le {value.updatedate}<br/>
-                    Etat : {getState(value)}<br/>
-                    Description : <NewlineText text={value.description}/>
+                    <strong>Etat : </strong>{getState(value)}<br/>
+                    <strong>Description : </strong><NewlineText text={value.description}/>
                 </Typography>
                 <Button size="small" onClick={() => history.push(`/user/activity/${value.id}`)}>Plus d'informations</Button>
                 <CancelButton disabled={false} cancel={() => cancel()}/>

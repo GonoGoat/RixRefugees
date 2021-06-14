@@ -15,10 +15,11 @@ const classes = makeStyles((theme) => ({
         display : 'inline-block',
     },
     connectionButton : {
-        color : theme.palette.common.white,
+        color : theme.palette.secondary.main,
         marginRight : theme.spacing(1),
         '&:hover': {
             backgroundColor : theme.palette.secondary.main,
+            color : theme.palette.common.white
         },
     },
     admin : {
@@ -39,9 +40,6 @@ const classes = makeStyles((theme) => ({
             color : theme.palette.common.white
         },
     },
-    divider : {
-        borderWidth : '5px'
-    }
 }));
 
 module.exports = classes

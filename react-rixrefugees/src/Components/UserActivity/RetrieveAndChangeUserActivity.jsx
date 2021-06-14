@@ -110,7 +110,7 @@ function RetrieveAndChangeUserActivity() {
         <div>
             {sessionsTasks ?
                 <React.Fragment>
-                    <Typography>Voici les informations liées à la tâche pour laquelle vous vous êtes rendus disponible</Typography>
+                    <Typography><strong>Voici les informations liées à la tâche pour laquelle vous vous êtes rendus disponible</strong></Typography>
                     <DataList api={`/sessions_tasks/${sessionsTasks}`} keys={sessionsTasksInfoDataListKeys}/>
                 </React.Fragment>
             :
@@ -131,7 +131,7 @@ function RetrieveAndChangeUserActivity() {
                 )
             :
                 <React.Fragment>
-                    <Typography>Voici les données de la disponibilité que vous avez soumises</Typography>
+                    <Typography><strong>Voici les données de la disponibilité que vous avez soumises</strong></Typography>
                     <DataList setDetails={(id) => setSessionsTasks(id)} api={`/availabilities/${param}`} keys={availabilitiesDataListKeys}/>
                 </React.Fragment>
             }

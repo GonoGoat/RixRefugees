@@ -72,7 +72,7 @@ function ListingGrid (props) {
                 return filtered;
             case '/friends' : 
                 if (!filter.state) {
-                    filtered = filtered.filter(row => row.out_date === null);
+                    filtered = filtered.filter(row => row.out_date === null || new Date() < new Date(row.out_date) );
                 }
                 return filtered
             case '/appointments' :

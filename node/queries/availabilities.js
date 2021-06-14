@@ -4,6 +4,7 @@ const errors = require('../errors.js');
 const moment = require('moment');
 const auth = require('../auth');
 const cypher = require('../cypher');
+const transporter = require('../mail.js');
 
 // add query functions
 function getValidAvailabilitiesPerSessionsTasks(req, res, next) {
@@ -111,7 +112,16 @@ function addNewAvailabilities(req, res, next) {
         pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',
         [req.body.availabilities.description,false,req.session.user.id, sessions_tasks_id],(err,rows) =>  {
           if (err) return errors(res,err);
-          return res.send(`Nous vous remercions d'avoir proposé une nouvelle tâche et de vous être rendu disponible pour celle-ci !\nVous serez prévenu par email de l'acceptation ou non de votre proposition.`);
+          transporter.sendMail({
+            to : "admin@rixref.be",
+            from : process.env.MAIL_USER,
+            subject : "RixRefugees : nouvelle tâche proposée par un bénévole",
+            html :  `<p>Un bénévole a proposé une nouvelle tâche : ${req.body.tasks.name} (${moment(req.body.sessions_tasks.start_date).format('DD/MM/YYYY HH:mm')} - ${moment(req.body.sessions_tasks.end_date).format('DD/MM/YYYY HH:mm')})</p>
+              <h5>Rendez-vous dans <a href="${process.env.WEBSITE}/manage/sessions">l'interface de gestion des tâches de sessions</a> pour valider cette tâche en tant que coordinateur ou la supprimer.`
+          },(err,info) => {
+            if (err) return res.status(500).send("Une erreur s'est produite lors de l'envoi du mail. Veuillez réessayer.")
+            return res.send(`Nous vous remercions d'avoir proposé une nouvelle tâche et de vous être rendu disponible pour celle-ci !\nRegardez régulièrement l'onglet "Tâches assignées" pour voir si la tâche vous a été assignée ou non.`);
+          })
         });
       })
     });
@@ -143,7 +153,7 @@ function addAvailabilities(req, res, next) {
     }
     pool.query('insert into availabilities (description,iscanceled,users_id,sessions_tasks_id) values ($1,$2,$3,$4)',[req.body.description,false,req.session.user.id, req.body.sessions_tasks_id],(err,rows) =>  {
       if (err) return errors(res,err);
-      return res.send(`Nous vous remercions de vous être rendu disponible pour cette tâche !\nVous serez prévenu par email de l'acceptation ou non de votre proposition.`);
+      return res.send(`Nous vous remercions de vous être rendu disponible pour cette tâche !\nRegardez régulièrement l'onglet "Tâches assignées" pour voir si la tâche vous a été assignée ou non.`);
     });
   });
 }
@@ -160,15 +170,23 @@ function cancelAvailabilities(req, res, next) {
   }
   pool.query('select users_id from availabilities where id = $1',[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    /*if rows.rowCount > 0 : mail
-     */
     if (rows.rows[0].users_id === req.session.user.id) {
       pool.query('update availabilities set iscanceled=true, updatedate = now() where id = ($1)',[req.body.id],(err,rows) =>  {
         if (err) return errors(res,err);
         pool.query('delete from assignments where availabilities_id = $1',[req.body.id],(err,rows) =>  {
           if (err) return errors(res,err);
-          /*if rows.rowCount > 0 : mail
-           */
+          if (rows.rowCount > 0) {
+            transporter.sendMail({
+              to : "admin@rixref.be",
+              from : process.env.MAIL_USER,
+              subject : "RixRefugees : annulation d'un bénévole",
+              html :  `<p>Un bénévole assigné à une tâche de session vient d'annuler sa disponibilité</p>
+              <h5>Rendez-vous dans <a href="${process.env.WEBSITE}/manage/sessions">l'interface de gestion des tâches de sessions</a> pour vérifier l'état d'asssignation des tâches à venir.`
+            },(err,info) => {
+              if (err) return res.status(500).send("Une erreur s'est produite lors de l'envoi du mail. Veuillez réessayer.")
+            })
+            return res.send("La procédure de réinitialisation de mot de passe a bien été lancée.\nVérifiez votre boîte mail pour continuer (regardez aussi dans le courrier indésirable !)");
+          }
           return res.send(`Votre proposition a bien été annulée. Nous vous remercions de votre attention et espérons vous revoir bientôt !`);
         })
       })
@@ -194,16 +212,18 @@ function updateAvailabilities(req, res, next) {
   if (verif !== true) {
     return verif;
   }
-  
-  if (rows.rows[0].users_id === req.session.user.id) {
-    pool.query('update availabilities set description=$1, updatedate = now() where id = ($2)',[req.body.description,req.body.id],(err,rows) =>  {
-      if (err) return errors(res,err);
-      return res.send(`Votre proposition a bien été modifiée.`);
-    })
-  }
-  else {
-    return res.status(400).send("Vous n'avez pas les permissions nécessaires pour accéder à cette fonctionnalité");
-  }
+  pool.query('select users_id from availabilities where id = $1',[req.body.id],(err,rows) =>  {
+    if (err) return errors(res,err);
+    if (rows.rows[0].users_id === req.session.user.id) {
+      pool.query('update availabilities set description=$1, updatedate = now() where id = ($2)',[req.body.description,req.body.id],(err,rows) =>  {
+        if (err) return errors(res,err);
+        return res.send(`Votre proposition a bien été modifiée.`);
+      })
+    }
+    else {
+      return res.status(400).send("Vous n'avez pas les permissions nécessaires pour accéder à cette fonctionnalité");
+    }
+  })
 }
 
 module.exports = {

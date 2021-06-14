@@ -35,7 +35,7 @@ function DeleteUser() {
 
     return (
         <Container>
-            <Grid container>
+            <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography>Vous êtes sur le point de supprimer votre compte du système.</Typography>
                     <Typography>A la suite de cette démarche, vos données personnelles seront supprimées de notre système, ne nous permettant plus de vous identifier.</Typography>

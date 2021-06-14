@@ -17,6 +17,26 @@ function Places () {
         setOptions(tab);
     }
 
+    React.useEffect(() => {
+        let url = localStorage.getItem("rixrefugees-url");
+        if (url) {
+            switch(url) {
+                case 'friends' :
+                    setData('friends',friendsList);
+                    break;
+                case 'status' :
+                    setData('status',statusList);
+                    break;
+                case 'appointments' :
+                    setData('appointments',appointmentsList);
+                    break;
+                default :
+                    break;
+            }
+            localStorage.removeItem("rixrefugees-url")
+        }   
+    },[])
+
     return (
         <div>
             <div>
