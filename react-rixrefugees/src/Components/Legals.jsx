@@ -3,22 +3,22 @@ import Container from "@material-ui/core/Container";
 
 function Legals() {
     return (
-        <Container>
-            <h1>Mentions légales de l'association RixRefugees</h1>
-            <div>
-                <h2>Données de l'association</h2>
+        <Container style={{textAlign : 'left'}}>
+            <Typography variant='h3'>Mentions légales de l'association RixRefugees</Typography>
+                <Typography variant='h4'>Données de l'association</Typography>
+                <Typography>
                 <ul>
                     <li><strong>Nom :</strong> RixRefugees</li>
                     <li><strong>Type d'organisation :</strong> Association de fait</li>
                     <li><strong>Description :</strong> Antenne locale de la Plateforme Citoyenne de Soutien aux Réfugiés ASBL</li>
                     <li><strong>Coordonnées de la Plateforme Citoyenne de Soutien aux Réfugiés ASBL :</strong> 186 rue Washington, 1050 Ixelles, BE04 5230 8077 7231 TRIOBEBB</li>
                 </ul>
-            </div>
-            <div>
-                <h2>Responsables de l'association</h2>
-                <p>
+                </Typography>
+                <Typography variant='h4'>Responsables de l'association</Typography>
+                <Typography>
                     L'association étant solidaire, elle ne comprend pas de président. Les membres du comité sont les suivants :
-                </p>
+                </Typography>
+                <Typography>
                 <table>
                     <thead>
                         <th>Nom</th>
@@ -71,24 +71,24 @@ function Legals() {
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div>
-                <h2>Editeur du site</h2>
-                <ul>
-                    <li><strong>Nom :</strong> VERSCHRAEGEN Gauthier</li>
-                    <li><strong>Téléphone :</strong> +32 471/76.25.94</li>
-                    <li><strong>Mail :</strong> gauth.vrsgn@outlook.be</li>
-                </ul>
-            </div>
-            <div>
-                <h2>Hébergeur du site</h2>
+                </Typography>
+                <Typography variant='h4'>Editeur du site</Typography>
+                <Typography>
+                    <ul>
+                        <li><strong>Nom :</strong> VERSCHRAEGEN Gauthier</li>
+                        <li><strong>Téléphone :</strong> +32 471/76.25.94</li>
+                        <li><strong>Mail :</strong> gauth.vrsgn@outlook.be</li>
+                    </ul>
+                </Typography>
+                <Typography variant='h4'>Hébergeur du site</Typography>
+                <Typography>
                 <ul>
                     <li><strong>Nom :</strong> 1&1 IONOS SARL</li>
                     <li><strong>Téléphone :</strong> 0970 808 911</li>
                     <li><strong>Mail :</strong> info@IONOS.fr</li>
                     <li><strong>Adresse :</strong> 7, place de la Gare, BP 70109, 57200 Sarreguemines Cedex,  431 303 775 RCS Sarreguemines</li>
                 </ul>
-            </div>
+                </Typography>
         </Container>
     )
 }
