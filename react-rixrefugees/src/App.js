@@ -1,7 +1,7 @@
 import React from "react";
 import { useSnackbar } from 'notistack';
 import {BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { StylesProvider, ThemeProvider } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
 
 import {Accueil, Header, About,Places,SessionsTasks,Footer,Assignments,UserAssignments,Friends,Login,Register,PasswordReset,NewPassword, UserProfile, Registrations, MakeDonations, ManageDonations,Error,Legals,Privacy, Usage,Join} from "./Components";
 import AddUserActivity from "./Components/UserActivity/AddUserActivity";
