@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button"
 import Typography from "@material-ui/core/Typography";
 import Container from '@material-ui/core/Container';
 import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box"
 
 import CloseIcon from '@material-ui/icons/Close';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
@@ -52,30 +53,42 @@ function UserProfile() {
                             <Typography variant='h3'>Informations de votre compte</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container>
+                            <Grid container spacing={3}>
                                 <Grid item xs={4}>
-                                    <Typography variant='h6'>Identifiant</Typography>
-                                    <Typography>{user.id}</Typography>
+                                    <Box border={1} borderRadius={8} borderColor='primary.main'>
+                                        <Typography variant='h6'>Identifiant</Typography>
+                                        <Typography>{user.id}</Typography>
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <Typography variant='h6'>Nom</Typography>
-                                    <Typography>{user.lname}</Typography>
+                                    <Box border={1} borderRadius={8} borderColor='primary.main'>
+                                        <Typography variant='h6'>Nom</Typography>
+                                        <Typography>{user.lname}</Typography>
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <Typography variant='h6'>Prénom</Typography>
-                                    <Typography>{user.fname}</Typography>
+                                    <Box border={1} borderRadius={8} borderColor='primary.main'>
+                                        <Typography variant='h6'>Prénom</Typography>
+                                        <Typography>{user.fname}</Typography>
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography variant='h6'>Adresse email</Typography>
-                                    <Typography>{user.mail}</Typography>
+                                    <Box border={1} borderRadius={8} borderColor='primary.main'>
+                                        <Typography variant='h6'>Adresse email</Typography>
+                                        <Typography>{user.mail}</Typography>
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography variant='h6'>Statut</Typography>
-                                    <Typography>{user.isadmin}</Typography>
+                                    <Box border={1} borderRadius={8} borderColor='primary.main'>
+                                        <Typography variant='h6'>Statut</Typography>
+                                        <Typography>{user.isadmin}</Typography>
+                                    </Box>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant='h6'>Moyen de contact</Typography>
-                                    <Typography><NewLineText text={user.contact}/></Typography>
+                                    <Box border={1} borderRadius={8} borderColor='primary.main'>
+                                        <Typography variant='h6'>Moyen de contact</Typography>
+                                        <Typography><NewLineText text={user.contact}/></Typography>
+                                    </Box>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -84,7 +97,7 @@ function UserProfile() {
                 <Grid item xs={12}> 
                     <Grid item container>
                         <Grid item xs={12}>
-                            <Typography variant='h3'>Informations de votre compte</Typography>
+                            <Typography variant='h3'>Actions sur votre compte</Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Grid container>

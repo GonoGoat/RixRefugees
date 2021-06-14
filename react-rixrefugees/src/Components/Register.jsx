@@ -153,7 +153,7 @@ function Register () {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Quelles sont vos motivations à rejoindre l'équipe RixRefugees ?"
+                  label="Quelles sont vos motivations à nous rejoindre ?"
                   name="motivation"
                   size="small"
                   variant="outlined"
@@ -166,7 +166,7 @@ function Register () {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Informations de contact"
+                  label="Comment pouvons-nous vous contacter ?"
                   name="contact"
                   size="small"
                   variant="outlined"

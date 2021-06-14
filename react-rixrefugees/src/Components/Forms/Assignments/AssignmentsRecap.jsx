@@ -2,7 +2,8 @@ import React from "react";
 
 import Grid from '@material-ui/core/Grid';
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
+
+import CustomDivider from "../../utils/CustomDivider";
 
 function AssignmentsRecap(props) {
 
@@ -24,7 +25,7 @@ function AssignmentsRecap(props) {
             <div>
                 <Typography>Identité bénévole : {value.username}</Typography>
                 <Typography>Etat : {getAction(value.state)}</Typography>
-                <Divider/>
+                <CustomDivider/>
             </div>
         )
     }
@@ -33,7 +34,7 @@ function AssignmentsRecap(props) {
         return (
             <div>
                 <Typography>Identité administrateur : {value.username}</Typography>
-                <Divider/>
+                <CustomDivider/>
             </div>
         )
     }
@@ -43,7 +44,7 @@ function AssignmentsRecap(props) {
             <div>
                 <Typography>Identité ami : {value.username}</Typography>
                 <Typography>Etat : {getAction(value.state)}</Typography>
-                <Divider/>
+                <CustomDivider/>
             </div>
         )
     }

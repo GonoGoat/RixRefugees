@@ -3,6 +3,7 @@ const errors = require('../errors.js');
 const check = require('../validators.js');
 const cypher = require('../cypher');
 const auth = require('../auth');
+const transporter = require('../mail.js');
 
 // add query functions
 function getAllRegistrations(req, res, next) {
@@ -60,11 +61,24 @@ function accept(req, res, next) {
     return verif;
   }
 
-  pool.query('update users set isactive = true where id in (select users_id from registrations where id = $1)',[req.body.id],(err,rows) =>  {
+  pool.query("select users.mail from registrations join users on registrations.users_id = users.id where registrations.id = $1",[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    pool.query('delete from registrations where id = $1',[req.body.id],(err,rows) =>  {
-      if (err) return errors(res,err);
-      return res.send(`La candidature a bien été acceptée !`);
+    transporter.sendMail({
+      to : cypher.decodeString(rows.rows[0].mail),
+      from : process.env.MAIL_USER,
+      subject : "RixRefugees : Candidature en tant que bénévole",
+      html :  `<p>Vous avez souhaité vous inscrire à notre plateforme <a href="${process.env.WEBSITE}">${process.env.WEBSITE}</a></p>
+        <p>Par cet email, nous vous informons que <strong>votre candidature a été acceptée</strong>.</p>
+        <p>Nous vous souhaitons donc la bienvenue chez RixRefugees ! Vous pouvez dès à présent vous connecter sur notre plateforme en <a href="${process.env.WEBSITE}/login">cliquant ici</a>.</p>`
+    },(err,info) => {
+      if (err) return res.status(500).send("Une erreur s'est produite lors de l'envoi du mail. Veuillez réessayer.")
+      pool.query('update users set isactive = true where id in (select users_id from registrations where id = $1)',[req.body.id],(err,rows) =>  {
+        if (err) return errors(res,err);
+        pool.query('delete from registrations where id = $1',[req.body.id],(err,rows) =>  {
+          if (err) return errors(res,err);
+          return res.send(`La candidature a bien été acceptée !`);
+        })
+      })
     })
   })
 }
@@ -86,12 +100,25 @@ function refuse(req, res, next) {
   if (verif !== true) {
     return verif;
   }
-
-  pool.query("delete from users where id in (select users_id from registrations where id = $1)",[req.body.id],(err,rows) =>  {
+  pool.query("select users.mail from registrations join users on registrations.users_id = users.id where registrations.id = $1",[req.body.id],(err,rows) =>  {
     if (err) return errors(res,err);
-    return res.send("La candidature a bien été refusée.");
+    transporter.sendMail({
+      to : cypher.decodeString(rows.rows[0].mail),
+      from : process.env.MAIL_USER,
+      subject : "RixRefugees : Candidature en tant que bénévole",
+      html :  `<p>Vous avez souhaité vous inscrire à notre plateforme <a href="${process.env.WEBSITE}">${process.env.WEBSITE}</a></p>
+        <p>Par cet email, nous vous informons que <strong>votre candidature a été refusée</strong>.</p>
+        <p>Votre compte contenant vos données personnelles à été supprimé. Si vous souhaitez en parler avec un coordinateur, contactons nous via l'adresse email suivante : admin@rixref.be</p>`
+    },(err,info) => {
+      if (err) return res.status(500).send("Une erreur s'est produite lors de l'envoi du mail. Veuillez réessayer.")
+      pool.query("delete from users where id in (select users_id from registrations where id = $1)",[req.body.id],(err,rows) =>  {
+        if (err) return errors(res,err);
+        return res.send("La candidature a bien été refusée.");
+      })
+    })
   })
 }
+
 
 module.exports = {
   getAllRegistrations: getAllRegistrations,

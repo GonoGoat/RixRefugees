@@ -20,7 +20,6 @@ function Places () {
 
     React.useEffect(() => {
         let url = localStorage.getItem("rixrefugees-url")
-        console.log(url);
         if (url) {
             switch(url) {
                 case '/sessions' :

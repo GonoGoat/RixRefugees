@@ -88,7 +88,7 @@ function About() {
                 <Typography color="textSecondary">
                     {obj.amountofpeople} personne{obj.amountofpeople > 1 ? "s" : ""}
                 </Typography>
-                <Button size="small" onClick={() => history.push(userId > 0 ? `/user/activity/add/${obj.id}` : '/login')}>Postuler maintenant</Button>
+                <Button variant='outlined' size="small" onClick={() => history.push(userId > 0 ? `/user/activity/add/${obj.id}` : '/login')}>Postuler maintenant</Button>
               </CardContent>
             </Card>
         );

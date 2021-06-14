@@ -324,7 +324,7 @@ function PlacesForm(props) {
         return (
             <Drawer anchor='bottom' open={true} onClose={() => props.stopForm()}>
                 <form className={styles.window}>
-                    <Grid container alignItems="center" justify="center" direction="column">
+                    <Grid container alignItems="center" justify="center" direction="column" spacing={3}>
                         {displayForm()}
                         <Button variant="contained" color="primary" onClick={checkSubmit}>
                             Envoyer

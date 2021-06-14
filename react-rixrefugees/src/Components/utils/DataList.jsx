@@ -79,7 +79,7 @@ function DataList(props) {
         return (
             <div>
                 {props.keys.map((arr) => {
-                    return (<Typography> {arr.name} :  <NewlineText text={details[arr.key]}/> </Typography>)
+                    return (<Typography><strong>{arr.name} : </strong><NewlineText text={details[arr.key]}/> </Typography>)
                 })}
             </div>
         )

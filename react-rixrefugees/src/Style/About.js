@@ -6,6 +6,7 @@ const classes = makeStyles((theme) => ({
     },
     card : {
         backgroundColor : theme.background.paper,
+        minHeight : '200px'
     }
 }));
 

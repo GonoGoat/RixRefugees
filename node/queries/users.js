@@ -93,7 +93,16 @@ async function addUsers(req, res, next) {
         pool.query ('insert into registrations (motivation,users_id) values ($1,$2)',
         [cypher.encodeString(req.body.motivation),id], (err,rows) =>  {
           if (err) return errors(res,err);
-          return res.send("Votre candidature a bien été enregistrée par le système et sera traitée très prochainement par les coordinateurs de l'association.\nNous vous contacterons par email pour vous informer de notre décision.")
+          transporter.sendMail({
+            to : "admin@rixref.be",
+            from : process.env.MAIL_USER,
+            subject : "RixRefugees : Nouvelle candidature",
+            html :  `<p>Un visiteur vient de poser sa candidature pour devenir bénévole.</p>
+              <h5>Rendez-vous sur <a href="${process.env.WEBSITE}/manage/users">l'interface de gestion des candidatures</a> pour valider ou non sa requête.`
+          },(err,info) => {
+            if (err) return res.status(500).send("Une erreur s'est produite lors de l'envoi du mail. Veuillez réessayer.")
+            return res.send("Votre candidature a bien été enregistrée par le système et sera traitée très prochainement par les coordinateurs de l'association.\nNous vous contacterons par email pour vous informer de notre décision.")
+          })
         })
       })
     }

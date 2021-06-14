@@ -165,6 +165,7 @@ function FriendsForm(props) {
                 await axios.post(`${process.env.REACT_APP_API}/${props.api}/add`, formValues[props.api])
                 .then(res => {
                     localStorage.setItem("rixrefugees-message",res.data);
+                    localStorage.setItem("rixrefugees-url",props.api);
                     window.location.reload();
                 })
                 .catch(err => {
@@ -241,7 +242,7 @@ function FriendsForm(props) {
         return (
             <Drawer anchor='bottom' open={true} onClose={() => props.stopForm()}>
                 <form className={styles.window}>
-                    <Grid container alignItems="center" justify="center" direction="column">
+                    <Grid container alignItems="center" justify="center" direction="column" spacing={3}>
                         {displayForm()}
                         <Button variant="contained" color="primary" onClick={checkSubmit}>
                             Envoyer

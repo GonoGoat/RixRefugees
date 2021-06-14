@@ -5,8 +5,8 @@ const classes = makeStyles((theme) => ({
     margin: 'auto',
   },
   paper: {
-    width: 200,
-    height: 230,
+    width: 400,
+    height: 460,
     overflow: 'auto',
   },
   button: {
